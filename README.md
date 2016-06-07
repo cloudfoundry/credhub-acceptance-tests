@@ -1,3 +1,3 @@
 Acceptance test for Credential Manager
 
-Runs local CM
+Runs local CredHub
