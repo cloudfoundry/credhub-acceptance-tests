@@ -1,1 +1,3 @@
-Accceptance test for Credential Manager
+Acceptance test for Credential Manager
+
+Runs local CM

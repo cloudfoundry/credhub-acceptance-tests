@@ -10,9 +10,15 @@ import (
 	. "github.com/onsi/gomega/gexec"
 	"os/exec"
 	"testing"
+	"io/ioutil"
+	"runtime"
+	"os"
 )
 
-var commandPath string
+var (
+	commandPath string
+	homeDir string
+)
 
 var _ = Describe("Integration test", func() {
 	It("smoke tests ok", func() {
@@ -37,6 +43,22 @@ func TestCommands(t *testing.T) {
 	RunSpecs(t, "Commands Suite")
 }
 
+var _ = BeforeEach(func() {
+	var err error
+	homeDir, err = ioutil.TempDir("", "cm-test")
+	Expect(err).NotTo(HaveOccurred())
+
+	if runtime.GOOS == "windows" {
+		os.Setenv("USERPROFILE", homeDir)
+	} else {
+		os.Setenv("HOME", homeDir)
+	}
+})
+
+var _ = AfterEach(func() {
+	os.RemoveAll(homeDir)
+})
+
 var _ = SynchronizedBeforeSuite(func() []byte {
 	path, err := Build("github.com/pivotal-cf/cm-cli")
 	Expect(err).NotTo(HaveOccurred())
@@ -45,6 +67,9 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	commandPath = string(data)
 })
 
+var _ = SynchronizedAfterSuite(func() {}, func() {
+	CleanupBuildArtifacts()
+})
 
 func runCommand(args ...string) *Session {
 	cmd := exec.Command(commandPath, args...)
