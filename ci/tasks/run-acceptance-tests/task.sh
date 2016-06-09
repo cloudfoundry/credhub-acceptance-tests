@@ -1,10 +1,12 @@
 #!/bin/bash
 
 set -e -x
+echo Hello world
 echo $PWD
 export GOPATH=$PWD/go
 export PATH=$PATH:$GOPATH/bin
 
-go install -v github.com/onsi/ginkgo/ginkgo
-cd $GOPATH/src/github.com/pivotal-cf/cred-hub-acceptance-tests
+cd go/src/github.com/pivotal-cf/cm-cli
+make dependencies
+cd ../cred-hub-acceptance-tests
 ginkgo -r integration
