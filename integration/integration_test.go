@@ -22,7 +22,7 @@ var (
 
 var _ = Describe("Integration test", func() {
 	It("smoke tests ok", func() {
-		session := runCommand("api", "pivotal-credential-manager.cfapps.io")
+		session := runCommand("api", "http://50.17.59.67:8844")
 		Eventually(session).Should(Exit(0))
 		uniqueId := strconv.FormatInt(time.Now().UnixNano(), 10)
 		session = runCommand("get", "-n", uniqueId)

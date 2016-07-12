@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -e -x
-echo Hello world
-echo $PWD
+set -ex
 export GOPATH=$PWD/go
 export PATH=$PATH:$GOPATH/bin
 
