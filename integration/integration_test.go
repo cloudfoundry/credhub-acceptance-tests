@@ -8,22 +8,22 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"os/exec"
-	"testing"
 	"io/ioutil"
-	"runtime"
 	"os"
+	"os/exec"
 	"path"
+	"runtime"
+	"testing"
 )
 
 var (
 	commandPath string
-	homeDir string
+	homeDir     string
 )
 
 var _ = Describe("Integration test", func() {
 	It("smoke tests ok", func() {
-		session := runCommand("api", "http://50.17.59.67:8844")
+		session := runCommand("api", "https://50.17.59.67:8844")
 		Eventually(session).Should(Exit(0))
 
 		session = runCommand("login", "-u", "credhub_cli", "-p", "credhub_cli_password")
