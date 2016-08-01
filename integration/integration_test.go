@@ -1,7 +1,6 @@
 package commands_test
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -11,7 +10,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path"
 	"runtime"
 	"testing"
 )
@@ -29,21 +27,30 @@ var _ = Describe("Integration test", func() {
 		session = runCommand("login", "-u", "credhub_cli", "-p", "credhub_cli_password")
 		Eventually(session).Should(Exit(0))
 
-		data, err := ioutil.ReadFile(path.Join(userHomeDir(), ".cm", "config.json"))
-		Expect(err).NotTo(HaveOccurred())
-		Expect(data).To(ContainSubstring(`"AuthURL":"https://50.17.59.67:8443"`))
-
 		uniqueId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(1))
 
 		session = runCommand("set", "-n", uniqueId, "-v", "bar")
 		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Credential:\s+bar`))
 
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
 
-		fmt.Println(string(session.Out.Contents()))
+		session = runCommand("ca-get", "-n", uniqueId)
+		Eventually(session).Should(Exit(1))
+
+		session = runCommand("ca-generate", "-n", uniqueId, "--common-name", uniqueId)
+		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+root`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+
+		session = runCommand("ca-get", "-n", uniqueId)
+		Eventually(session).Should(Exit(0))
+
 		session = runCommand("delete", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
 	})
@@ -90,16 +97,4 @@ func runCommand(args ...string) *Session {
 	<-session.Exited
 
 	return session
-}
-
-func userHomeDir() string {
-	if runtime.GOOS == "windows" {
-		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
-		if home == "" {
-			home = os.Getenv("USERPROFILE")
-		}
-		return home
-	}
-
-	return os.Getenv("HOME")
 }
