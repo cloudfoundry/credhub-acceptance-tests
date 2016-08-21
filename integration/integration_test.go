@@ -4,14 +4,15 @@ import (
 	"strconv"
 	"time"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"runtime"
 	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gexec"
 )
 
 var (
@@ -35,7 +36,7 @@ var _ = Describe("Integration test", func() {
 		session = runCommand("set", "-n", uniqueId, "-v", "bar")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Credential:\s+bar`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
 
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
