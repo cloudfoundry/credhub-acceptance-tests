@@ -63,7 +63,6 @@ var _ = Describe("Integration test", func() {
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+certificate`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
 
 		session = runCommand("get", "-n", uniqueId2)
 		Eventually(session).Should(Exit(0))
