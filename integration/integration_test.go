@@ -41,6 +41,13 @@ var _ = Describe("Integration test", func() {
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
 
+		session = runCommand("delete", "-n", uniqueId)
+		Eventually(session).Should(Exit(0))
+
+		uniqueId2 := uniqueId + "2"
+		session = runCommand("get", "-n", uniqueId2)
+		Eventually(session).Should(Exit(1))
+
 		session = runCommand("ca-get", "-n", uniqueId)
 		Eventually(session).Should(Exit(1))
 
@@ -52,8 +59,15 @@ var _ = Describe("Integration test", func() {
 		session = runCommand("ca-get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
 
-		session = runCommand("delete", "-n", uniqueId)
+		session = runCommand("generate", "-n", uniqueId2, "-t", "certificate", "--common-name", uniqueId2, "--ca", uniqueId)
 		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+certificate`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+
+		session = runCommand("get", "-n", uniqueId2)
+		Eventually(session).Should(Exit(0))
+
 	})
 })
 
