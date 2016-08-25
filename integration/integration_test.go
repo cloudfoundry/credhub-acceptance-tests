@@ -13,16 +13,25 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	"path"
+	"encoding/json"
 )
 
 var (
 	commandPath string
 	homeDir     string
+	cfg         Config
+	err         error
 )
 
 var _ = Describe("Integration test", func() {
+	BeforeEach(func() {
+		cfg, err = loadConfig()
+		Expect(err).NotTo(HaveOccurred())
+	})
+
 	It("smoke tests ok", func() {
-		session := runCommand("api", "https://50.17.59.67:8844")
+		session := runCommand("api", cfg.ApiUrl)
 		Eventually(session).Should(Exit(0))
 
 		session = runCommand("login", "-u", "credhub_cli", "-p", "credhub_cli_password")
@@ -111,4 +120,24 @@ func runCommand(args ...string) *Session {
 	<-session.Exited
 
 	return session
+}
+
+type Config struct {
+	ApiUrl string `json:"api_url"`
+}
+
+func loadConfig() (Config, error) {
+	c := Config{}
+
+	data, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "config", "config.json"))
+	if err != nil {
+		return c, err
+	}
+
+	err = json.Unmarshal(data, &c)
+	if err != nil {
+		return c, err
+	}
+
+	return c, nil
 }

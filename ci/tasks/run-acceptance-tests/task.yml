@@ -8,3 +8,6 @@ inputs:
     path: go/src/github.com/pivotal-cf/cm-cli
 run:
   path: go/src/github.com/pivotal-cf/cred-hub-acceptance-tests/ci/tasks/run-acceptance-tests/task.sh
+
+params:
+  API_URL:

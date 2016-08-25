@@ -1,3 +1,4 @@
 build/
 cm-cli
 *.iml
+config/config.json
