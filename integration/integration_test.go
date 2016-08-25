@@ -10,11 +10,12 @@ import (
 	"runtime"
 	"testing"
 
+	"encoding/json"
+	"path"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"path"
-	"encoding/json"
 )
 
 var (
@@ -129,7 +130,7 @@ type Config struct {
 func loadConfig() (Config, error) {
 	c := Config{}
 
-	data, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "config", "config.json"))
+	data, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "config.json"))
 	if err != nil {
 		return c, err
 	}
