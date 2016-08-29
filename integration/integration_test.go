@@ -43,7 +43,7 @@ var _ = Describe("Integration test", func() {
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(1))
 
-		session = runCommand("set", "-n", uniqueId, "-v", "bar")
+		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
@@ -76,7 +76,6 @@ var _ = Describe("Integration test", func() {
 
 		session = runCommand("get", "-n", uniqueId2)
 		Eventually(session).Should(Exit(0))
-
 	})
 })
 

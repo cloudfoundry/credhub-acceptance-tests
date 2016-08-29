@@ -1,4 +1,4 @@
 build/
-cm-cli
+credhub-cli
 *.iml
 config.json
