@@ -12,4 +12,4 @@ fly \
   --tag vsphere \
   -c task.yml \
   -i task-repo=../../../ \
-  -i subject-repo=../../../../cm-cli
+  -i subject-repo=../../../../credhub-cli
