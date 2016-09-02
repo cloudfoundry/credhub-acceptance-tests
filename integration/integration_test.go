@@ -48,8 +48,20 @@ var _ = Describe("Integration test", func() {
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
 
+		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar2", "--no-overwrite")
+		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
+
+		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar2")
+		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar2`))
+
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar2`))
 
 		session = runCommand("delete", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
