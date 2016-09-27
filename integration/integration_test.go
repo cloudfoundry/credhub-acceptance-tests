@@ -48,20 +48,31 @@ var _ = Describe("Integration test", func() {
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
 
-		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar2", "--no-overwrite")
+		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue", "--no-overwrite")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
 
-		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar2")
+		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar2`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+newvalue`))
 
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar2`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+newvalue`))
+
+		uniqueCertificateId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		session = runCommand("set", "-n", uniqueCertificateId, "-t", "certificate", "--certificate-string", "iamacertificate")
+		Eventually(session).Should(Exit(0))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+certificate`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+
+		session = runCommand("set", "-n", uniqueCertificateId, "-t", "certificate", "--no-overwrite")
+		Eventually(session).Should(Exit(1))
+		Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
 
 		session = runCommand("delete", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
@@ -88,6 +99,9 @@ var _ = Describe("Integration test", func() {
 
 		session = runCommand("get", "-n", uniqueId2)
 		Eventually(session).Should(Exit(0))
+
+		session = runCommand("get", "-n", uniqueId2)
+
 	})
 })
 

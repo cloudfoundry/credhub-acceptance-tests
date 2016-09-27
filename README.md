@@ -1,3 +1,5 @@
+
+
 Acceptance test for Credential Manager
 
 ### Run Tests locally
@@ -11,4 +13,8 @@ cat > config.json <<EOF
 EOF
 ```
 
-Runs local CredHub
+Runs local CredHub testing via:
+
+```sh
+ginkgo -r integration/
+```
