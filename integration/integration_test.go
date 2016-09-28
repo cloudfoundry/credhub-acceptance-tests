@@ -16,6 +16,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	"regexp"
+	"fmt"
 )
 
 var (
@@ -48,15 +50,30 @@ var _ = Describe("Integration test", func() {
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
 
+		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
+		original_timestamp_array := r.FindSubmatch(session.Out.Contents())
+
+		Expect(original_timestamp_array).To(HaveLen(2))
+
+		original_timestamp := original_timestamp_array[1]
+
+		Expect(original_timestamp).NotTo(HaveLen(0))
+
 		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue", "--no-overwrite")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
+		Expect(session.Out.Contents()).To(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
+
+		// We need to sleep in order to ensure that the timestamp is different,
+		// since it is truncated to the second.
+		time.Sleep(time.Duration(1) * time.Second)
 
 		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue")
 		Eventually(session).Should(Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+newvalue`))
+		Expect(session.Out.Contents()).NotTo(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
 
 		session = runCommand("get", "-n", uniqueId)
 		Eventually(session).Should(Exit(0))
