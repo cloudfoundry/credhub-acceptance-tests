@@ -43,6 +43,7 @@ var _ = Describe("Integration test", func() {
 		uniqueId := strconv.FormatInt(time.Now().UnixNano(), 10)
 
 		session = runCommand("get", "-n", uniqueId)
+		Expect(session.Err.Contents()).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
 		Eventually(session).Should(Exit(1))
 
 		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar")
@@ -96,9 +97,11 @@ var _ = Describe("Integration test", func() {
 
 		uniqueId2 := uniqueId + "2"
 		session = runCommand("get", "-n", uniqueId2)
+		Expect(session.Err.Contents()).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
 		Eventually(session).Should(Exit(1))
 
 		session = runCommand("ca-get", "-n", uniqueId)
+		Expect(session.Err.Contents()).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
 		Eventually(session).Should(Exit(1))
 
 		session = runCommand("ca-generate", "-n", uniqueId, "--common-name", uniqueId)
