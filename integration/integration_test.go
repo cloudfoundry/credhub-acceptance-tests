@@ -121,9 +121,9 @@ var _ = Describe("Integration test", func() {
 		Eventually(session).Should(Exit(0))
 
 		uniqueId3 := uniqueId + "3"
-		session = runCommand("generate", "-n", uniqueId3, "-t", "ssh")
+		session = runCommand("generate", "-n", uniqueId3, "-t", "rsa")
 		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+ssh`))
+		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+rsa`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Public Key:\s+-----BEGIN PUBLIC KEY-----`))
 		Expect(session.Out.Contents()).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
 
