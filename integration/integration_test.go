@@ -31,105 +31,188 @@ var _ = Describe("Integration test", func() {
 	BeforeEach(func() {
 		cfg, err = loadConfig()
 		Expect(err).NotTo(HaveOccurred())
-	})
 
-	It("smoke tests ok", func() {
+		// These happen before each test due to the lack of a BeforeAll
+		// (https://github.com/onsi/ginkgo/issues/70) :(
+		// If the tests are slow, they should be runnable in parallel with the -p option.
 		session := runCommand("api", cfg.ApiUrl)
 		Eventually(session).Should(Exit(0))
 
 		session = runCommand("login", "-u", "credhub_cli", "-p", "credhub_cli_password")
 		Eventually(session).Should(Exit(0))
+	})
 
-		uniqueId := strconv.FormatInt(time.Now().UnixNano(), 10)
+	It("should set, get, and delete a new value secret", func() {
+		valueId := strconv.FormatInt(time.Now().UnixNano(), 10)
 
-		session = runCommand("get", "-n", uniqueId)
-		Expect(session.Err.Contents()).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
-		Eventually(session).Should(Exit(1))
+		By("trying to access a secret that doesn't exist", func() {
+			session := runCommand("get", "-n", valueId)
+			stdErr := string(session.Err.Contents())
 
-		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "bar")
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
+			Expect(stdErr).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
+			Eventually(session).Should(Exit(1))
+		})
 
+		By("setting a new value secret", func() {
+			session := runCommand("set", "-n", valueId, "-t", "value", "-v", "bar")
+			Eventually(session).Should(Exit(0))
+
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
+			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+		})
+
+		By("getting the new value secret", func() {
+			session := runCommand("get", "-n", valueId)
+			stdOut := string(session.Out.Contents())
+
+			Eventually(session).Should(Exit(0))
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
+			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+		})
+
+		By("deleting the secret", func() {
+			session := runCommand("delete", "-n", valueId)
+			Eventually(session).Should(Exit(0))
+		})
+	})
+
+	It("should set a secret's timestamp correctly", func() {
+		var original_timestamp []byte
 		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
-		original_timestamp_array := r.FindSubmatch(session.Out.Contents())
 
-		Expect(original_timestamp_array).To(HaveLen(2))
+		secretId := strconv.FormatInt(time.Now().UnixNano(), 10)
 
-		original_timestamp := original_timestamp_array[1]
+		By("getting the original timestamp", func() {
+			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "bar")
+			original_timestamp_array := r.FindSubmatch(session.Out.Contents())
 
-		Expect(original_timestamp).NotTo(HaveLen(0))
+			Expect(original_timestamp_array).To(HaveLen(2))
 
-		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue", "--no-overwrite")
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+bar`))
-		Expect(session.Out.Contents()).To(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
+			original_timestamp = original_timestamp_array[1]
 
-		// We need to sleep in order to ensure that the timestamp is different,
-		// since it is truncated to the second.
-		time.Sleep(time.Duration(1) * time.Second)
+			Expect(original_timestamp).NotTo(HaveLen(0))
+		})
 
-		session = runCommand("set", "-n", uniqueId, "-t", "value", "-v", "newvalue")
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+newvalue`))
-		Expect(session.Out.Contents()).NotTo(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
+		By("getting the timestamp after a no-overwrite set", func() {
+			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "newvalue", "--no-overwrite")
+			stdOut := string(session.Out.Contents())
 
-		session = runCommand("get", "-n", uniqueId)
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+value`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Value:\s+newvalue`))
+			Eventually(session).Should(Exit(0))
 
-		uniqueCertificateId := strconv.FormatInt(time.Now().UnixNano(), 10)
+			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
+			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+			Expect(stdOut).To(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
+		})
 
-		session = runCommand("set", "-n", uniqueCertificateId, "-t", "certificate", "--certificate-string", "iamacertificate")
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+certificate`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+		By("getting the timestamp after an overwrite set", func() {
+			// We need to sleep in order to ensure that the timestamp is different,
+			// since it is truncated to the second.
+			time.Sleep(time.Duration(1) * time.Second)
 
-		session = runCommand("set", "-n", uniqueCertificateId, "-t", "certificate", "--no-overwrite")
-		Eventually(session).Should(Exit(1))
-		Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
+			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "newvalue")
+			stdOut := string(session.Out.Contents())
 
-		session = runCommand("delete", "-n", uniqueId)
-		Eventually(session).Should(Exit(0))
+			Eventually(session).Should(Exit(0))
 
-		uniqueId2 := uniqueId + "2"
-		session = runCommand("get", "-n", uniqueId2)
-		Expect(session.Err.Contents()).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
-		Eventually(session).Should(Exit(1))
+			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
+			Expect(stdOut).To(MatchRegexp(`Value:\s+newvalue`))
+			Expect(stdOut).NotTo(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
+		})
 
-		session = runCommand("ca-get", "-n", uniqueId)
-		Expect(session.Err.Contents()).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
-		Eventually(session).Should(Exit(1))
+		By("getting the value", func() {
+			session := runCommand("get", "-n", secretId)
+			stdOut := string(session.Out.Contents())
 
-		session = runCommand("ca-generate", "-n", uniqueId, "--common-name", uniqueId)
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+root`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+			Eventually(session).Should(Exit(0))
 
-		session = runCommand("ca-get", "-n", uniqueId)
-		Eventually(session).Should(Exit(0))
+			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
+			Expect(stdOut).To(MatchRegexp(`Value:\s+newvalue`))
+		})
+	})
 
-		session = runCommand("generate", "-n", uniqueId2, "-t", "certificate", "--common-name", uniqueId2, "--ca", uniqueId)
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+certificate`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+	Describe("setting a certificate", func() {
+		certificateId := strconv.FormatInt(time.Now().UnixNano(), 10)
 
-		session = runCommand("get", "-n", uniqueId2)
-		Eventually(session).Should(Exit(0))
+		It("should be able to set a certificate", func() {
+			session := runCommand("set", "-n", certificateId, "-t", "certificate", "--certificate-string", "iamacertificate")
+			stdOut := string(session.Out.Contents())
 
-		uniqueId3 := uniqueId + "3"
-		session = runCommand("generate", "-n", uniqueId3, "-t", "rsa")
-		Eventually(session).Should(Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Type:\s+rsa`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Public Key:\s+-----BEGIN PUBLIC KEY-----`))
-		Expect(session.Out.Contents()).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+			Eventually(session).Should(Exit(0))
 
-		session = runCommand("get", "-n", uniqueId3)
-		Eventually(session).Should(Exit(0))
+			Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+			Expect(stdOut).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+		})
 
+		It("should require a certificate type", func() {
+			session := runCommand("set", "-n", certificateId, "-t", "certificate", "--no-overwrite")
+			Eventually(session).Should(Exit(1))
+			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
+		})
+	})
+
+	It("should generate a CA and certificate", func() {
+		certificateAuthorityId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		certificateId := certificateAuthorityId + "1"
+
+		By("retrieving a CA that doesn't exist yet", func() {
+			session := runCommand("ca-get", "-n", certificateAuthorityId)
+			stdErr := string(session.Err.Contents())
+
+			Expect(stdErr).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
+			Eventually(session).Should(Exit(1))
+		})
+
+		By("generating the CA", func() {
+			session := runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
+			stdOut := string(session.Out.Contents())
+
+			Eventually(session).Should(Exit(0))
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+root`))
+			Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+		})
+
+		By("getting the new CA", func() {
+			session := runCommand("ca-get", "-n", certificateAuthorityId)
+			Eventually(session).Should(Exit(0))
+		})
+
+		By("generating the certificate", func() {
+			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId)
+			stdOut := string(session.Out.Contents())
+
+			Eventually(session).Should(Exit(0))
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+			Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+		})
+
+		By("getting the certificate", func() {
+			session := runCommand("get", "-n", certificateId)
+			Eventually(session).Should(Exit(0))
+		})
+	})
+
+	It("should generate an RSA key", func() {
+		rsaId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		By("generating the key", func() {
+			session := runCommand("generate", "-n", rsaId, "-t", "rsa")
+
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+rsa`))
+			Expect(stdOut).To(MatchRegexp(`Public Key:\s+-----BEGIN PUBLIC KEY-----`))
+			Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+		})
+
+		By("getting the key", func() {
+			session := runCommand("get", "-n", rsaId)
+			Eventually(session).Should(Exit(0))
+		})
 	})
 })
 
@@ -157,6 +240,7 @@ var _ = AfterEach(func() {
 var _ = SynchronizedBeforeSuite(func() []byte {
 	path, err := Build("github.com/pivotal-cf/credhub-cli")
 	Expect(err).NotTo(HaveOccurred())
+
 	return []byte(path)
 }, func(data []byte) {
 	commandPath = string(data)
