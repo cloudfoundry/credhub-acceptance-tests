@@ -195,6 +195,26 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
+	It("should generate an SSH key", func() {
+		sshId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		By("generating the key", func() {
+			session := runCommand("generate", "-n", sshId, "-t", "ssh")
+
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+ssh`))
+			Expect(stdOut).To(MatchRegexp(`Public Key:\s+ssh-rsa \S+`))
+			Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+		})
+
+		By("getting the key", func() {
+			session := runCommand("get", "-n", sshId)
+			Eventually(session).Should(Exit(0))
+		})
+	})
+
 	It("should generate an RSA key", func() {
 		rsaId := strconv.FormatInt(time.Now().UnixNano(), 10)
 
