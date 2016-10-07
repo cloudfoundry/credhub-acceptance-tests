@@ -152,6 +152,36 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
+	Describe("setting an SSH key", func() {
+		sshId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		It("should be able to set an ssh key", func() {
+			session := runCommand("set", "-n", sshId, "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			stdOut := string(session.Out.Contents())
+
+			Eventually(session).Should(Exit(0))
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+ssh`))
+			Expect(stdOut).To(MatchRegexp(`Public Key:\s+iamapublickey`))
+			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamaprivatekey`))
+		})
+	})
+
+	Describe("setting an RSA key", func() {
+		rsaId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		It("should be able to set an rsa key", func() {
+			session := runCommand("set", "-n", rsaId, "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			stdOut := string(session.Out.Contents())
+
+			Eventually(session).Should(Exit(0))
+
+			Expect(stdOut).To(MatchRegexp(`Type:\s+rsa`))
+			Expect(stdOut).To(MatchRegexp(`Public Key:\s+iamapublickey`))
+			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamaprivatekey`))
+		})
+	})
+
 	It("should generate a CA and certificate", func() {
 		certificateAuthorityId := strconv.FormatInt(time.Now().UnixNano(), 10)
 		certificateId := certificateAuthorityId + "1"
