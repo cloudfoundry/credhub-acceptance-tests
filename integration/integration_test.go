@@ -78,6 +78,16 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
+	It("should generate a password", func() {
+		valueId := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+		session := runCommand("generate", "-n", valueId, "-t", "password")
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+	})
+
 	It("should set a secret's timestamp correctly", func() {
 		var original_timestamp []byte
 		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
