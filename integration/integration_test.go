@@ -43,7 +43,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should set, get, and delete a new value secret", func() {
-		valueId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		valueId := generateValueId()
 
 		By("trying to access a secret that doesn't exist", func() {
 			session := runCommand("get", "-n", valueId)
@@ -79,9 +79,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate a password", func() {
-		valueId := strconv.FormatInt(time.Now().UnixNano(), 10)
-
-		session := runCommand("generate", "-n", valueId, "-t", "password")
+		session := runCommand("generate", "-n", generateValueId(), "-t", "password")
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -92,7 +90,7 @@ var _ = Describe("Integration test", func() {
 		var original_timestamp []byte
 		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
 
-		secretId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		secretId := generateValueId()
 
 		By("getting the original timestamp", func() {
 			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "bar")
@@ -143,10 +141,8 @@ var _ = Describe("Integration test", func() {
 	})
 
 	Describe("setting a certificate", func() {
-		certificateId := strconv.FormatInt(time.Now().UnixNano(), 10)
-
 		It("should be able to set a certificate", func() {
-			session := runCommand("set", "-n", certificateId, "-t", "certificate", "--certificate-string", "iamacertificate")
+			session := runCommand("set", "-n", generateValueId(), "-t", "certificate", "--certificate-string", "iamacertificate")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -156,17 +152,15 @@ var _ = Describe("Integration test", func() {
 		})
 
 		It("should require a certificate type", func() {
-			session := runCommand("set", "-n", certificateId, "-t", "certificate", "--no-overwrite")
+			session := runCommand("set", "-n", generateValueId(), "-t", "certificate", "--no-overwrite")
 			Eventually(session).Should(Exit(1))
 			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
 		})
 	})
 
 	Describe("setting an SSH key", func() {
-		sshId := strconv.FormatInt(time.Now().UnixNano(), 10)
-
 		It("should be able to set an ssh key", func() {
-			session := runCommand("set", "-n", sshId, "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateValueId(), "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -178,10 +172,8 @@ var _ = Describe("Integration test", func() {
 	})
 
 	Describe("setting an RSA key", func() {
-		rsaId := strconv.FormatInt(time.Now().UnixNano(), 10)
-
 		It("should be able to set an rsa key", func() {
-			session := runCommand("set", "-n", rsaId, "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateValueId(), "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -193,7 +185,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate a CA and certificate", func() {
-		certificateAuthorityId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		certificateAuthorityId := generateValueId()
 		certificateId := certificateAuthorityId + "1"
 
 		By("retrieving a CA that doesn't exist yet", func() {
@@ -236,7 +228,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate an SSH key", func() {
-		sshId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		sshId := generateValueId()
 
 		By("generating the key", func() {
 			session := runCommand("generate", "-n", sshId, "-t", "ssh")
@@ -256,7 +248,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate an RSA key", func() {
-		rsaId := strconv.FormatInt(time.Now().UnixNano(), 10)
+		rsaId := generateValueId()
 
 		By("generating the key", func() {
 			session := runCommand("generate", "-n", rsaId, "-t", "rsa")
@@ -322,6 +314,10 @@ func runCommand(args ...string) *Session {
 
 type Config struct {
 	ApiUrl string `json:"api_url"`
+}
+
+func generateValueId() string {
+	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
 func loadConfig() (Config, error) {
