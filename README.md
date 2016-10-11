@@ -1,20 +1,18 @@
 
-
 Acceptance test for Credential Manager
 
 ### Run Tests locally
 
-Create `config.json` file in the project directory with desired target API URL like so:
+Target your local API by running:
+
 ```sh
-cat > config.json <<EOF
-{
-  "api_url": "https://TARGET_API_IP:TARGET_API_PORT"
-}
-EOF
+./target_local.sh
 ```
+
+If you want to target a different API you can edit the generated `config.json` file.
 
 Runs local CredHub testing via:
 
 ```sh
-ginkgo -r integration/
+./run_tests.sh
 ```
