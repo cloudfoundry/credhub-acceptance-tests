@@ -43,10 +43,10 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should set, get, and delete a new value secret", func() {
-		valueId := generateValueId()
+		credentialName := generateUniqueCredentialName()
 
 		By("trying to access a secret that doesn't exist", func() {
-			session := runCommand("get", "-n", valueId)
+			session := runCommand("get", "-n", credentialName)
 			stdErr := string(session.Err.Contents())
 
 			Expect(stdErr).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
@@ -54,7 +54,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("setting a new value secret", func() {
-			session := runCommand("set", "-n", valueId, "-t", "value", "-v", "bar")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "bar")
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
@@ -63,7 +63,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the new value secret", func() {
-			session := runCommand("get", "-n", valueId)
+			session := runCommand("get", "-n", credentialName)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -73,13 +73,13 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("deleting the secret", func() {
-			session := runCommand("delete", "-n", valueId)
+			session := runCommand("delete", "-n", credentialName)
 			Eventually(session).Should(Exit(0))
 		})
 	})
 
 	It("should generate a password", func() {
-		session := runCommand("generate", "-n", generateValueId(), "-t", "password")
+		session := runCommand("generate", "-n", generateUniqueCredentialName(), "-t", "password")
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -90,10 +90,10 @@ var _ = Describe("Integration test", func() {
 		var original_timestamp []byte
 		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
 
-		secretId := generateValueId()
+		credentialName := generateUniqueCredentialName()
 
 		By("getting the original timestamp", func() {
-			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "bar")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "bar")
 			original_timestamp_array := r.FindSubmatch(session.Out.Contents())
 
 			Expect(original_timestamp_array).To(HaveLen(2))
@@ -104,7 +104,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the timestamp after a no-overwrite set", func() {
-			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "newvalue", "--no-overwrite")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "newvalue", "--no-overwrite")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -119,7 +119,7 @@ var _ = Describe("Integration test", func() {
 			// since it is truncated to the second.
 			time.Sleep(time.Duration(1) * time.Second)
 
-			session := runCommand("set", "-n", secretId, "-t", "value", "-v", "newvalue")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "newvalue")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -130,7 +130,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the value", func() {
-			session := runCommand("get", "-n", secretId)
+			session := runCommand("get", "-n", credentialName)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -142,7 +142,7 @@ var _ = Describe("Integration test", func() {
 
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
-			session := runCommand("set", "-n", generateValueId(), "-t", "certificate", "--certificate-string", "iamacertificate")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "certificate", "--certificate-string", "iamacertificate")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -152,7 +152,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		It("should require a certificate type", func() {
-			session := runCommand("set", "-n", generateValueId(), "-t", "certificate", "--no-overwrite")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "certificate", "--no-overwrite")
 			Eventually(session).Should(Exit(1))
 			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
 		})
@@ -160,7 +160,7 @@ var _ = Describe("Integration test", func() {
 
 	Describe("setting an SSH key", func() {
 		It("should be able to set an ssh key", func() {
-			session := runCommand("set", "-n", generateValueId(), "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -173,7 +173,7 @@ var _ = Describe("Integration test", func() {
 
 	Describe("setting an RSA key", func() {
 		It("should be able to set an rsa key", func() {
-			session := runCommand("set", "-n", generateValueId(), "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -185,7 +185,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate a CA and certificate", func() {
-		certificateAuthorityId := generateValueId()
+		certificateAuthorityId := generateUniqueCredentialName()
 		certificateId := certificateAuthorityId + "1"
 
 		By("retrieving a CA that doesn't exist yet", func() {
@@ -228,10 +228,10 @@ var _ = Describe("Integration test", func() {
 	})
 
 	It("should generate an SSH key", func() {
-		sshId := generateValueId()
+		sshSecretName := generateUniqueCredentialName()
 
 		By("generating the key", func() {
-			session := runCommand("generate", "-n", sshId, "-t", "ssh")
+			session := runCommand("generate", "-n", sshSecretName, "-t", "ssh")
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
@@ -242,16 +242,16 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the key", func() {
-			session := runCommand("get", "-n", sshId)
+			session := runCommand("get", "-n", sshSecretName)
 			Eventually(session).Should(Exit(0))
 		})
 	})
 
 	It("should generate an RSA key", func() {
-		rsaId := generateValueId()
+		rsaSecretName := generateUniqueCredentialName()
 
 		By("generating the key", func() {
-			session := runCommand("generate", "-n", rsaId, "-t", "rsa")
+			session := runCommand("generate", "-n", rsaSecretName, "-t", "rsa")
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
@@ -262,7 +262,7 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the key", func() {
-			session := runCommand("get", "-n", rsaId)
+			session := runCommand("get", "-n", rsaSecretName)
 			Eventually(session).Should(Exit(0))
 		})
 	})
@@ -316,8 +316,9 @@ type Config struct {
 	ApiUrl string `json:"api_url"`
 }
 
-func generateValueId() string {
-	return strconv.FormatInt(time.Now().UnixNano(), 10)
+func generateUniqueCredentialName() string {
+	// We use this prefix to scan for credentials leaking into log messages in the verify-logging CI task
+	return "TEST-CREDENTIALS-" + strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
 func loadConfig() (Config, error) {
