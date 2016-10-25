@@ -27,6 +27,9 @@ var (
 	err         error
 )
 
+const credentialValue = "FAKE-CREDENTIAL-VALUE"
+const newCredentialValue = "FAKE-CREDENTIAL-VALUE1"
+
 var _ = Describe("Integration test", func() {
 	BeforeEach(func() {
 		cfg, err = loadConfig()
@@ -54,12 +57,12 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("setting a new value secret", func() {
-			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "bar")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+			Expect(stdOut).To(MatchRegexp("Value:\\s+" + credentialValue))
 		})
 
 		By("getting the new value secret", func() {
@@ -69,7 +72,7 @@ var _ = Describe("Integration test", func() {
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+			Expect(stdOut).To(MatchRegexp("Value:\\s+" + credentialValue))
 		})
 
 		By("deleting the secret", func() {
@@ -93,7 +96,7 @@ var _ = Describe("Integration test", func() {
 		credentialName := generateUniqueCredentialName()
 
 		By("getting the original timestamp", func() {
-			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "bar")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
 			original_timestamp_array := r.FindSubmatch(session.Out.Contents())
 
 			Expect(original_timestamp_array).To(HaveLen(2))
@@ -104,13 +107,13 @@ var _ = Describe("Integration test", func() {
 		})
 
 		By("getting the timestamp after a no-overwrite set", func() {
-			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "newvalue", "--no-overwrite")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue, "--no-overwrite")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-			Expect(stdOut).To(MatchRegexp(`Value:\s+bar`))
+			Expect(stdOut).To(MatchRegexp("Value:\\s+" + credentialValue))
 			Expect(stdOut).To(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
 		})
 
@@ -119,13 +122,13 @@ var _ = Describe("Integration test", func() {
 			// since it is truncated to the second.
 			time.Sleep(time.Duration(1) * time.Second)
 
-			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "newvalue")
+			session := runCommand("set", "-n", credentialName, "-t", "value", "-v", newCredentialValue)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-			Expect(stdOut).To(MatchRegexp(`Value:\s+newvalue`))
+			Expect(stdOut).To(MatchRegexp("Value:\\s+" + newCredentialValue))
 			Expect(stdOut).NotTo(MatchRegexp(fmt.Sprintf(`Updated:\s+%s`, original_timestamp)))
 		})
 
@@ -136,7 +139,7 @@ var _ = Describe("Integration test", func() {
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-			Expect(stdOut).To(MatchRegexp(`Value:\s+newvalue`))
+			Expect(stdOut).To(MatchRegexp("Value:\\s+" + newCredentialValue))
 		})
 	})
 
