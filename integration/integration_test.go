@@ -27,6 +27,7 @@ var (
 	err         error
 )
 
+// We look for these values in the verify-logging CI task to ensure that credentials don't leak
 const credentialValue = "FAKE-CREDENTIAL-VALUE"
 const newCredentialValue = "FAKE-CREDENTIAL-VALUE1"
 
@@ -163,27 +164,27 @@ var _ = Describe("Integration test", func() {
 
 	Describe("setting an SSH key", func() {
 		It("should be able to set an ssh key", func() {
-			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "ssh", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "ssh", "-U", "iamapublickey", "-P", credentialValue)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+ssh`))
 			Expect(stdOut).To(MatchRegexp(`Public Key:\s+iamapublickey`))
-			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamaprivatekey`))
+			Expect(stdOut).To(MatchRegexp("Private Key:\\s+" + credentialValue))
 		})
 	})
 
 	Describe("setting an RSA key", func() {
 		It("should be able to set an rsa key", func() {
-			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "rsa", "-U", "iamapublickey", "-P", "iamaprivatekey")
+			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "rsa", "-U", "iamapublickey", "-P", credentialValue)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+rsa`))
 			Expect(stdOut).To(MatchRegexp(`Public Key:\s+iamapublickey`))
-			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamaprivatekey`))
+			Expect(stdOut).To(MatchRegexp("Private Key:\\s+" + credentialValue))
 		})
 	})
 
@@ -320,8 +321,7 @@ type Config struct {
 }
 
 func generateUniqueCredentialName() string {
-	// We use this prefix to scan for credentials leaking into log messages in the verify-logging CI task
-	return "TEST-CREDENTIALS-" + strconv.FormatInt(time.Now().UnixNano(), 10)
+	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
 func loadConfig() (Config, error) {
