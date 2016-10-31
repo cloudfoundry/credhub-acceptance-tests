@@ -90,6 +90,27 @@ var _ = Describe("Integration test", func() {
 		Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
 	})
 
+	It("should regenerate passwords with similar rules", func() {
+		generatedPasswordId := generateUniqueCredentialName()
+
+		By("first generating a password with no numbers", func() {
+			session := runCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			Eventually(session).Should(Exit(0))
+
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+			Expect(stdOut).To(Not(MatchRegexp(`Value:\s.+\d`)))
+		})
+
+		By("then regenerating the password and observing it still has no numbers", func() {
+			session := runCommand("regenerate", "-n", generatedPasswordId)
+			Eventually(session).Should(Exit(0))
+
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(Not(MatchRegexp(`Value:\s.+\d`)))
+		})
+	})
+
 	It("should set a secret's timestamp correctly", func() {
 		var original_timestamp []byte
 		r, _ := regexp.Compile(`Updated:\s+(.*)[\s|$]`)
