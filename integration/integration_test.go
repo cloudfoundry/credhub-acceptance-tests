@@ -53,7 +53,7 @@ var _ = Describe("Integration test", func() {
 			session := runCommand("get", "-n", credentialName)
 			stdErr := string(session.Err.Contents())
 
-			Expect(stdErr).To(MatchRegexp(`Secret not found. Please validate your input and retry your request.`))
+			Expect(stdErr).To(MatchRegexp(`Credential not found. Please validate your input and retry your request.`))
 			Eventually(session).Should(Exit(1))
 		})
 
