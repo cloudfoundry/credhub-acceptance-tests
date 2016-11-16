@@ -82,6 +82,60 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
+	Describe("handling special characters", func() {
+		It("should get secrets whose names have lots of special characters", func() {
+			crazyCharsId := "dan:test/ing?danother[stuff]that@shouldn!tbe$in&the" + generateUniqueCredentialName()
+
+			By("setting a value with lots of special characters", func() {
+				session := runCommand("set", "-n", crazyCharsId, "-t", "password", "-v", "woof-woof")
+				Eventually(session).Should(Exit(0))
+			})
+
+			By("retrieving the value that was set", func() {
+				session := runCommand("get", "-n", crazyCharsId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+				Expect(stdOut).To(ContainSubstring(crazyCharsId))
+			})
+		})
+
+		It("should handle edge-casey character combinations", func() {
+			edgeCaseId := "&gunk=x/bar/cr@zytown108" + generateUniqueCredentialName()
+
+			By("setting a value with lots of special characters", func() {
+				session := runCommand("set", "-n", edgeCaseId, "-t", "password", "-v", "find-me")
+				Eventually(session).Should(Exit(0))
+			})
+
+			By("retrieving the value that was set", func() {
+				session := runCommand("get", "-n", edgeCaseId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+				Expect(stdOut).To(ContainSubstring(edgeCaseId))
+			})
+		})
+
+		It("should delete secrets with special characters", func() {
+			deleteId := "?testParam=foo&gunk=x/bar/piv0t@l" + generateUniqueCredentialName()
+
+			By("setting a value with lots of special characters", func() {
+				session := runCommand("set", "-n", deleteId, "-t", "password", "-v", "find-me")
+				Eventually(session).Should(Exit(0))
+			})
+
+			By("deleting the secret", func() {
+				session := runCommand("delete", "-n", deleteId)
+				Eventually(session).Should(Exit(0))
+			})
+		})
+	})
+
 	It("should generate a password", func() {
 		session := runCommand("generate", "-n", generateUniqueCredentialName(), "-t", "password")
 		Eventually(session).Should(Exit(0))
@@ -209,46 +263,62 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
-	It("should generate a CA and certificate", func() {
-		certificateAuthorityId := generateUniqueCredentialName()
-		certificateId := certificateAuthorityId + "1"
+	Describe("CAs", func() {
+		It("should generate a CA and certificate", func() {
+			certificateAuthorityId := generateUniqueCredentialName()
+			certificateId := certificateAuthorityId + "1"
 
-		By("retrieving a CA that doesn't exist yet", func() {
-			session := runCommand("ca-get", "-n", certificateAuthorityId)
-			stdErr := string(session.Err.Contents())
+			By("retrieving a CA that doesn't exist yet", func() {
+				session := runCommand("ca-get", "-n", certificateAuthorityId)
+				stdErr := string(session.Err.Contents())
 
-			Expect(stdErr).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
-			Eventually(session).Should(Exit(1))
+				Expect(stdErr).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
+				Eventually(session).Should(Exit(1))
+			})
+
+			By("generating the CA", func() {
+				session := runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+root`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+			})
+
+			By("getting the new CA", func() {
+				session := runCommand("ca-get", "-n", certificateAuthorityId)
+				Eventually(session).Should(Exit(0))
+			})
+
+			By("generating the certificate", func() {
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+			})
+
+			By("getting the certificate", func() {
+				session := runCommand("get", "-n", certificateId)
+				Eventually(session).Should(Exit(0))
+			})
 		})
 
-		By("generating the CA", func() {
-			session := runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
-			stdOut := string(session.Out.Contents())
+		It("should handle CAs whose names have lots of special characters", func() {
+			madDogCAId := "dan:test/ing?danothertbe$in&the[stuff]=that@shouldn!"
 
-			Eventually(session).Should(Exit(0))
+			By("setting a value with lots of special characters", func() {
+				session := runCommand("ca-generate", "-n", madDogCAId, "--common-name", generateUniqueCredentialName())
+				Eventually(session).Should(Exit(0))
+			})
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+root`))
-			Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-		})
-
-		By("getting the new CA", func() {
-			session := runCommand("ca-get", "-n", certificateAuthorityId)
-			Eventually(session).Should(Exit(0))
-		})
-
-		By("generating the certificate", func() {
-			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId)
-			stdOut := string(session.Out.Contents())
-
-			Eventually(session).Should(Exit(0))
-
-			Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-			Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-		})
-
-		By("getting the certificate", func() {
-			session := runCommand("get", "-n", certificateId)
-			Eventually(session).Should(Exit(0))
+			By("retrieving the value that was set", func() {
+				session := runCommand("ca-get", "-n", madDogCAId)
+				Eventually(session).Should(Exit(0))
+			})
 		})
 	})
 
