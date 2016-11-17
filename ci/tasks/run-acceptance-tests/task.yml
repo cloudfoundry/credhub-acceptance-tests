@@ -15,3 +15,5 @@ run:
 
 params:
   API_URL:
+  API_USERNAME:
+  API_PASSWORD:

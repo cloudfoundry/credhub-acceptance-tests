@@ -12,7 +12,9 @@ go get github.com/onsi/gomega
 
 cat > config.json <<EOF
 {
-  "api_url": "$API_URL"
+  "api_url": "$API_URL",
+  "api_username": "$API_USERNAME",
+  "api_password": "$API_PASSWORD"
 }
 EOF
 

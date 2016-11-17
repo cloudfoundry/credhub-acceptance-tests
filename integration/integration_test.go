@@ -13,11 +13,12 @@ import (
 	"encoding/json"
 	"path"
 
+	"fmt"
+	"regexp"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"regexp"
-	"fmt"
 )
 
 var (
@@ -42,7 +43,7 @@ var _ = Describe("Integration test", func() {
 		session := runCommand("api", cfg.ApiUrl)
 		Eventually(session).Should(Exit(0))
 
-		session = runCommand("login", "-u", "credhub_cli", "-p", "credhub_cli_password")
+		session = runCommand("login", "-u", cfg.ApiUsername, "-p", cfg.ApiPassword)
 		Eventually(session).Should(Exit(0))
 	})
 
@@ -408,7 +409,9 @@ func runCommand(args ...string) *Session {
 }
 
 type Config struct {
-	ApiUrl string `json:"api_url"`
+	ApiUrl      string `json:"api_url"`
+	ApiUsername string `json:"api_username"`
+	ApiPassword string `json:"api_password"`
 }
 
 func generateUniqueCredentialName() string {
