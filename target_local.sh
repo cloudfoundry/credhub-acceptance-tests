@@ -6,7 +6,9 @@ if [ -e config.json ]; then
 else
   cat <<EOF > config.json
 {
-  "api_url": "http://localhost:9000"
+  "api_url": "http://localhost:9000",
+  "api_username":"credhub_cli",
+  "api_password":"silent42opportunity"
 }
 EOF
   echo "config.json generated, pointing to localhost:9000"
