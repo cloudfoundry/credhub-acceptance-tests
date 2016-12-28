@@ -84,6 +84,37 @@ var _ = Describe("Integration test", func() {
 	})
 
 	Describe("handling special characters", func() {
+		It("should handle secrets who names begin with a leading slash", func() {
+			baseId := "ace/ventura" + generateUniqueCredentialName()
+			leadingSlashId := "/" + baseId
+			passwordValue := "finkel-is-einhorn"
+
+			By("setting a value whose name begins with a leading slash", func() {
+				session := runCommand("set", "-n", leadingSlashId, "-t", "password", "-v", passwordValue)
+				Eventually(session).Should(Exit(0))
+			})
+
+			By("retrieving the value that was set with a leading slash", func() {
+				session := runCommand("get", "-n", leadingSlashId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+				Expect(stdOut).To(ContainSubstring(passwordValue))
+			})
+
+			By("retrieving the value that was set without a leading slash", func() {
+				session := runCommand("get", "-n", baseId)
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+				Expect(stdOut).To(ContainSubstring(passwordValue))
+			})
+		})
+
 		It("should get secrets whose names have lots of special characters", func() {
 			crazyCharsId := "dan:test/ing?danother[stuff]that@shouldn!tbe$in&the" + generateUniqueCredentialName()
 
