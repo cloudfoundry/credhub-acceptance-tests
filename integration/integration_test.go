@@ -295,7 +295,7 @@ var _ = Describe("Integration test", func() {
 		})
 	})
 
-	Describe("CAs", func() {
+	Describe("CAs and Certificates", func() {
 		It("should generate a CA and certificate", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
@@ -324,7 +324,7 @@ var _ = Describe("Integration test", func() {
 			})
 
 			By("generating the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId)
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -337,6 +337,17 @@ var _ = Describe("Integration test", func() {
 				session := runCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 			})
+		})
+
+		It("should error gracefully when supplying an invalid extended key name", func() {
+			certificateAuthorityId := generateUniqueCredentialName()
+			certificateId := certificateAuthorityId + "1"
+			runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
+			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_sinning")
+			stdErr := string(session.Err.Contents())
+
+			Eventually(session).Should(Exit(1))
+			Expect(stdErr).To(MatchRegexp(`The provided extended key usage 'code_sinning' was not known. Please update this value and retry your request.`))
 		})
 
 		It("should handle CAs whose names have lots of special characters", func() {
