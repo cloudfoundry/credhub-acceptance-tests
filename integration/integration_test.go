@@ -331,11 +331,35 @@ var _ = Describe("Integration test", func() {
 
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
 			})
 
 			By("getting the certificate", func() {
 				session := runCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
+			})
+		})
+
+		It("should be able to generate a self-signed certificate", func() {
+			certificateId := generateUniqueCredentialName()
+			By("generating the certificate", func() {
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign")
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+			})
+
+			By("getting the certificate", func() {
+				session := runCommand("get", "-n", certificateId)
+				stdOut := string(session.Out.Contents())
+				Eventually(session).Should(Exit(0))
+				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 			})
 		})
 
