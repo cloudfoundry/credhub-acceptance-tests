@@ -340,11 +340,41 @@ var _ = Describe("Integration test", func() {
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
 				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
+				Expect(cert.IsCA).To(Equal(false))
 			})
 
 			By("getting the certificate", func() {
 				session := runCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
+			})
+		})
+
+		It("should generate a CA", func() {
+			certificateId := generateUniqueCredentialName()
+
+			By("generating the certificate", func() {
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--is-ca")
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.IsCA).To(Equal(true))
+			})
+
+			By("getting the certificate", func() {
+				session := runCommand("get", "-n", certificateId)
+				stdOut := string(session.Out.Contents())
+				Eventually(session).Should(Exit(0))
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.IsCA).To(Equal(true))
 			})
 		})
 
@@ -364,6 +394,7 @@ var _ = Describe("Integration test", func() {
 				cert := CertFromPem(stdOut)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.IsCA).To(Equal(false))
 			})
 
 			By("getting the certificate", func() {
