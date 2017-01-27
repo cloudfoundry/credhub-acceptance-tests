@@ -16,6 +16,9 @@ import (
 	"fmt"
 	"regexp"
 
+	"crypto/x509"
+	"encoding/pem"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -296,7 +299,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	Describe("CAs and Certificates", func() {
-		It("should generate a CA and certificate", func() {
+		It("should generate an old-style CA and certificate", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
 
@@ -332,6 +335,11 @@ var _ = Describe("Integration test", func() {
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
 			})
 
 			By("getting the certificate", func() {
@@ -352,6 +360,10 @@ var _ = Describe("Integration test", func() {
 				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
 			})
 
 			By("getting the certificate", func() {
@@ -509,4 +521,21 @@ func loadConfig() (Config, error) {
 	}
 
 	return c, nil
+}
+
+// https://golang.org/pkg/crypto/x509/#Certificate
+func CertFromPem(input string) *x509.Certificate {
+	r, _ := regexp.Compile(`(?s)-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----`)
+	pemByteArrays := r.FindAll([]byte(input), 5)
+	lastPem := pemByteArrays[len(pemByteArrays) - 1]
+
+	block, _ := pem.Decode(lastPem)
+	if block == nil {
+		panic("failed to parse certificate PEM")
+	}
+	cert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		panic("failed to parse certificate: " + err.Error())
+	}
+	return cert
 }
