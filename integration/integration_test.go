@@ -299,7 +299,7 @@ var _ = Describe("Integration test", func() {
 	})
 
 	Describe("CAs and Certificates", func() {
-		It("should generate an old-style CA and certificate", func() {
+		It("it should generate CA and certificate when using the 'ca-' commands, ", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
 
@@ -326,7 +326,7 @@ var _ = Describe("Integration test", func() {
 				Eventually(session).Should(Exit(0))
 			})
 
-			By("generating the certificate", func() {
+			By("generating and signing the certificate", func() {
 				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature")
 				stdOut := string(session.Out.Contents())
 
@@ -349,11 +349,37 @@ var _ = Describe("Integration test", func() {
 			})
 		})
 
-		It("should generate a CA", func() {
+		It("should generate a ca when using the --is-ca flag", func() {
 			certificateId := generateUniqueCredentialName()
+			certificateAuthorityId := generateUniqueCredentialName()
 
-			By("generating the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--is-ca")
+			By("generating the CA", func() {
+				session := runCommand("generate", "-n", certificateAuthorityId, "-t", "certificate", "--common-name", certificateAuthorityId, "--is-ca")
+				stdOut := string(session.Out.Contents())
+
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
+				Expect(cert.IsCA).To(Equal(true))
+			})
+
+			By("getting the CA", func() {
+				session := runCommand("get", "-n", certificateAuthorityId)
+				stdOut := string(session.Out.Contents())
+				Eventually(session).Should(Exit(0))
+				cert := CertFromPem(stdOut)
+				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
+				Expect(cert.IsCA).To(Equal(true))
+			})
+
+			By("generating and signing the certificate", func() {
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -363,18 +389,15 @@ var _ = Describe("Integration test", func() {
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
 				cert := CertFromPem(stdOut)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
-				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
-				Expect(cert.IsCA).To(Equal(true))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
+				Expect(cert.IsCA).To(Equal(false))
 			})
 
 			By("getting the certificate", func() {
 				session := runCommand("get", "-n", certificateId)
-				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				cert := CertFromPem(stdOut)
-				Expect(cert.Subject.CommonName).To(Equal(certificateId))
-				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
-				Expect(cert.IsCA).To(Equal(true))
 			})
 		})
 
@@ -558,7 +581,7 @@ func loadConfig() (Config, error) {
 func CertFromPem(input string) *x509.Certificate {
 	r, _ := regexp.Compile(`(?s)-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----`)
 	pemByteArrays := r.FindAll([]byte(input), 5)
-	lastPem := pemByteArrays[len(pemByteArrays) - 1]
+	lastPem := pemByteArrays[len(pemByteArrays)-1]
 
 	block, _ := pem.Decode(lastPem)
 	if block == nil {
