@@ -307,7 +307,7 @@ var _ = Describe("Integration test", func() {
 				session := runCommand("ca-get", "-n", certificateAuthorityId)
 				stdErr := string(session.Err.Contents())
 
-				Expect(stdErr).To(MatchRegexp(`CA not found. Please validate your input and retry your request.`))
+				Expect(stdErr).To(MatchRegexp(`The request could not be completed because the CA has not been defined. Please set the CA and retry your request.`))
 				Eventually(session).Should(Exit(1))
 			})
 
