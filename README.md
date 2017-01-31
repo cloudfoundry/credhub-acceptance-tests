@@ -1,5 +1,11 @@
+# Acceptance test for Credential Manager
 
-Acceptance test for Credential Manager
+### Build the CLI first:
+
+```
+cd ../credhub-cli
+make
+```
 
 ### Run Tests locally
 
