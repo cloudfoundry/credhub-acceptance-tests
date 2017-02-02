@@ -5,6 +5,8 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	"crypto/x509"
+	"encoding/pem"
+	"regexp"
 )
 
 var _ = Describe("Certificates Test", func() {
@@ -27,6 +29,32 @@ var _ = Describe("Certificates Test", func() {
 	})
 
 	Describe("CAs and Certificates", func() {
+		Describe("certificate chains", func() {
+			It("should build the chain with an intermediate CA", func() {
+				rootCaName := generateUniqueCredentialName()
+				intermediateCaName := generateUniqueCredentialName()
+				leafCertificateName := generateUniqueCredentialName()
+
+				session := runCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
+				cert := CertFromPem(string(session.Out.Contents()))
+				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
+				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
+				Expect(cert.IsCA).To(Equal(true))
+
+				session = runCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
+				cert = CertFromPem(string(session.Out.Contents()))
+				Expect(cert.Subject.CommonName).To(Equal(intermediateCaName))
+				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
+				Expect(cert.IsCA).To(Equal(true))
+
+				session = runCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
+				cert = CertFromPem(string(session.Out.Contents()))
+				Expect(cert.Subject.CommonName).To(Equal(leafCertificateName))
+				Expect(cert.Issuer.CommonName).To(Equal(intermediateCaName))
+				Expect(cert.IsCA).To(Equal(false))
+			})
+		})
+
 		It("it should generate CA and certificate when using the 'ca-' commands, ", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
@@ -194,3 +222,21 @@ var _ = Describe("Certificates Test", func() {
 		})
 	})
 })
+
+
+// https://golang.org/pkg/crypto/x509/#Certificate
+func CertFromPem(input string) *x509.Certificate {
+	r, _ := regexp.Compile(`(?s)-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----`)
+	pemByteArrays := r.FindAll([]byte(input), 5)
+	lastPem := pemByteArrays[len(pemByteArrays)-1]
+
+	block, _ := pem.Decode(lastPem)
+	if block == nil {
+		panic("failed to parse certificate PEM")
+	}
+	cert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		panic("failed to parse certificate: " + err.Error())
+	}
+	return cert
+}

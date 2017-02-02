@@ -13,11 +13,6 @@ import (
 	"encoding/json"
 	"path"
 
-	"regexp"
-
-	"crypto/x509"
-	"encoding/pem"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -112,21 +107,4 @@ func loadConfig() (Config, error) {
 	}
 
 	return c, nil
-}
-
-// https://golang.org/pkg/crypto/x509/#Certificate
-func CertFromPem(input string) *x509.Certificate {
-	r, _ := regexp.Compile(`(?s)-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----`)
-	pemByteArrays := r.FindAll([]byte(input), 5)
-	lastPem := pemByteArrays[len(pemByteArrays)-1]
-
-	block, _ := pem.Decode(lastPem)
-	if block == nil {
-		panic("failed to parse certificate PEM")
-	}
-	cert, err := x509.ParseCertificate(block.Bytes)
-	if err != nil {
-		panic("failed to parse certificate: " + err.Error())
-	}
-	return cert
 }
