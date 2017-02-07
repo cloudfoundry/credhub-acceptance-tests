@@ -7,6 +7,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"regexp"
+	"crypto/rsa"
 )
 
 var _ = Describe("Certificates Test", func() {
@@ -36,19 +37,19 @@ var _ = Describe("Certificates Test", func() {
 				leafCertificateName := generateUniqueCredentialName()
 
 				session := runCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
-				cert := CertFromPem(string(session.Out.Contents()))
+				cert := CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
 				session = runCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
-				cert = CertFromPem(string(session.Out.Contents()))
+				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(intermediateCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
 				session = runCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
-				cert = CertFromPem(string(session.Out.Contents()))
+				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(leafCertificateName))
 				Expect(cert.Issuer.CommonName).To(Equal(intermediateCaName))
 				Expect(cert.IsCA).To(Equal(false))
@@ -91,7 +92,7 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut)
+				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
@@ -118,7 +119,7 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut)
+				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
 				Expect(cert.IsCA).To(Equal(true))
@@ -128,14 +129,14 @@ var _ = Describe("Certificates Test", func() {
 				session := runCommand("get", "-n", certificateAuthorityId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				cert := CertFromPem(stdOut)
+				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
 				Expect(cert.IsCA).To(Equal(true))
 			})
 
 			By("generating and signing the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature")
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -143,24 +144,46 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut)
+				cert := CertFromPem(stdOut, "Certificate")
+				ca := CertFromPem(stdOut, "Ca")
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
-				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(ca.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by ca
 				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
 				Expect(cert.IsCA).To(Equal(false))
+				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
+				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
+				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
 			})
 
 			By("getting the certificate", func() {
 				session := runCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
+			})
+
+			By("regenerating the certificate", func() {
+				session := runCommand("regenerate", "-n", certificateId)
+				Eventually(session).Should(Exit(0))
+				stdOut := string(session.Out.Contents())
+				cert := CertFromPem(stdOut, "Certificate")
+				ca := CertFromPem(stdOut, "Ca")
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
+				Expect(ca.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by ca
+				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(cert.IsCA).To(Equal(false))
+				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
+				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
+				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
 			})
 		})
 
 		It("should be able to generate a self-signed certificate", func() {
 			certificateId := generateUniqueCredentialName()
 			By("generating the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign")
+				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign", "-e", "email_protection", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -170,10 +193,16 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
 
-				cert := CertFromPem(stdOut)
+				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
 				Expect(cert.IsCA).To(Equal(false))
+				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageEmailProtection}))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
+				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
+				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
 			})
 
 			By("getting the certificate", func() {
@@ -182,6 +211,23 @@ var _ = Describe("Certificates Test", func() {
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
 				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+			})
+
+			By("regenerating the certificate", func() {
+				session := runCommand("regenerate", "-n", certificateId)
+				Eventually(session).Should(Exit(0))
+
+				stdOut := string(session.Out.Contents())
+				cert := CertFromPem(stdOut, "Certificate")
+				Expect(cert.Subject.CommonName).To(Equal(certificateId))
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
+				Expect(cert.IsCA).To(Equal(false))
+				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageEmailProtection}))
+				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
+				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
+				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
+				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
 			})
 		})
 
@@ -225,9 +271,12 @@ var _ = Describe("Certificates Test", func() {
 
 
 // https://golang.org/pkg/crypto/x509/#Certificate
-func CertFromPem(input string) *x509.Certificate {
-	r, _ := regexp.Compile(`(?s)-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----`)
-	pemByteArrays := r.FindAll([]byte(input), 5)
+// prefix should be "Certificate" or "Ca"
+func CertFromPem(input string, prefix string) *x509.Certificate {
+	r, _ := regexp.Compile(`(?s)` + prefix + `:\s+(-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----)`)
+
+	pemByteArrays := r.FindAllSubmatch([]byte(input), 5)[0]
+
 	lastPem := pemByteArrays[len(pemByteArrays)-1]
 
 	block, _ := pem.Decode(lastPem)
