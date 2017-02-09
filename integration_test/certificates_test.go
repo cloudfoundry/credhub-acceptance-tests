@@ -56,56 +56,6 @@ var _ = Describe("Certificates Test", func() {
 			})
 		})
 
-		It("it should generate CA and certificate when using the 'ca-' commands, ", func() {
-			certificateAuthorityId := generateUniqueCredentialName()
-			certificateId := certificateAuthorityId + "1"
-
-			By("retrieving a CA that doesn't exist yet", func() {
-				session := runCommand("ca-get", "-n", certificateAuthorityId)
-				stdErr := string(session.Err.Contents())
-
-				Expect(stdErr).To(MatchRegexp(`The request could not be completed because the CA has not been defined. Please set the CA and retry your request.`))
-				Eventually(session).Should(Exit(1))
-			})
-
-			By("generating the CA", func() {
-				session := runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
-				stdOut := string(session.Out.Contents())
-
-				Eventually(session).Should(Exit(0))
-
-				Expect(stdOut).To(MatchRegexp(`Type:\s+root`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-			})
-
-			By("getting the new CA", func() {
-				session := runCommand("ca-get", "-n", certificateAuthorityId)
-				Eventually(session).Should(Exit(0))
-			})
-
-			By("generating and signing the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature")
-				stdOut := string(session.Out.Contents())
-
-				Eventually(session).Should(Exit(0))
-
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut, "Certificate")
-				Expect(cert.Subject.CommonName).To(Equal(certificateId))
-				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
-				Expect(cert.KeyUsage).To(Equal(x509.KeyUsageDigitalSignature))
-				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}))
-				Expect(cert.IsCA).To(Equal(false))
-			})
-
-			By("getting the certificate", func() {
-				session := runCommand("get", "-n", certificateId)
-				Eventually(session).Should(Exit(0))
-			})
-		})
-
 		It("should generate a ca when using the --is-ca flag", func() {
 			certificateId := generateUniqueCredentialName()
 			certificateAuthorityId := generateUniqueCredentialName()
@@ -234,7 +184,7 @@ var _ = Describe("Certificates Test", func() {
 		It("should error gracefully when supplying an invalid extended key usage name", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
-			runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
+			runCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
 			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_sinning")
 			stdErr := string(session.Err.Contents())
 
@@ -245,7 +195,7 @@ var _ = Describe("Certificates Test", func() {
 		It("should error gracefully when supplying an invalid key usage name", func() {
 			certificateAuthorityId := generateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
-			runCommand("ca-generate", "-n", certificateAuthorityId, "--common-name", certificateAuthorityId)
+			runCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
 			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-g", "digital_sinnature")
 			stdErr := string(session.Err.Contents())
 
@@ -253,16 +203,16 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' was not known. Please update this value and retry your request.`))
 		})
 
-		It("should handle CAs whose names have lots of special characters", func() {
+		It("should handle secrets whose names have lots of special characters", func() {
 			madDogCAId := "dan:test/ing?danothertbe$in&the[stuff]=that@shouldn!"
 
 			By("setting a value with lots of special characters", func() {
-				session := runCommand("ca-generate", "-n", madDogCAId, "--common-name", generateUniqueCredentialName())
+				session := runCommand("generate", "-t", "certificate", "-n", madDogCAId, "--common-name", generateUniqueCredentialName(), "--is-ca")
 				Eventually(session).Should(Exit(0))
 			})
 
 			By("retrieving the value that was set", func() {
-				session := runCommand("ca-get", "-n", madDogCAId)
+				session := runCommand("get", "-n", madDogCAId)
 				Eventually(session).Should(Exit(0))
 			})
 		})
