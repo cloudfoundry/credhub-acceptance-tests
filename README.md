@@ -1,4 +1,4 @@
-# Acceptance test for Credential Manager
+# Acceptance tests for CredHub
 
 ### Build the CLI first:
 
