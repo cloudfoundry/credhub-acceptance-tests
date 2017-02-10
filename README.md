@@ -1,10 +1,11 @@
-# Acceptance tests for CredHub
+# Acceptance test for CredHub
 
-### Build the CLI first:
+# Get prerequisites
 
-```
-cd ../credhub-cli
-make
+Ensure that you have a local version of the CredHub CLI checked out in your $GOPATH
+
+```sh
+go get github.com/pivotal-cf/credhub-cli
 ```
 
 ### Run Tests locally
@@ -12,10 +13,14 @@ make
 Target your local API by running:
 
 ```sh
-./target_local.sh
+cat <<EOF > config.json
+{
+  "api_url": "https://${YOUR_IP_HERE}:8844",
+  "api_username":"${YOUR_USERNAME}",
+  "api_password":"${YOUR_PASSWORD}"
+}
+EOF
 ```
-
-If you want to target a different API you can edit the generated `config.json` file.
 
 Runs local CredHub testing via:
 
