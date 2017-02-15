@@ -2,12 +2,13 @@ package integration_test
 
 import (
 	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = FDescribe("Race condition tests", func() {
+var _ = Describe("Race condition tests", func() {
 	Describe("when creating a new secret in multiple threads with `--no-overwrite`", func() {
 		It("should return the same value for both given they are seperated by at least 150 milliseconds", func() {
 			rsaSecretName := generateUniqueCredentialName()
@@ -26,8 +27,8 @@ var _ = FDescribe("Race condition tests", func() {
 				waitForSession2 <- session
 			}()
 
-			session1 := <- waitForSession1
-			session2 := <- waitForSession2
+			session1 := <-waitForSession1
+			session2 := <-waitForSession2
 
 			Eventually(session1).Should(Exit(0))
 			Eventually(session2).Should(Exit(0))
@@ -41,4 +42,4 @@ var _ = FDescribe("Race condition tests", func() {
 			Expect(stdOut1).To(Equal(stdOut2))
 		})
 	})
-});
+})
