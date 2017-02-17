@@ -1,13 +1,14 @@
 package integration_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
+	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
 	"regexp"
-	"crypto/rsa"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Certificates Test", func() {
@@ -145,7 +146,7 @@ var _ = Describe("Certificates Test", func() {
 
 				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
-				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId))                                                  // self-signed
 				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
 				Expect(cert.IsCA).To(Equal(false))
 				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageEmailProtection}))
@@ -170,7 +171,7 @@ var _ = Describe("Certificates Test", func() {
 				stdOut := string(session.Out.Contents())
 				cert := CertFromPem(stdOut, "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
-				Expect(cert.Issuer.CommonName).To(Equal(certificateId)) // self-signed
+				Expect(cert.Issuer.CommonName).To(Equal(certificateId))                                                  // self-signed
 				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
 				Expect(cert.IsCA).To(Equal(false))
 				Expect(cert.ExtKeyUsage).To(Equal([]x509.ExtKeyUsage{x509.ExtKeyUsageEmailProtection}))
@@ -189,7 +190,7 @@ var _ = Describe("Certificates Test", func() {
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
-			Expect(stdErr).To(MatchRegexp(`The provided extended key usage 'code_sinning' was not known. Please update this value and retry your request.`))
+			Expect(stdErr).To(MatchRegexp(`The provided extended key usage 'code_sinning' is not supported. Valid values include client_auth, server_auth, code_signing, email_protection and timestamping.`))
 		})
 
 		It("should error gracefully when supplying an invalid key usage name", func() {
@@ -200,7 +201,7 @@ var _ = Describe("Certificates Test", func() {
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
-			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' was not known. Please update this value and retry your request.`))
+			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' is not supported. Valid values include digital_signature, non_repudiation, key_encipherment, data_encipherment, key_agreement, key_cert_sign, crl_sign, encipher_only and decipher_only.`))
 		})
 
 		It("should handle secrets whose names have lots of special characters", func() {
@@ -218,7 +219,6 @@ var _ = Describe("Certificates Test", func() {
 		})
 	})
 })
-
 
 // https://golang.org/pkg/crypto/x509/#Certificate
 // prefix should be "Certificate" or "Ca"
