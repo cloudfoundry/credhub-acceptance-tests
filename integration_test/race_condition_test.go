@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"time"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -69,6 +70,37 @@ var _ = Describe("Race condition tests", func() {
 			stdOut2 := string(session2.Out.Contents())
 
 			Expect(stdOut1).To(Equal(stdOut2))
+		})
+	})
+
+	Describe("when setting one secret name for two types", func() {
+		It("should return a type mismatch error", func() {
+			rsaSecretName := generateUniqueCredentialName()
+			type_error := "The credential type cannot be modified. Please delete the credential if you wish to create it with a different type."
+
+			waitForSession1 := make(chan *Session)
+			waitForSession2 := make(chan *Session)
+
+			go func() {
+				session := runCommand("set", "-n", rsaSecretName, "-t", "ssh", "-P", "something")
+				waitForSession1 <- session
+			}()
+
+			go func() {
+				session := runCommand("set", "-n", rsaSecretName, "-t", "rsa", "-P", "something")
+				waitForSession2 <- session
+			}()
+
+			session1 := <-waitForSession1
+			session2 := <-waitForSession2
+
+			Eventually(session1).Should(Exit())
+			Eventually(session2).Should(Exit())
+			out1 := string(session1.Out.Contents()) + string(session1.Err.Contents())
+			out2 := string(session2.Out.Contents()) + string(session2.Err.Contents())
+			
+			errors_out := strings.Contains(out1, type_error) || strings.Contains(out2, type_error)
+			Expect(errors_out).To(BeTrue())
 		})
 	})
 })
