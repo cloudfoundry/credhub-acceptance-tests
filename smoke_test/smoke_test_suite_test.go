@@ -1,29 +1,21 @@
-package integration_test
+package smoke_test
 
 import (
-	"io/ioutil"
-	"os"
-	"runtime"
 	"testing"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
+	"io/ioutil"
+	"runtime"
+	"os"
 )
 
 var (
 	homeDir     string
 	cfg         Config
 )
-
-// We look for these values in the verify-logging CI task to ensure that credentials don't leak
-const credentialValue = "FAKE-CREDENTIAL-VALUE"
-
-func TestCommands(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Commands Suite")
-}
 
 var _ = BeforeEach(func() {
 	var err error
@@ -49,9 +41,11 @@ var _ = BeforeEach(func() {
 	Eventually(session).Should(Exit(0))
 })
 
-var _ = AfterEach(func() {
-	os.RemoveAll(homeDir)
-})
+func TestSmokeTest(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "SmokeTest Suite")
+}
+
 
 var _ = SynchronizedBeforeSuite(func() []byte {
 	path, err := Build("github.com/pivotal-cf/credhub-cli")

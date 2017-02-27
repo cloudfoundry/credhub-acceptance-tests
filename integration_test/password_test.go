@@ -4,11 +4,12 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Password test", func() {
 	It("should generate a password", func() {
-		session := runCommand("generate", "-n", generateUniqueCredentialName(), "-t", "password")
+		session := RunCommand("generate", "-n", GenerateUniqueCredentialName(), "-t", "password")
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -16,10 +17,10 @@ var _ = Describe("Password test", func() {
 	})
 
 	It("should regenerate passwords with similar rules", func() {
-		generatedPasswordId := generateUniqueCredentialName()
+		generatedPasswordId := GenerateUniqueCredentialName()
 
 		By("first generating a password with no numbers", func() {
-			session := runCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			session := RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
@@ -28,7 +29,7 @@ var _ = Describe("Password test", func() {
 		})
 
 		By("then regenerating the password and observing it still has no numbers", func() {
-			session := runCommand("regenerate", "-n", generatedPasswordId)
+			session := RunCommand("regenerate", "-n", generatedPasswordId)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())

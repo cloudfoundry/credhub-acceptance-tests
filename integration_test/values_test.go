@@ -4,13 +4,14 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
 )
 
 var _ =	It("should set, get, and delete a new value secret", func() {
-	credentialName := generateUniqueCredentialName()
+	credentialName := GenerateUniqueCredentialName()
 
 	By("trying to access a secret that doesn't exist", func() {
-		session := runCommand("get", "-n", credentialName)
+		session := RunCommand("get", "-n", credentialName)
 		stdErr := string(session.Err.Contents())
 
 		Expect(stdErr).To(MatchRegexp(`Credential not found. Please validate your input and retry your request.`))
@@ -18,7 +19,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 	})
 
 	By("setting a new value secret", func() {
-		session := runCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
+		session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -27,7 +28,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 	})
 
 	By("getting the new value secret", func() {
-		session := runCommand("get", "-n", credentialName)
+		session := RunCommand("get", "-n", credentialName)
 		stdOut := string(session.Out.Contents())
 
 		Eventually(session).Should(Exit(0))
@@ -37,7 +38,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 	})
 
 	By("deleting the secret", func() {
-		session := runCommand("delete", "-n", credentialName)
+		session := RunCommand("delete", "-n", credentialName)
 		Eventually(session).Should(Exit(0))
 	})
 })

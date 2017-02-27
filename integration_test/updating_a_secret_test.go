@@ -4,15 +4,16 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("updating a secret", func() {
 	Describe("updating with a set (PUT)", func() {
 		It("should be able to overwrite a secret", func() {
-			credentialName := generateUniqueCredentialName()
+			credentialName := GenerateUniqueCredentialName()
 
 			By("setting a new value secret", func() {
-				session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
+				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
@@ -21,7 +22,7 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("setting the value secret again", func() {
-				session := runCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
+				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
@@ -33,15 +34,15 @@ var _ = Describe("updating a secret", func() {
 
 	Describe("generating -> setting -> generating", func() {
 		It("does not bleed values from the generate", func() {
-			caName := generateUniqueCredentialName()
-			credentialname := generateUniqueCredentialName()
+			caName := GenerateUniqueCredentialName()
+			credentialname := GenerateUniqueCredentialName()
 
 			By("generating a new ca", func() {
-				runCommand("generate", "-n", caName, "-t", "certificate", "-c", "anything", "--is-ca", "--self-sign")
+				RunCommand("generate", "-n", caName, "-t", "certificate", "-c", "anything", "--is-ca", "--self-sign")
 			})
 
 			By("generating a new certificate signed by the CA", func() {
-				session := runCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
+				session := RunCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
@@ -51,7 +52,7 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("overwriting the certificate with `set`", func() {
-				session := runCommand("set", "-n", credentialname, "-t", "certificate", "--certificate-string", "fake-certificate")
+				session := RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate-string", "fake-certificate")
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))

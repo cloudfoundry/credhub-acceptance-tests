@@ -9,12 +9,13 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
-			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "certificate", "--certificate-string", "iamacertificate")
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--certificate-string", "iamacertificate")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -24,7 +25,7 @@ var _ = Describe("Certificates Test", func() {
 		})
 
 		It("should require a certificate type", func() {
-			session := runCommand("set", "-n", generateUniqueCredentialName(), "-t", "certificate", "--no-overwrite")
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--no-overwrite")
 			Eventually(session).Should(Exit(1))
 			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
 		})
@@ -33,23 +34,23 @@ var _ = Describe("Certificates Test", func() {
 	Describe("CAs and Certificates", func() {
 		Describe("certificate chains", func() {
 			It("should build the chain with an intermediate CA", func() {
-				rootCaName := generateUniqueCredentialName()
-				intermediateCaName := generateUniqueCredentialName()
-				leafCertificateName := generateUniqueCredentialName()
+				rootCaName := GenerateUniqueCredentialName()
+				intermediateCaName := GenerateUniqueCredentialName()
+				leafCertificateName := GenerateUniqueCredentialName()
 
-				session := runCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
+				session := RunCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
 				cert := CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
-				session = runCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
+				session = RunCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
 				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(intermediateCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
-				session = runCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
+				session = RunCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
 				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
 				Expect(cert.Subject.CommonName).To(Equal(leafCertificateName))
 				Expect(cert.Issuer.CommonName).To(Equal(intermediateCaName))
@@ -58,11 +59,11 @@ var _ = Describe("Certificates Test", func() {
 		})
 
 		It("should generate a ca when using the --is-ca flag", func() {
-			certificateId := generateUniqueCredentialName()
-			certificateAuthorityId := generateUniqueCredentialName()
+			certificateId := GenerateUniqueCredentialName()
+			certificateAuthorityId := GenerateUniqueCredentialName()
 
 			By("generating the CA", func() {
-				session := runCommand("generate", "-n", certificateAuthorityId, "-t", "certificate", "--common-name", certificateAuthorityId, "--is-ca")
+				session := RunCommand("generate", "-n", certificateAuthorityId, "-t", "certificate", "--common-name", certificateAuthorityId, "--is-ca")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -77,7 +78,7 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("getting the CA", func() {
-				session := runCommand("get", "-n", certificateAuthorityId)
+				session := RunCommand("get", "-n", certificateAuthorityId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				cert := CertFromPem(stdOut, "Certificate")
@@ -87,7 +88,7 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("generating and signing the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
+				session := RunCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_signing", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -109,12 +110,12 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("getting the certificate", func() {
-				session := runCommand("get", "-n", certificateId)
+				session := RunCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 			})
 
 			By("regenerating the certificate", func() {
-				session := runCommand("regenerate", "-n", certificateId)
+				session := RunCommand("regenerate", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 				stdOut := string(session.Out.Contents())
 				cert := CertFromPem(stdOut, "Certificate")
@@ -132,9 +133,9 @@ var _ = Describe("Certificates Test", func() {
 		})
 
 		It("should be able to generate a self-signed certificate", func() {
-			certificateId := generateUniqueCredentialName()
+			certificateId := GenerateUniqueCredentialName()
 			By("generating the certificate", func() {
-				session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign", "-e", "email_protection", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
+				session := RunCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign", "-e", "email_protection", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -157,7 +158,7 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("getting the certificate", func() {
-				session := runCommand("get", "-n", certificateId)
+				session := RunCommand("get", "-n", certificateId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
@@ -165,7 +166,7 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("regenerating the certificate", func() {
-				session := runCommand("regenerate", "-n", certificateId)
+				session := RunCommand("regenerate", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
@@ -183,10 +184,10 @@ var _ = Describe("Certificates Test", func() {
 		})
 
 		It("should error gracefully when supplying an invalid extended key usage name", func() {
-			certificateAuthorityId := generateUniqueCredentialName()
+			certificateAuthorityId := GenerateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
-			runCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
-			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_sinning")
+			RunCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
+			session := RunCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-e", "code_sinning")
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
@@ -194,10 +195,10 @@ var _ = Describe("Certificates Test", func() {
 		})
 
 		It("should error gracefully when supplying an invalid key usage name", func() {
-			certificateAuthorityId := generateUniqueCredentialName()
+			certificateAuthorityId := GenerateUniqueCredentialName()
 			certificateId := certificateAuthorityId + "1"
-			runCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
-			session := runCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-g", "digital_sinnature")
+			RunCommand("generate", "-n", certificateAuthorityId, "-t certificate", "--common-name", certificateAuthorityId, "--is-ca")
+			session := RunCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--ca", certificateAuthorityId, "-g", "digital_sinnature")
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
@@ -208,12 +209,12 @@ var _ = Describe("Certificates Test", func() {
 			madDogCAId := "dan:test/ing?danothertbe$in&the[stuff]=that@shouldn!"
 
 			By("setting a value with lots of special characters", func() {
-				session := runCommand("generate", "-t", "certificate", "-n", madDogCAId, "--common-name", generateUniqueCredentialName(), "--is-ca")
+				session := RunCommand("generate", "-t", "certificate", "-n", madDogCAId, "--common-name", GenerateUniqueCredentialName(), "--is-ca")
 				Eventually(session).Should(Exit(0))
 			})
 
 			By("retrieving the value that was set", func() {
-				session := runCommand("get", "-n", madDogCAId)
+				session := RunCommand("get", "-n", madDogCAId)
 				Eventually(session).Should(Exit(0))
 			})
 		})
