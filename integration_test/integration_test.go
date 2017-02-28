@@ -42,11 +42,7 @@ var _ = BeforeEach(func() {
 	// These happen before each test due to the lack of a BeforeAll
 	// (https://github.com/onsi/ginkgo/issues/70) :(
 	// If the tests are slow, they should be runnable in parallel with the -p option.
-	session := RunCommand("api", cfg.ApiUrl)
-	Eventually(session).Should(Exit(0))
-
-	session = RunCommand("login", "-u", cfg.ApiUsername, "-p", cfg.ApiPassword)
-	Eventually(session).Should(Exit(0))
+	TargetAndLogin(cfg)
 })
 
 var _ = AfterEach(func() {

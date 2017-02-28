@@ -57,3 +57,8 @@ func LoadConfig() (Config, error) {
 
 	return c, nil
 }
+
+func TargetAndLogin(cfg Config) {
+	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword)
+	Eventually(session).Should(Exit(0))
+}
