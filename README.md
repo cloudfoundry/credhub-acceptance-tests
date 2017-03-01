@@ -5,7 +5,7 @@
 Ensure that you have a local version of the CredHub CLI checked out in your $GOPATH
 
 ```sh
-go get github.com/pivotal-cf/credhub-cli
+go get github.com/cloudfoundry-incubator/credhub-cli
 ```
 
 ### Run Tests locally
