@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ =	It("should set, get, and delete a new value secret", func() {

@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/pivotal-cf/credhub-acceptance-tests/test_helpers"
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"io/ioutil"
 	"runtime"
 	"os"
@@ -40,7 +40,7 @@ func TestSmokeTest(t *testing.T) {
 }
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("github.com/pivotal-cf/credhub-cli")
+	path, err := Build("github.com/cloudfoundry-incubator/credhub-cli")
 	Expect(err).NotTo(HaveOccurred())
 
 	return []byte(path)
