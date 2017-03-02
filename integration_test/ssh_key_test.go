@@ -26,7 +26,7 @@ var _ = Describe("SSH key test", func() {
 		sshSecretName := GenerateUniqueCredentialName()
 
 		By("generating the key", func() {
-			session := RunCommand("generate", "-n", sshSecretName, "-t", "ssh")
+			session := RunCommand("generate", "-n", sshSecretName, "-t", "ssh", "-m", "some comment")
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
