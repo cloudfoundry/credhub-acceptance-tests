@@ -20,7 +20,6 @@ var (
 	CommandPath string
 )
 
-
 func GenerateUniqueCredentialName() string {
 	return strconv.FormatInt(time.Now().UnixNano(), 10)
 }
@@ -59,6 +58,6 @@ func LoadConfig() (Config, error) {
 }
 
 func TargetAndLogin(cfg Config) {
-	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword)
+	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
 	Eventually(session).Should(Exit(0))
 }
