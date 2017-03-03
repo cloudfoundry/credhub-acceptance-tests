@@ -8,7 +8,7 @@ See additional repos for more info:
 
 * [credhub](https://github.com/cloudfoundry-incubator/credhub) :     CredHub server code 
 * [credhub-cli](https://github.com/cloudfoundry-incubator/credhub-cli) :     command line interface for credhub
-* [credhub-release](https://github.com/pivotal-cf/credhub-release) : BOSH release of CredHub server **[Currently private - Coming Soon]**
+* [credhub-release](https://github.com/pivotal-cf/credhub-release) : BOSH release of CredHub server
 
 ### Get prerequisites
 
