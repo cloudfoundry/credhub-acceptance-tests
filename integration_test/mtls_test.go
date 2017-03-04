@@ -38,7 +38,7 @@ func runCommandWithMTLS(config Config, pkcs12Path string) *Session {
 	payload := `{"name":"mtlstest","type":"password"}`
 	println("pkcs12Path", pkcs12Path)
 	content_type := "Content-Type: application/json"
-	cmd := exec.Command("/usr/local/opt/curl/bin/curl",  "-k", url, "-H", content_type, "-X", "POST", "-d", payload, "--cert", pkcs12Path)
+	cmd := exec.Command("curl",  "-k", url, "-H", content_type, "-X", "POST", "-d", payload, "--cert", pkcs12Path)
 	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 
 	Expect(err).NotTo(HaveOccurred())
