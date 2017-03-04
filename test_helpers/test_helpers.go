@@ -38,6 +38,7 @@ type Config struct {
 	ApiUrl      string `json:"api_url"`
 	ApiUsername string `json:"api_username"`
 	ApiPassword string `json:"api_password"`
+	ValidPKCS12Path string `json:"valid_pkcs12_path"`
 }
 
 func LoadConfig() (Config, error) {
