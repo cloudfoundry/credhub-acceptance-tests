@@ -35,11 +35,11 @@ func RunCommand(args ...string) *Session {
 }
 
 type Config struct {
-	ApiUrl       string `json:"api_url"`
-	ApiUsername  string `json:"api_username"`
-	ApiPassword  string `json:"api_password"`
-	MTLSPassword string `json:"mtls_password"`
-	ValidPEMPath string `json:"valid_pem_path"`
+	ApiUrl              string `json:"api_url"`
+	ApiUsername         string `json:"api_username"`
+	ApiPassword         string `json:"api_password"`
+	ValidCertPath       string `json:"valid_cert_path"`
+	ValidPrivateKeyPath string `json:"valid_private_key_path"`
 }
 
 func LoadConfig() (Config, error) {

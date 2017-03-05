@@ -34,11 +34,15 @@ var _ = Describe("mutual TLS authentication", func() {
 
 func runCommandWithMTLS(config Config) *Session {
 	url := config.ApiUrl + "/api/v1/data"
-	pemPathWithPassword := config.ValidPEMPath + ":" + config.MTLSPassword
 	payload := `{"name":"mtlstest","type":"password"}`
-	println("pem certificate path", pemPathWithPassword)
 	content_type := "Content-Type: application/json"
-	cmd := exec.Command("curl",  "-k", url, "-H", content_type, "-X", "POST", "-d", payload, "--cert", pemPathWithPassword)
+	cmd := exec.Command("curl",
+		"-k", url,
+		"-H", content_type,
+		"-XPOST",
+		"-d", payload,
+		"--cert", config.ValidCertPath,
+		"--key", config.ValidPrivateKeyPath)
 	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 
 	Expect(err).NotTo(HaveOccurred())
