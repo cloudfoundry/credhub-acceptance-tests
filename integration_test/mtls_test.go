@@ -34,18 +34,6 @@ var _ = Describe("mutual TLS authentication", func() {
 			})
 		})
 	})
-
-	Describe("with a certificate not signed by a trusted CA", func() {
-		It("denies access to the api", func() {
-			session := runCommandWithMTLS(
-				config.ApiUrl + "/api/v1/data",
-				config.InvalidCertPath,
-				config.InvalidPrivateKeyPath)
-
-			Eventually(session).Should(Exit(35))
-
-		})
-	})
 })
 
 func runCommandWithMTLS(url, certPath, keyPath string) *Session{
