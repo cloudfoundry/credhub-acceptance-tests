@@ -2,6 +2,8 @@
 
 set -eu
 
+USERNAME=${USERNAME:-credhub}
+PASSWORD=${PASSWORD:-password}
 CREDHUB_SRC=${CREDHUB_SRC:-~/workspace/credhub-release/src/credhub}
 CERTS_PATH=${CREDHUB_SRC}/src/test/resources
 
