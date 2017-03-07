@@ -40,6 +40,8 @@ type Config struct {
 	ApiPassword         string `json:"api_password"`
 	ValidCertPath       string `json:"valid_cert_path"`
 	ValidPrivateKeyPath string `json:"valid_private_key_path"`
+	InvalidCertPath       string `json:"invalid_cert_path"`
+	InvalidPrivateKeyPath string `json:"invalid_private_key_path"`
 }
 
 func LoadConfig() (Config, error) {

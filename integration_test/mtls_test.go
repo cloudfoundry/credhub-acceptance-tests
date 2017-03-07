@@ -6,6 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"fmt"
 )
 
 var _ = Describe("mutual TLS authentication", func() {
@@ -19,10 +20,13 @@ var _ = Describe("mutual TLS authentication", func() {
 		Expect(err).NotTo(HaveOccurred())
 	})
 
-	Describe("with a certicate signed by a trusted CA	", func() {
+	Describe("with a certificate signed by a trusted CA	", func() {
 		Describe("when the certificate has a valid date range", func() {
 			It("allows the user to hit an authenticated endpoint", func() {
-				session := runCommandWithMTLS(config)
+				session := runCommandWithMTLS(
+						config.ApiUrl + "/api/v1/data",
+						config.ValidCertPath,
+						config.ValidPrivateKeyPath)
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
@@ -30,10 +34,25 @@ var _ = Describe("mutual TLS authentication", func() {
 			})
 		})
 	})
+
+	Describe("with a certificate not signed by a trusted CA", func() {
+		It("denies access to the api", func() {
+			session := runCommandWithMTLS(
+				config.ApiUrl + "/api/v1/data",
+				config.InvalidCertPath,
+				config.InvalidPrivateKeyPath)
+
+			Eventually(session).Should(Exit(35))
+
+		})
+	})
 })
 
-func runCommandWithMTLS(config Config) *Session {
-	url := config.ApiUrl + "/api/v1/data"
+func runCommandWithMTLS(url, certPath, keyPath string) *Session{
+
+	Expect(certPath).NotTo(BeEmpty())
+	Expect(keyPath).NotTo(BeEmpty())
+
 	payload := `{"name":"mtlstest","type":"password"}`
 	content_type := "Content-Type: application/json"
 	cmd := exec.Command("curl",
@@ -41,8 +60,11 @@ func runCommandWithMTLS(config Config) *Session {
 		"-H", content_type,
 		"-XPOST",
 		"-d", payload,
-		"--cert", config.ValidCertPath,
-		"--key", config.ValidPrivateKeyPath)
+		"--cert", certPath,
+		"--key", keyPath)
+
+	fmt.Printf("%#v\n", cmd.Args)
+
 	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 
 	Expect(err).NotTo(HaveOccurred())
