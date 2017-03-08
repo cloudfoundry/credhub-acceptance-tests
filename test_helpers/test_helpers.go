@@ -38,25 +38,27 @@ type Config struct {
 	ApiUrl              string `json:"api_url"`
 	ApiUsername         string `json:"api_username"`
 	ApiPassword         string `json:"api_password"`
-	ValidCertPath       string `json:"valid_cert_path"`
-	ValidPrivateKeyPath string `json:"valid_private_key_path"`
+	ValidClientCertPath string `json:"valid_client_cert_path"`
+	ValidClientKeyPath  string `json:"valid_client_key_path"`
+	ValidClientCAPath 	string `json:"valid_client_ca_path"`
+	ValidServerCAPath 	string `json:"valid_server_ca_path"`
 }
 
 func LoadConfig() (Config, error) {
 
-	c := Config{}
+	configuration := Config{}
 
 	data, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "config.json"))
 	if err != nil {
-		return c, err
+		return configuration, err
 	}
 
-	err = json.Unmarshal(data, &c)
+	err = json.Unmarshal(data, &configuration)
 	if err != nil {
-		return c, err
+		return configuration, err
 	}
 
-	return c, nil
+	return configuration, nil
 }
 
 func TargetAndLogin(cfg Config) {

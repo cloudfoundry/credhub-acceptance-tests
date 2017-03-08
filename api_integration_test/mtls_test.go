@@ -1,12 +1,18 @@
-package integration
+package api_integration_test
 
 import (
-	"os/exec"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"fmt"
+	"crypto/tls"
+	"log"
+	"crypto/x509"
+	"io/ioutil"
+	"net/http"
+	"bytes"
+	"encoding/json"
+	"testing"
 )
 
 var _ = Describe("mutual TLS authentication", func() {
@@ -23,40 +29,63 @@ var _ = Describe("mutual TLS authentication", func() {
 	Describe("with a certificate signed by a trusted CA	", func() {
 		Describe("when the certificate has a valid date range", func() {
 			It("allows the user to hit an authenticated endpoint", func() {
-				session := runCommandWithMTLS(
+				result := parlezMTLS(
 						config.ApiUrl + "/api/v1/data",
-						config.ValidCertPath,
-						config.ValidPrivateKeyPath)
-				stdOut := string(session.Out.Contents())
+						config.ValidClientCertPath,
+						config.ValidClientKeyPath,
+						config.ValidServerCAPath)
 
-				Eventually(session).Should(Exit(0))
-				Expect(stdOut).To(MatchRegexp(`"type":"password"`))
+				Expect(result).To(MatchRegexp(`"type":"password"`))
 			})
 		})
 	})
 })
 
-func runCommandWithMTLS(url, certPath, keyPath string) *Session{
+func TestMTLS(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "mTLS Test Suite")
+}
 
-	Expect(certPath).NotTo(BeEmpty())
-	Expect(keyPath).NotTo(BeEmpty())
+func handleError(err error) {
+	if err != nil {
+		log.Fatal("Fatal", err)
+	}
+}
 
-	payload := `{"name":"mtlstest","type":"password"}`
-	content_type := "Content-Type: application/json"
-	cmd := exec.Command("curl",
-		"-k", url,
-		"-H", content_type,
-		"-XPOST",
-		"-d", payload,
-		"--cert", certPath,
-		"--key", keyPath)
+func parlezMTLS(url, clientCertPath, clientKeyPath, serverCAPath string) string {
+	Expect(clientCertPath).NotTo(BeEmpty())
+	Expect(clientKeyPath).NotTo(BeEmpty())
+	Expect(serverCAPath).NotTo(BeEmpty())
 
-	fmt.Printf("%#v\n", cmd.Args)
+	cert, err := tls.LoadX509KeyPair(clientCertPath, clientKeyPath)
+	handleError(err)
 
-	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
+	roots := x509.NewCertPool()
 
-	Expect(err).NotTo(HaveOccurred())
-	<-session.Exited
+	CA, err := ioutil.ReadFile(serverCAPath)
+	ok := roots.AppendCertsFromPEM([]byte(CA))
+	if !ok {
+		panic("failed to parse root certificate")
+	}
 
-	return session
+	tlsConf := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		RootCAs: roots,
+	}
+	tr := &http.Transport{TLSClientConfig: tlsConf}
+	client := &http.Client{Transport: tr}
+
+	values := map[string]string{"name": "mtlstest", "type": "password"}
+	jsonValue, _ := json.Marshal(values)
+
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+	handleError(err)
+
+	fmt.Println(resp.Status)
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	handleError(err)
+
+	return string(body)
 }
