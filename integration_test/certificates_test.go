@@ -15,17 +15,19 @@ import (
 var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--certificate-string", "iamacertificate")
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakey", "--root-string=someca")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
+			Expect(stdOut).To(MatchRegexp(`Ca:\s+someca`))
 			Expect(stdOut).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamakey`))
 		})
 
 		It("should require a certificate type", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--no-overwrite")
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate")
 			Eventually(session).Should(Exit(1))
 			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
 		})
