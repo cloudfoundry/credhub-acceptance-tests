@@ -6,10 +6,10 @@ import (
 	"encoding/pem"
 	"regexp"
 
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Certificates Test", func() {
@@ -29,7 +29,7 @@ var _ = Describe("Certificates Test", func() {
 		It("should require a certificate type", func() {
 			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate")
 			Eventually(session).Should(Exit(1))
-			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate type must be set. Please validate your input and retry your request."))
+			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate attribute must be set. Please validate your input and retry your request."))
 		})
 	})
 
