@@ -31,7 +31,8 @@ var _ = Describe("json secrets", func() {
 				"-X", "PUT",
 				"-d", json,
 				"--cert", config.ValidCertPath,
-				"--key", config.ValidPrivateKeyPath)
+				"--key", config.ValidPrivateKeyPath,
+				"-i")
 
 			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 
@@ -41,6 +42,7 @@ var _ = Describe("json secrets", func() {
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(MatchRegexp(`HTTP/1.1 200`))
 			Expect(stdOut).To(MatchRegexp(`"type":\s*"json"`))
 			Expect(stdOut).To(MatchRegexp(`"value":\s*{"object":{"is":"complex"}}`))
 		})
@@ -51,7 +53,8 @@ var _ = Describe("json secrets", func() {
 				"-H", "Content-Type: application/json",
 				"-XGET",
 				"--cert", config.ValidCertPath,
-				"--key", config.ValidPrivateKeyPath)
+				"--key", config.ValidPrivateKeyPath,
+				"-i")
 
 			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 
@@ -61,8 +64,34 @@ var _ = Describe("json secrets", func() {
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(MatchRegexp(`HTTP/1.1 200`))
 			Expect(stdOut).To(MatchRegexp(`"type":\s*"json"`))
 			Expect(stdOut).To(MatchRegexp(`"value":\s*{"object":{"is":"complex"}}`))
 		})
+	})
+
+	It("should fail gracefully if the value is not a JSON object", func() {
+		credentialName := GenerateUniqueCredentialName()
+		json := `{"type":"json","name":"` + credentialName + `","value":["arrays","should","not","be","allowed"]}`
+
+		cmd := exec.Command("curl",
+			"-k", config.ApiUrl + "/api/v1/data",
+			"-H", "Content-Type: application/json",
+			"-X", "PUT",
+			"-d", json,
+			"--cert", config.ValidCertPath,
+			"--key", config.ValidPrivateKeyPath,
+			"-i")
+
+		session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
+
+		Expect(err).NotTo(HaveOccurred())
+		<-session.Exited
+
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(MatchRegexp(`HTTP/1.1 400`))
+		Expect(stdOut).To(MatchRegexp(`"error":\s*"The request could not be fulfilled because the request path or body did not meet expectation. Please check the documentation for required formatting and retry your request."`))
 	})
 })
