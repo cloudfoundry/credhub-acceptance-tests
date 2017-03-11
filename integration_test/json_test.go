@@ -95,7 +95,7 @@ var _ = Describe("json secrets", func() {
 		Expect(stdOut).To(MatchRegexp(`"error":\s*"The request could not be fulfilled because the request path or body did not meet expectation. Please check the documentation for required formatting and retry your request."`))
 	})
 
-	FIt("should fail gracefully on POST", func() {
+	It("should fail gracefully on POST", func() {
 		credentialName := GenerateUniqueCredentialName()
 		json := `{"type":"json","name":"` + credentialName + `"}`
 
