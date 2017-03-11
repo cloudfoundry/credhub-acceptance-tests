@@ -94,4 +94,29 @@ var _ = Describe("json secrets", func() {
 		Expect(stdOut).To(MatchRegexp(`HTTP/1.1 400`))
 		Expect(stdOut).To(MatchRegexp(`"error":\s*"The request could not be fulfilled because the request path or body did not meet expectation. Please check the documentation for required formatting and retry your request."`))
 	})
+
+	FIt("should fail gracefully on POST", func() {
+		credentialName := GenerateUniqueCredentialName()
+		json := `{"type":"json","name":"` + credentialName + `"}`
+
+		cmd := exec.Command("curl",
+			"-k", config.ApiUrl + "/api/v1/data",
+			"-H", "Content-Type: application/json",
+			"-X", "POST",
+			"-d", json,
+			"--cert", config.ValidCertPath,
+			"--key", config.ValidPrivateKeyPath,
+			"-i")
+
+		session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
+
+		Expect(err).NotTo(HaveOccurred())
+		<-session.Exited
+
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(MatchRegexp(`HTTP/1.1 400`))
+		Expect(stdOut).To(MatchRegexp(`"error":\s*"Credentials of this type cannot be generated. Please adjust the credential type and retry your request."`))
+	})
 })
