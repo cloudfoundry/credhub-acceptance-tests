@@ -8,6 +8,15 @@ import (
 )
 
 var _ = Describe("Password test", func() {
+	It("should set a password", func() {
+		session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "password", "-v", "some_value")
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+		Expect(stdOut).To(MatchRegexp(`Value:\s+some_value`))
+	})
+
 	It("should generate a password", func() {
 		session := RunCommand("generate", "-n", GenerateUniqueCredentialName(), "-t", "password")
 		Eventually(session).Should(Exit(0))
