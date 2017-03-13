@@ -2,10 +2,10 @@
 
 set -eu
 
+API_URL=${API_URL:-https://localhost:9000}
 USERNAME=${USERNAME:-credhub}
 PASSWORD=${PASSWORD:-password}
 CREDENTIAL_ROOT=${CREDHUB_SRC:-~/workspace/credhub-release/src/credhub/src/test/resources}
-API_URL=${API_URL:-https://localhost:9000}
 
 cat <<EOF > config.json
 {
@@ -16,5 +16,5 @@ cat <<EOF > config.json
 }
 EOF
 
-./generate_certs.py -caKey $CREDENTIAL_ROOT/ca_key.pem -caCert $CREDENTIAL_ROOT/ca.pem
+./generate_certs.py -caKey $CREDENTIAL_ROOT/client_ca_private.pem -caCert $CREDENTIAL_ROOT/client_ca_cert.pem
 ginkgo -r -p

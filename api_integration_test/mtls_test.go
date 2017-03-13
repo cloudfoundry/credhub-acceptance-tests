@@ -38,7 +38,7 @@ var _ = Describe("mutual TLS authentication", func() {
 				result, err := mtlsPost(
 					config.ApiUrl + "/api/v1/data",
 					postData,
-					"ca.pem",
+					"server_ca_cert.pem",
 					"client.pem",
 					"client_key.pem")
 
@@ -61,7 +61,7 @@ var _ = Describe("mutual TLS authentication", func() {
 				result, err := mtlsPost(
 					config.ApiUrl + "/api/v1/data",
 					postData,
-					"ca.pem",
+					"server_ca_cert.pem",
 					"expired.pem",
 					"expired_key.pem")
 
