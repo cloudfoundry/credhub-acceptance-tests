@@ -84,7 +84,7 @@ func handleError(err error) {
 }
 
 func mtlsPost(url string, postData map[string]string, serverCaFilename, clientCertFilename, clientKeyPath string) (string, error) {
-	err, client := createMtlsClient(serverCaFilename, clientCertFilename, clientKeyPath)
+	client, err := createMtlsClient(serverCaFilename, clientCertFilename, clientKeyPath)
 
 	jsonValue, _ := json.Marshal(postData)
 
@@ -102,7 +102,7 @@ func mtlsPost(url string, postData map[string]string, serverCaFilename, clientCe
 	return string(body), nil
 }
 
-func createMtlsClient(serverCaFilename, clientCertFilename, clientKeyFilename string) (error, *http.Client) {
+func createMtlsClient(serverCaFilename, clientCertFilename, clientKeyFilename string) (*http.Client, error) {
 	serverCaPath := path.Join(config.CredentialRoot, serverCaFilename)
 	clientCertPath := path.Join(os.Getenv("PWD"), "certs", clientCertFilename)
 	clientKeyPath := path.Join(os.Getenv("PWD"), "certs", clientKeyFilename)
@@ -132,5 +132,5 @@ func createMtlsClient(serverCaFilename, clientCertFilename, clientKeyFilename st
 	transport := &http.Transport{TLSClientConfig: tlsConf}
 	client := &http.Client{Transport: transport}
 
-	return err, client
+	return client, err
 }
