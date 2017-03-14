@@ -1,73 +1,99 @@
 package api_integration_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	"crypto/tls"
-	"log"
-	"crypto/x509"
-	"io/ioutil"
-	"net/http"
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
-	"testing"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"path"
+	"testing"
+
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
+
 var (
 	config Config
-	err error
+	err    error
 )
 
 var _ = Describe("mutual TLS authentication", func() {
 
 	Describe("with a certificate signed by a trusted CA	", func() {
-		Describe("when the certificate has a valid date range", func() {
-
-			BeforeEach(func() {
-				config, err = LoadConfig()
-				Expect(err).NotTo(HaveOccurred())
-			})
-
-			It("allows the client to hit an authenticated endpoint", func() {
-				postData := map[string]string{
-					"name": "mtlstest",
-					"type": "password",
-				}
-				result, err := mtlsPost(
-					config.ApiUrl + "/api/v1/data",
-					postData,
-					"server_ca_cert.pem",
-					"client.pem",
-					"client_key.pem")
-
-				Expect(err).To(BeNil())
-				Expect(result).To(MatchRegexp(`"type":"password"`))
-			})
+		BeforeEach(func() {
+			config, err = LoadConfig()
+			Expect(err).NotTo(HaveOccurred())
 		})
 
-		Describe("when the certificate is signed by wrong CA", func() {
-			BeforeEach(func() {
-				config, err = LoadConfig()
-				Expect(err).NotTo(HaveOccurred())
-			})
+		It("allows the client to hit an authenticated endpoint", func() {
+			postData := map[string]string{
+				"name": "mtlstest",
+				"type": "password",
+			}
+			result, err := mtlsPost(
+				config.ApiUrl+"/api/v1/data",
+				postData,
+				"server_ca_cert.pem",
+				"client.pem",
+				"client_key.pem")
 
-			It("prevents the client from hitting an authenticated endpoint", func() {
-				postData := map[string]string{
-					"name": "mtlstest",
-					"type": "password",
-				}
-				result, err := mtlsPost(
-					config.ApiUrl + "/api/v1/data",
-					postData,
-					"server_ca_cert.pem",
-					"expired.pem",
-					"expired_key.pem")
+			Expect(err).To(BeNil())
+			Expect(result).To(MatchRegexp(`"type":"password"`))
+		})
+	})
 
-				Expect(err).ToNot(BeNil())
-				Expect(result).To(BeEmpty())
-			})
+	Describe("with an expired certificate", func() {
+		BeforeEach(func() {
+			config, err = LoadConfig()
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("prevents the client from hitting an authenticated endpoint", func() {
+			postData := map[string]string{
+				"name": "mtlstest",
+				"type": "password",
+			}
+			result, err := mtlsPost(
+				config.ApiUrl+"/api/v1/data",
+				postData,
+				"server_ca_cert.pem",
+				"expired.pem",
+				"expired_key.pem")
+
+			Expect(err).ToNot(BeNil())
+			Expect(result).To(BeEmpty())
+		})
+	})
+
+	Describe("with a certificate signed by an untrusted CA", func() {
+		BeforeEach(func() {
+			config, err = LoadConfig()
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("prevents the client from hitting an authenticated endpoint", func() {
+			postData := map[string]string{
+				"name": "mtlstest",
+				"type": "password",
+			}
+			result, err := mtlsPost(
+				config.ApiUrl+"/api/v1/data",
+				postData,
+				"server_ca_cert.pem",
+				"invalid.pem",
+				"invalid_key.pem")
+
+			// golang doesn't send client certificate if it's signed by the CA
+			// that server doesn't trust if the server is configured with
+			// server.ssl.client-auth=want (https://tools.ietf.org/html/rfc5246#section-7.4.4)
+			// That is why, we are asserting on OAuth authorization failure here.
+			Expect(err).To(BeNil())
+			Expect(result).To(MatchRegexp(".*Full authentication is required to access this resource"))
 		})
 	})
 })
@@ -106,6 +132,7 @@ func createMtlsClient(serverCaFilename, clientCertFilename, clientKeyFilename st
 	serverCaPath := path.Join(config.CredentialRoot, serverCaFilename)
 	clientCertPath := path.Join(os.Getenv("PWD"), "certs", clientCertFilename)
 	clientKeyPath := path.Join(os.Getenv("PWD"), "certs", clientKeyFilename)
+
 	_, err := os.Stat(serverCaPath)
 	handleError(err)
 	_, err = os.Stat(clientCertPath)

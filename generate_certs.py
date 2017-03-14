@@ -36,7 +36,7 @@ def generate_cert(ca_cert_path, ca_key_path, file_base_name, days):
                      "-CAcreateserial", "-days", days, "-sha256", "-out", cert_path])
 
 def generate_bad_certs(ca_cert_path, ca_key_path):
-    # generate_self_signed_cert("invalid", "30")
+    generate_self_signed_cert("invalid", "30")
     generate_cert(ca_cert_path, ca_key_path, "expired", "-30")
 
 tool_desc = "TLS certificate generator for CredHub acceptance tests"
