@@ -15,9 +15,9 @@ var _ = Describe("RSA key test", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+rsa`))
-			Expect(stdOut).To(MatchRegexp(`Public Key:\s+iamapublickey`))
-			Expect(stdOut).To(MatchRegexp("Private Key:\\s+" + credentialValue))
+			Expect(stdOut).To(ContainSubstring(`type: rsa`))
+			Expect(stdOut).To(ContainSubstring(`public_key: iamapublickey`))
+			Expect(stdOut).To(ContainSubstring("private_key: " + credentialValue))
 		})
 	})
 
@@ -30,9 +30,9 @@ var _ = Describe("RSA key test", func() {
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+rsa`))
-			Expect(stdOut).To(MatchRegexp(`Public Key:\s+-----BEGIN PUBLIC KEY-----`))
-			Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`type: rsa`))
+			Expect(stdOut).To(MatchRegexp(`public_key: |\s+-----BEGIN PUBLIC KEY-----`))
+			Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 		})
 
 		By("getting the key", func() {

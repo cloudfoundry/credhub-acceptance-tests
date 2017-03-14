@@ -24,7 +24,7 @@ var _ = Describe("handling special characters", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).To(ContainSubstring(passwordValue))
 		})
 
@@ -34,7 +34,7 @@ var _ = Describe("handling special characters", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).To(ContainSubstring(passwordValue))
 		})
 	})
@@ -53,7 +53,7 @@ var _ = Describe("handling special characters", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).To(ContainSubstring(crazyCharsId))
 		})
 	})
@@ -72,7 +72,7 @@ var _ = Describe("handling special characters", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+password`))
+			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).To(ContainSubstring(edgeCaseId))
 		})
 	})

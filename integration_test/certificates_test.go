@@ -4,26 +4,28 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"regexp"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	"gopkg.in/yaml.v2"
 )
 
 var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakey", "--root-string=someca")
+			name := GenerateUniqueCredentialName()
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakey", "--root-string=someca")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-			Expect(stdOut).To(MatchRegexp(`Ca:\s+someca`))
-			Expect(stdOut).To(MatchRegexp(`Certificate:\s+iamacertificate`))
-			Expect(stdOut).To(MatchRegexp(`Private Key:\s+iamakey`))
+			Expect(stdOut).To(ContainSubstring(`name: /` + name))
+			Expect(stdOut).To(ContainSubstring(`type: certificate`))
+			Expect(stdOut).To(ContainSubstring(`ca: someca`))
+			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
 		})
 
 		It("should require a certificate type", func() {
@@ -41,19 +43,19 @@ var _ = Describe("Certificates Test", func() {
 				leafCertificateName := GenerateUniqueCredentialName()
 
 				session := RunCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
-				cert := CertFromPem(string(session.Out.Contents()), "Certificate")
+				cert := CertFromPem(string(session.Out.Contents()), false)
 				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
 				session = RunCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
-				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
+				cert = CertFromPem(string(session.Out.Contents()), false)
 				Expect(cert.Subject.CommonName).To(Equal(intermediateCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
 
 				session = RunCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
-				cert = CertFromPem(string(session.Out.Contents()), "Certificate")
+				cert = CertFromPem(string(session.Out.Contents()), false)
 				Expect(cert.Subject.CommonName).To(Equal(leafCertificateName))
 				Expect(cert.Issuer.CommonName).To(Equal(intermediateCaName))
 				Expect(cert.IsCA).To(Equal(false))
@@ -70,10 +72,10 @@ var _ = Describe("Certificates Test", func() {
 
 				Eventually(session).Should(Exit(0))
 
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut, "Certificate")
+				Expect(stdOut).To(ContainSubstring(`type: certificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
+				cert := CertFromPem(stdOut, false)
 				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
 				Expect(cert.IsCA).To(Equal(true))
@@ -83,7 +85,7 @@ var _ = Describe("Certificates Test", func() {
 				session := RunCommand("get", "-n", certificateAuthorityId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				cert := CertFromPem(stdOut, "Certificate")
+				cert := CertFromPem(stdOut, false)
 				Expect(cert.Subject.CommonName).To(Equal(certificateAuthorityId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId)) // self-signed
 				Expect(cert.IsCA).To(Equal(true))
@@ -95,11 +97,11 @@ var _ = Describe("Certificates Test", func() {
 
 				Eventually(session).Should(Exit(0))
 
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
-				cert := CertFromPem(stdOut, "Certificate")
-				ca := CertFromPem(stdOut, "Ca")
+				Expect(stdOut).To(ContainSubstring(`type: certificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
+				cert := CertFromPem(stdOut, false)
+				ca := CertFromPem(stdOut, true)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
 				Expect(ca.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by ca
@@ -120,8 +122,8 @@ var _ = Describe("Certificates Test", func() {
 				session := RunCommand("regenerate", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 				stdOut := string(session.Out.Contents())
-				cert := CertFromPem(stdOut, "Certificate")
-				ca := CertFromPem(stdOut, "Ca")
+				cert := CertFromPem(stdOut, false)
+				ca := CertFromPem(stdOut, true)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
 				Expect(ca.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by ca
@@ -142,12 +144,12 @@ var _ = Describe("Certificates Test", func() {
 
 				Eventually(session).Should(Exit(0))
 
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
-				Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+				Expect(stdOut).To(ContainSubstring(`type: certificate`))
+				Expect(stdOut).NotTo(ContainSubstring(`ca:`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 
-				cert := CertFromPem(stdOut, "Certificate")
+				cert := CertFromPem(stdOut, false)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateId))                                                  // self-signed
 				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
@@ -163,8 +165,8 @@ var _ = Describe("Certificates Test", func() {
 				session := RunCommand("get", "-n", certificateId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				Expect(stdOut).ToNot(MatchRegexp(`Ca:`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+-----BEGIN CERTIFICATE-----`))
+				Expect(stdOut).ToNot(ContainSubstring(`ca:`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
 			})
 
 			By("regenerating the certificate", func() {
@@ -172,7 +174,7 @@ var _ = Describe("Certificates Test", func() {
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
-				cert := CertFromPem(stdOut, "Certificate")
+				cert := CertFromPem(stdOut, false)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateId))                                                  // self-signed
 				Expect(cert.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by self
@@ -225,20 +227,36 @@ var _ = Describe("Certificates Test", func() {
 
 // https://golang.org/pkg/crypto/x509/#Certificate
 // prefix should be "Certificate" or "Ca"
-func CertFromPem(input string, prefix string) *x509.Certificate {
-	r, _ := regexp.Compile(`(?s)` + prefix + `:\s+(-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----)`)
-
-	pemByteArrays := r.FindAllSubmatch([]byte(input), 5)[0]
-
-	lastPem := pemByteArrays[len(pemByteArrays)-1]
-
-	block, _ := pem.Decode(lastPem)
-	if block == nil {
-		panic("failed to parse certificate PEM")
+func CertFromPem(input string, ca bool) *x509.Certificate {
+	type certificateValue struct {
+		Ca string `yaml:"ca,omitempty"`
+		Certificate string `yaml:"certificate,omitempty"`
 	}
-	cert, err := x509.ParseCertificate(block.Bytes)
+	type certificate struct {
+		Value certificateValue `yaml:"value"`
+	}
+
+	cert := certificate{}
+	err := yaml.Unmarshal([]byte(input), &cert)
+
 	if err != nil {
 		panic("failed to parse certificate: " + err.Error())
 	}
-	return cert
+
+	var pemCert string
+	if ca {
+		pemCert = cert.Value.Ca
+	} else {
+		pemCert = cert.Value.Certificate
+	}
+
+	block, _ := pem.Decode([]byte(pemCert))
+	if block == nil {
+		panic("failed to parse certificate PEM")
+	}
+	parsed_cert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		panic("failed to parse certificate: " + err.Error())
+	}
+	return parsed_cert
 }

@@ -40,8 +40,8 @@ var _ = Describe("Smoke Test", func() {
 
 				Eventually(session).Should(Exit(0))
 
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+				Expect(stdOut).To(ContainSubstring(`type: certificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+iamacertificate`))
 			})
 
 			By("should be able to get the certificate", func() {
@@ -50,8 +50,8 @@ var _ = Describe("Smoke Test", func() {
 
 				Eventually(session).Should(Exit(0))
 
-				Expect(stdOut).To(MatchRegexp(`Type:\s+certificate`))
-				Expect(stdOut).To(MatchRegexp(`Certificate:\s+iamacertificate`))
+				Expect(stdOut).To(ContainSubstring(`type: certificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |\s+iamacertificate`))
 			})
 
 			By("should be able to delete the certificate", func() {
@@ -64,7 +64,7 @@ var _ = Describe("Smoke Test", func() {
 
 				Eventually(session).Should(Exit(1))
 
-				Expect(stdErr).To(MatchRegexp(`Credential not found. Please validate your input and retry your request.`))
+				Expect(stdErr).To(ContainSubstring(`Credential not found. Please validate your input and retry your request.`))
 			})
 		})
 	})

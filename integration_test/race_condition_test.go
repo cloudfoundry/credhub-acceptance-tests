@@ -37,9 +37,9 @@ var _ = Describe("Race condition tests", func() {
 			stdOut1 := string(session1.Out.Contents())
 			stdOut2 := string(session2.Out.Contents())
 
-			Expect(stdOut1).To(MatchRegexp(`Type:\s+rsa`))
-			Expect(stdOut1).To(MatchRegexp(`Public Key:\s+-----BEGIN PUBLIC KEY-----`))
-			Expect(stdOut1).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut1).To(ContainSubstring(`type: rsa`))
+			Expect(stdOut1).To(MatchRegexp(`public_key: |\s+-----BEGIN PUBLIC KEY-----`))
+			Expect(stdOut1).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 
 			Expect(stdOut1).To(Equal(stdOut2))
 		})

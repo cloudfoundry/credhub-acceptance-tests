@@ -14,7 +14,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 		session := RunCommand("get", "-n", credentialName)
 		stdErr := string(session.Err.Contents())
 
-		Expect(stdErr).To(MatchRegexp(`Credential not found. Please validate your input and retry your request.`))
+		Expect(stdErr).To(ContainSubstring(`Credential not found. Please validate your input and retry your request.`))
 		Eventually(session).Should(Exit(1))
 	})
 
@@ -23,8 +23,8 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-		Expect(stdOut).To(MatchRegexp("Value:\\s+" + credentialValue))
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
 	})
 
 	By("getting the new value secret", func() {
@@ -33,8 +33,8 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 
 		Eventually(session).Should(Exit(0))
 
-		Expect(stdOut).To(MatchRegexp(`Type:\s+value`))
-		Expect(stdOut).To(MatchRegexp("Value:\\s+" + credentialValue))
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
 	})
 
 	By("deleting the secret", func() {

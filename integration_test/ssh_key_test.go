@@ -16,9 +16,9 @@ var _ = Describe("SSH key test", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+ssh`))
-			Expect(stdOut).To(MatchRegexp(`Public Key:\s+` + base64DecodablePublicKey))
-			Expect(stdOut).To(MatchRegexp("Private Key:\\s+" + credentialValue))
+			Expect(stdOut).To(ContainSubstring(`type: ssh`))
+			Expect(stdOut).To(ContainSubstring(`public_key: ` + base64DecodablePublicKey))
+			Expect(stdOut).To(ContainSubstring("private_key: " + credentialValue))
 		})
 	})
 
@@ -31,9 +31,9 @@ var _ = Describe("SSH key test", func() {
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
 
-			Expect(stdOut).To(MatchRegexp(`Type:\s+ssh`))
-			Expect(stdOut).To(MatchRegexp(`Public Key:\s+ssh-rsa \S+`))
-			Expect(stdOut).To(MatchRegexp(`Private Key:\s+-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`type: ssh`))
+			Expect(stdOut).To(MatchRegexp(`public_key: ssh-rsa \w+`))
+			Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 		})
 
 		By("getting the key", func() {
