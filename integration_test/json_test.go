@@ -5,118 +5,36 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	"os/exec"
 )
 
-var (
-	config Config
-	err    error
-)
+var _ = Describe("json secrets", func() {
+	credentialName := GenerateUniqueCredentialName()
+	credentialValue := `{"object":{"is":"complex"},"has":["an","array"]}`
+	credentialYaml := "value:\n  has:\n  - an\n  - array\n  object:\n    is: complex\n"
 
-var _ = XDescribe("json secrets", func() {
-	BeforeEach(func() {
-		config, err = LoadConfig()
-		Expect(err).NotTo(HaveOccurred())
-	})
-
-	It("should set and get a new json secret", func() {
-		credentialName := GenerateUniqueCredentialName()
-
+	It("should set, get, and delete a new json secret", func() {
 		By("setting a new json secret", func() {
-			json := `{"type":"json","name":"` + credentialName + `","value":{"object":{"is":"complex"}}}`
-
-			cmd := exec.Command("curl",
-				"-k", config.ApiUrl + "/api/v1/data",
-				"-H", "Content-Type: application/json",
-				"-X", "PUT",
-				"-d", json,
-				//"--cert", config.ValidCertPath,
-				//"--key", config.ValidPrivateKeyPath,
-				"-i")
-
-			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
-
-			Expect(err).NotTo(HaveOccurred())
-			<-session.Exited
-
+			session := RunCommand("set", "-n", credentialName, "-t", "json", "-v", credentialValue)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
-			Expect(stdOut).To(MatchRegexp(`HTTP/1.1 200`))
-			Expect(stdOut).To(MatchRegexp(`"type":\s*"json"`))
-			Expect(stdOut).To(MatchRegexp(`"value":\s*{"object":{"is":"complex"}}`))
+			Expect(stdOut).To(ContainSubstring(`type: json`))
+			Expect(stdOut).To(ContainSubstring(credentialYaml))
 		})
 
 		By("getting the new json secret", func() {
-			cmd := exec.Command("curl",
-				"-k", config.ApiUrl+"/api/v1/data?name="+credentialName,
-				"-H", "Content-Type: application/json",
-				"-XGET",
-				//"--cert", config.ValidCertPath,
-				//"--key", config.ValidPrivateKeyPath,
-				"-i")
-
-			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
-
-			Expect(err).NotTo(HaveOccurred())
-			<-session.Exited
+			session := RunCommand("get", "-n", credentialName)
+			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
-			stdOut := string(session.Out.Contents())
-			Expect(stdOut).To(MatchRegexp(`HTTP/1.1 200`))
-			Expect(stdOut).To(MatchRegexp(`"type":\s*"json"`))
-			Expect(stdOut).To(MatchRegexp(`"value":\s*{"object":{"is":"complex"}}`))
+			Expect(stdOut).To(ContainSubstring(`type: json`))
+			Expect(stdOut).To(ContainSubstring(credentialYaml))
 		})
-	})
 
-	It("should fail gracefully if the value is not a JSON object", func() {
-		credentialName := GenerateUniqueCredentialName()
-		json := `{"type":"json","name":"` + credentialName + `","value":["arrays","should","not","be","allowed"]}`
-
-		cmd := exec.Command("curl",
-			"-k", config.ApiUrl + "/api/v1/data",
-			"-H", "Content-Type: application/json",
-			"-X", "PUT",
-			"-d", json,
-			//"--cert", config.ValidCertPath,
-			//"--key", config.ValidPrivateKeyPath,
-			"-i")
-
-		session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
-
-		Expect(err).NotTo(HaveOccurred())
-		<-session.Exited
-
-		Eventually(session).Should(Exit(0))
-
-		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(MatchRegexp(`HTTP/1.1 400`))
-		Expect(stdOut).To(MatchRegexp(`"error":\s*"The request could not be fulfilled because the request path or body did not meet expectation. Please check the documentation for required formatting and retry your request."`))
-	})
-
-	It("should fail gracefully on POST", func() {
-		credentialName := GenerateUniqueCredentialName()
-		json := `{"type":"json","name":"` + credentialName + `"}`
-
-		cmd := exec.Command("curl",
-			"-k", config.ApiUrl + "/api/v1/data",
-			"-H", "Content-Type: application/json",
-			"-X", "POST",
-			"-d", json,
-			//"--cert", config.ValidCertPath,
-			//"--key", config.ValidPrivateKeyPath,
-			"-i")
-
-		session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
-
-		Expect(err).NotTo(HaveOccurred())
-		<-session.Exited
-
-		Eventually(session).Should(Exit(0))
-
-		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(MatchRegexp(`HTTP/1.1 400`))
-		Expect(stdOut).To(MatchRegexp(`"error":\s*"Credentials of this type cannot be generated. Please adjust the credential type and retry your request."`))
+		By("deleting the secret", func() {
+			session := RunCommand("delete", "-n", credentialName)
+			Eventually(session).Should(Exit(0))
+		})
 	})
 })
