@@ -35,9 +35,19 @@ def generate_cert(ca_cert_path, ca_key_path, file_base_name, days):
     subprocess.call(["openssl", "x509", "-req", "-in", client_csr_path, "-CA", ca_cert_path, "-CAkey", ca_key_path,
                      "-CAcreateserial", "-days", days, "-sha256", "-out", cert_path])
 
+def make_unknown_cert_and_ca():
+    # Make a new CA
+    unknown_ca_path = os.path.join(cert_dir, "unknown_ca.pem")
+    unknown_ca_key_path = os.path.join(cert_dir, "unknown_ca_key.pem")
+    subprocess.call(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-days", "365", "-sha256", "-nodes", "-subj", "/CN=credhub_client_ca", "-keyout", unknown_ca_key_path, "-out", unknown_ca_path])
+
+    # Sign a new cert with unknown CA
+    generate_cert(unknown_ca_path, unknown_ca_key_path, "unknown", "30")
+
 def generate_bad_certs(ca_cert_path, ca_key_path):
-    generate_self_signed_cert("invalid", "30")
-    generate_cert(ca_cert_path, ca_key_path, "expired", "-30")
+    generate_self_signed_cert("selfsigned", "30")
+    make_unknown_cert_and_ca()
+    generate_cert(ca_cert_path, ca_key_path, "expired", "-1")
 
 tool_desc = "TLS certificate generator for CredHub acceptance tests"
 parser = argparse.ArgumentParser(description=tool_desc)

@@ -70,7 +70,7 @@ var _ = Describe("mutual TLS authentication", func() {
 		})
 	})
 
-	Describe("with a certificate signed by an untrusted CA", func() {
+	Describe("with a self-signed certificate", func() {
 		BeforeEach(func() {
 			config, err = LoadConfig()
 			Expect(err).NotTo(HaveOccurred())
@@ -85,15 +85,37 @@ var _ = Describe("mutual TLS authentication", func() {
 				config.ApiUrl+"/api/v1/data",
 				postData,
 				"server_ca_cert.pem",
-				"invalid.pem",
-				"invalid_key.pem")
+				"selfsigned.pem",
+				"selfsigned_key.pem")
 
-			// golang doesn't send client certificate if it's signed by the CA
-			// that server doesn't trust if the server is configured with
+			// golang doesn't seem to send self-signed certs
 			// server.ssl.client-auth=want (https://tools.ietf.org/html/rfc5246#section-7.4.4)
 			// That is why, we are asserting on OAuth authorization failure here.
 			Expect(err).To(BeNil())
 			Expect(result).To(MatchRegexp(".*Full authentication is required to access this resource"))
+		})
+	})
+
+	Describe("with a certificate signed by an unknown CA", func() {
+		BeforeEach(func() {
+			config, err = LoadConfig()
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("prevents the client from hitting an authenticated endpoint", func() {
+			postData := map[string]string{
+				"name": "mtlstest",
+				"type": "password",
+			}
+			result, err := mtlsPost(
+				config.ApiUrl+"/api/v1/data",
+				postData,
+				"server_ca_cert.pem",
+				"unknown.pem",
+				"unknown_key.pem")
+
+			Expect(err).ToNot(BeNil())
+			Expect(result).To(BeEmpty())
 		})
 	})
 })
