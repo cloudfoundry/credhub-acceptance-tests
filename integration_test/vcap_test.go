@@ -37,17 +37,17 @@ var _ = Describe("vcap interpolation of secrets", func() {
 			token := strings.TrimSpace(string(session.Out.Contents()))
 
 			postData := `{` +
-				        `  "VCAP_SERVICES": {` +
-				   	    `   "p-config-server": [` +
-			   		    `      {` +
-			   		    `        "credentials": {` +
-			   		    `          "credhub-ref": "((/` + credentialName + `))"` +
-			   		    `        },` +
-			   		    `        "label": "p-config-server"` +
-			   		    `      }` +
-			   		    `    ]` +
-			   		    `  }` +
-			            `}`;
+				`  "VCAP_SERVICES": {` +
+				`   "p-config-server": [` +
+				`      {` +
+				`        "credentials": {` +
+				`          "credhub-ref": "((/` + credentialName + `))"` +
+				`        },` +
+				`        "label": "p-config-server"` +
+				`      }` +
+				`    ]` +
+				`  }` +
+				`}`;
 
 			result, statusCode, err := postJSON(config.ApiUrl + "/api/v1/vcap", postData, token)
 			Expect(err).NotTo(HaveOccurred())
