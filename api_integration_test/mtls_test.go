@@ -15,6 +15,7 @@ import (
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"fmt"
 )
 
 var (
@@ -65,7 +66,7 @@ var _ = Describe("mutual TLS authentication", func() {
 				"expired.pem",
 				"expired_key.pem")
 
-			Expect(err).ToNot(BeNil())
+			Expect(err.Error()).To(ContainSubstring("unknown certificate"))
 			Expect(result).To(BeEmpty())
 		})
 	})
@@ -114,8 +115,15 @@ var _ = Describe("mutual TLS authentication", func() {
 				"unknown.pem",
 				"unknown_key.pem")
 
-			Expect(err).ToNot(BeNil())
-			Expect(result).To(BeEmpty())
+
+			// Okay, so golang 1.7.x **sometimes** doesn't seem to send certs that the server won't accept...
+			// Here we assert that, if there was an error, it should be the server rejecting the cert, and
+			// if there wasn't an error, the server told us to go away because we didn't send an auth token or cert.
+			if err != nil {
+				Expect(err.Error()).To(ContainSubstring("unknown certificate"))
+			} else {
+				Expect(result).To(MatchRegexp(".*Full authentication is required to access this resource"))
+			}
 		})
 	})
 })
@@ -127,6 +135,7 @@ func TestMTLS(t *testing.T) {
 
 func handleError(err error) {
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal("Fatal", err)
 	}
 }
