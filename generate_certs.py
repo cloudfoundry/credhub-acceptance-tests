@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import os
 import sys
+import uuid
 
 cert_dir = os.path.join(os.getcwd(), 'certs/')
 
@@ -18,7 +19,7 @@ def generate_valid_cert(ca_cert_path, ca_key_path):
 def generate_self_signed_cert(file_base_name, days):
     cert_path = os.path.join(cert_dir, file_base_name+".pem")
     key_path = os.path.join(cert_dir, file_base_name+"_key.pem")
-    subprocess.call(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-days", days, "-subj", "/CN=credhub_test_client",
+    subprocess.call(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-days", days, "-subj", "/CN=credhub_test_client/OU=app:20045e7a-4686-48ba-b523-b5378357073f",
                      "-nodes", "-sha256", "-keyout", key_path, "-out", cert_path])
 
 def generate_cert(ca_cert_path, ca_key_path, file_base_name, days):
@@ -29,7 +30,8 @@ def generate_cert(ca_cert_path, ca_key_path, file_base_name, days):
     subprocess.call(["openssl", "genrsa", "-out", key_path, "2048"])
 
     # create CSR
-    subprocess.call(["openssl", "req", "-new", "-key", key_path, "-out", client_csr_path, "-subj", "/CN=credhub_test_client"])
+    app_uuid = uuid.uuid4()
+    subprocess.call(["openssl", "req", "-new", "-key", key_path, "-out", client_csr_path, "-subj", "/CN=credhub_test_client/OU=app:" + str(app_uuid)])
 
     # generate client certificate
     subprocess.call(["openssl", "x509", "-req", "-in", client_csr_path, "-CA", ca_cert_path, "-CAkey", ca_key_path,
@@ -39,7 +41,7 @@ def make_unknown_cert_and_ca():
     # Make a new CA
     unknown_ca_path = os.path.join(cert_dir, "unknown_ca.pem")
     unknown_ca_key_path = os.path.join(cert_dir, "unknown_ca_key.pem")
-    subprocess.call(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-days", "365", "-sha256", "-nodes", "-subj", "/CN=credhub_client_ca", "-keyout", unknown_ca_key_path, "-out", unknown_ca_path])
+    subprocess.call(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-days", "365", "-sha256", "-nodes", "-subj", "/CN=credhub_client_ca/OU=app:20045e7a-4686-48ba-b523-b5378357073f", "-keyout", unknown_ca_key_path, "-out", unknown_ca_path])
 
     # Sign a new cert with unknown CA
     generate_cert(unknown_ca_path, unknown_ca_key_path, "unknown", "30")
