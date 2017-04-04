@@ -34,7 +34,7 @@ def generate_cert(ca_cert_path, ca_key_path, file_base_name, days):
     subprocess.call(["openssl", "req", "-new", "-key", key_path, "-out", client_csr_path, "-subj", "/CN=credhub_test_client/OU=app:" + str(app_uuid)])
 
     # generate client certificate
-    subprocess.call(["openssl", "x509", "-req", "-in", client_csr_path, "-CA", ca_cert_path, "-CAkey", ca_key_path,
+    subprocess.call(["openssl", "x509", "-req", "-in", client_csr_path, "-extfile", "openssl_extra.cnf", "-extensions", "v3_req", "-CA", ca_cert_path, "-CAkey", ca_key_path,
                      "-CAcreateserial", "-days", days, "-sha256", "-out", cert_path])
 
 def make_unknown_cert_and_ca():

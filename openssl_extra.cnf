@@ -1,0 +1,3 @@
+[ v3_req ]
+basicConstraints = critical,CA:FALSE,pathlen:0
+extendedKeyUsage = critical,clientAuth
