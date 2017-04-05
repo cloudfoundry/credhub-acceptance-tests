@@ -47,6 +47,7 @@ var _ = Describe("Certificates Test", func() {
 				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
 				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
 				Expect(cert.IsCA).To(Equal(true))
+				Expect(len(cert.SubjectKeyId)).ToNot(Equal(0))
 
 				session = RunCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
 				cert = CertFromPem(string(session.Out.Contents()), false)
