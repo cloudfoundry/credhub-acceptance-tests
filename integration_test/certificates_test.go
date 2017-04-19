@@ -10,6 +10,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
+	"strings"
 )
 
 var _ = Describe("Certificates Test", func() {
@@ -139,6 +140,9 @@ var _ = Describe("Certificates Test", func() {
 
 		It("should be able to generate a self-signed certificate", func() {
 			certificateId := GenerateUniqueCredentialName()
+			initialCertificate := ""
+			initialPrivateKey := ""
+
 			By("generating the certificate", func() {
 				session := RunCommand("generate", "-n", certificateId, "-t", "certificate", "--common-name", certificateId, "--self-sign", "-e", "email_protection", "-g", "digital_signature", "-a", "example.com", "-k", "3072", "-d", "90")
 				stdOut := string(session.Out.Contents())
@@ -149,6 +153,9 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).NotTo(ContainSubstring(`ca:`))
 				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
+
+				initialCertificate = stdOut[strings.Index(stdOut, "-----BEGIN CERTIFICATE-----"):strings.Index(stdOut, "-----END CERTIFICATE-----")]
+				initialPrivateKey = stdOut[strings.Index(stdOut, "-----BEGIN RSA PRIVATE KEY-----"):strings.Index(stdOut, "-----END RSA PRIVATE KEY-----")]
 
 				cert := CertFromPem(stdOut, false)
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
@@ -185,6 +192,10 @@ var _ = Describe("Certificates Test", func() {
 				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
 				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
 				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
+
+
+				Expect(stdOut).NotTo(ContainSubstring(initialCertificate))
+				Expect(stdOut).NotTo(ContainSubstring(initialPrivateKey))
 			})
 		})
 

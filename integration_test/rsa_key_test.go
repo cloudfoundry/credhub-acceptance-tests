@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"strings"
 )
 
 var _ = Describe("RSA key test", func() {
@@ -38,6 +39,26 @@ var _ = Describe("RSA key test", func() {
 		By("getting the key", func() {
 			session := RunCommand("get", "-n", rsaSecretName)
 			Eventually(session).Should(Exit(0))
+		})
+	})
+
+
+	It("should regenerate an RSA key", func() {
+		rsaSecretName := GenerateUniqueCredentialName()
+
+		By("regenerate should create an new value", func() {
+			session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+			initialPublicKey := stdOut[strings.Index(stdOut, "-----BEGIN PUBLIC KEY-----"):strings.Index(stdOut, "-----END PUBLIC KEY-----")]
+			initialPrivateKey := stdOut[strings.Index(stdOut, "-----BEGIN RSA PRIVATE KEY-----"):strings.Index(stdOut, "-----END RSA PRIVATE KEY-----")]
+			session = RunCommand("regenerate", "-n", rsaSecretName)
+
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).NotTo(ContainSubstring(initialPublicKey))
+			Expect(stdOut).NotTo(ContainSubstring(initialPrivateKey))
 		})
 	})
 })

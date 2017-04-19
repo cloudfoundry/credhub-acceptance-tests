@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"regexp"
 )
 
 var _ = Describe("Password test", func() {
@@ -27,6 +28,8 @@ var _ = Describe("Password test", func() {
 
 	It("should regenerate passwords with similar rules", func() {
 		generatedPasswordId := GenerateUniqueCredentialName()
+		firstValue :=""
+		valueRegexp := regexp.MustCompile(`value: \D*`)
 
 		By("first generating a password with no numbers", func() {
 			session := RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
@@ -35,6 +38,8 @@ var _ = Describe("Password test", func() {
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).NotTo(MatchRegexp(`value: \S*\d`))
+
+			firstValue = valueRegexp.FindString(stdOut)
 		})
 
 		By("then regenerating the password and observing it still has no numbers", func() {
@@ -43,6 +48,7 @@ var _ = Describe("Password test", func() {
 
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).NotTo(MatchRegexp(`value: \S*\d`))
+			Expect(stdOut).NotTo(ContainSubstring(firstValue))
 		})
 	})
 })
