@@ -38,7 +38,7 @@ var _ = Describe("Certificates Test", func() {
 
 	Describe("CAs and Certificates", func() {
 		Describe("certificate chains", func() {
-			It("should build the chain with an intermediate CA", func() {
+			It("should build the chain with an intermediate CA"	, func() {
 				rootCaName := GenerateUniqueCredentialName()
 				intermediateCaName := GenerateUniqueCredentialName()
 				leafCertificateName := GenerateUniqueCredentialName()
@@ -104,6 +104,9 @@ var _ = Describe("Certificates Test", func() {
 				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 				cert := CertFromPem(stdOut, false)
 				ca := CertFromPem(stdOut, true)
+
+				Expect(cert.AuthorityKeyId).To(Equal(ca.SubjectKeyId))
+
 				Expect(cert.Subject.CommonName).To(Equal(certificateId))
 				Expect(cert.Issuer.CommonName).To(Equal(certificateAuthorityId))
 				Expect(ca.CheckSignature(cert.SignatureAlgorithm, cert.RawTBSCertificate, cert.Signature)).To(BeNil()) // signed by ca
