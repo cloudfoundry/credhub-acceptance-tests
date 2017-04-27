@@ -40,12 +40,9 @@ func TestSmokeTest(t *testing.T) {
 }
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("github.com/cloudfoundry-incubator/credhub-cli")
-	Expect(err).NotTo(HaveOccurred())
-
-	return []byte(path)
-}, func(data []byte) {
-	CommandPath = string(data)
+	return []byte("credhub")
+}, func(cli_path []byte) {
+	CommandPath = string(cli_path)
 })
 
 var _ = SynchronizedAfterSuite(func() {}, func() {

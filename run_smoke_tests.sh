@@ -14,4 +14,4 @@ cat <<EOF > config.json
 }
 EOF
 
-ginkgo -r -p smoke_tests
+ginkgo -r -p smoke_test

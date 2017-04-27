@@ -17,4 +17,4 @@ cat <<EOF > config.json
 EOF
 
 ./generate_certs.py -caKey ${CREDENTIAL_ROOT}/client_ca_private.pem -caCert ${CREDENTIAL_ROOT}/client_ca_cert.pem
-ginkgo -r -p
+ginkgo -r -p -skipPackage smoke_test
