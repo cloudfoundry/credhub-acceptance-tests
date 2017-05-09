@@ -153,7 +153,6 @@ var _ = Describe("Certificates Test", func() {
 				Eventually(session).Should(Exit(0))
 
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).NotTo(ContainSubstring(`ca:`))
 				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
 				Expect(stdOut).To(MatchRegexp(`private_key: |\s+-----BEGIN RSA PRIVATE KEY-----`))
 
@@ -176,7 +175,6 @@ var _ = Describe("Certificates Test", func() {
 				session := RunCommand("get", "-n", certificateId)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				Expect(stdOut).ToNot(ContainSubstring(`ca:`))
 				Expect(stdOut).To(MatchRegexp(`certificate: |\s+-----BEGIN CERTIFICATE-----`))
 			})
 
@@ -195,7 +193,6 @@ var _ = Describe("Certificates Test", func() {
 				Expect(cert.NotAfter.Sub(cert.NotBefore).Hours()).To(Equal(90 * 24.0))
 				Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(3072))
 				Expect(cert.DNSNames).To(Equal([]string{"example.com"}))
-
 
 				Expect(stdOut).NotTo(ContainSubstring(initialCertificate))
 				Expect(stdOut).NotTo(ContainSubstring(initialPrivateKey))

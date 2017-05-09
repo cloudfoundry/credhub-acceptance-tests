@@ -57,8 +57,6 @@ var _ = Describe("updating a secret", func() {
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
 				Expect(stdOut).To(ContainSubstring(`certificate: fake-certificate`))
-				Expect(stdOut).To(Not(ContainSubstring(`ca:`)))
-				Expect(stdOut).To(Not(ContainSubstring(`private_key:`)))
 			})
 		})
 	})
