@@ -11,29 +11,60 @@ var _ = Describe("Creating a User", func() {
 	Describe("User Generation", func() {
 		name := GenerateUniqueCredentialName()
 
-		It("should create a user", func() {
-			session := RunCommand("generate", "-n", name, "-t", "user")
-			stdOut := string(session.Out.Contents())
-
-			By("generating the credential first", func() {
-				Eventually(session).Should(Exit(0))
-
-				Expect(stdOut).To(ContainSubstring(`name: /` + name))
-				Expect(stdOut).To(ContainSubstring(`type: user`))
-				Expect(stdOut).To(MatchRegexp(`username: \S*`))
-				Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
-				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
-			})
-
-			By("getting the generated credential", func() {
-				session := RunCommand("get", "-n", name)
+		Describe("With default parameters", func() {
+			It("should generate a user", func() {
+				session := RunCommand("generate", "-n", name, "-t", "user")
 				stdOut := string(session.Out.Contents())
 
+				By("generating the credential first", func() {
+					Eventually(session).Should(Exit(0))
+
+					Expect(stdOut).To(ContainSubstring(`name: /` + name))
+					Expect(stdOut).To(ContainSubstring(`type: user`))
+					Expect(stdOut).To(MatchRegexp(`username: \S*`))
+					Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
+					Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+				})
+
+				By("getting the generated credential", func() {
+					session := RunCommand("get", "-n", name)
+					stdOut := string(session.Out.Contents())
+
+					Eventually(session).Should(Exit(0))
+
+					Expect(stdOut).To(ContainSubstring(`name: /` + name))
+					Expect(stdOut).To(ContainSubstring(`type: user`))
+					Expect(stdOut).To(MatchRegexp(`username: \S*`))
+					Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
+					Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+				})
+			})
+		})
+
+		Describe("with parameters", func() {
+			It("should generate a user with password of length 50", func() {
+				session := RunCommand("generate", "-n", name, "-t", "user", "--length", "50")
+				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 
 				Expect(stdOut).To(ContainSubstring(`name: /` + name))
 				Expect(stdOut).To(ContainSubstring(`type: user`))
 				Expect(stdOut).To(MatchRegexp(`username: \S*`))
+				Expect(stdOut).To(MatchRegexp(`password: \S{50}\b`))
+				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+			})
+		})
+
+		Describe("with provided username", func() {
+			It("should generate a password, but not the username", func() {
+				username := "test-username"
+				session := RunCommand("generate", "-n", name, "-t", "user", "--username", username)
+				stdOut := string(session.Out.Contents())
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(ContainSubstring(`name: /` + name))
+				Expect(stdOut).To(ContainSubstring(`type: user`))
+				Expect(stdOut).To(ContainSubstring(`username: ` + username))
 				Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
 				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
 			})
