@@ -15,26 +15,28 @@ var _ = Describe("Creating a User", func() {
 			session := RunCommand("generate", "-n", name, "-t", "user")
 			stdOut := string(session.Out.Contents())
 
-			Eventually(session).Should(Exit(0))
+			By("generating the credential first", func() {
+				Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(ContainSubstring(`name: /` + name))
-			Expect(stdOut).To(ContainSubstring(`type: user`))
-			Expect(stdOut).To(MatchRegexp(`username: \S*`))
-			Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
-			Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
-		})
+				Expect(stdOut).To(ContainSubstring(`name: /` + name))
+				Expect(stdOut).To(ContainSubstring(`type: user`))
+				Expect(stdOut).To(MatchRegexp(`username: \S*`))
+				Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
+				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+			})
 
-		It("should get the created user", func() {
-			session := RunCommand("get", "-n", name)
-			stdOut := string(session.Out.Contents())
+			By("getting the generated credential", func() {
+				session := RunCommand("get", "-n", name)
+				stdOut := string(session.Out.Contents())
 
-			Eventually(session).Should(Exit(0))
+				Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(ContainSubstring(`name: /` + name))
-			Expect(stdOut).To(ContainSubstring(`type: user`))
-			Expect(stdOut).To(MatchRegexp(`username: \S*`))
-			Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
-			Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+				Expect(stdOut).To(ContainSubstring(`name: /` + name))
+				Expect(stdOut).To(ContainSubstring(`type: user`))
+				Expect(stdOut).To(MatchRegexp(`username: \S*`))
+				Expect(stdOut).To(MatchRegexp(`password: \S*\d`))
+				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+			})
 		})
 	})
 })
