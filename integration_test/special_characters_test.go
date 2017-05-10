@@ -14,7 +14,7 @@ var _ = Describe("handling special characters", func() {
 		passwordValue := "finkel-is-einhorn"
 
 		By("setting a value whose name begins with a leading slash", func() {
-			session := RunCommand("set", "-n", leadingSlashId, "-t", "password", "-v", passwordValue)
+			session := RunCommand("set", "-n", leadingSlashId, "-t", "password", "-w", passwordValue)
 			Eventually(session).Should(Exit(0))
 		})
 
@@ -43,7 +43,7 @@ var _ = Describe("handling special characters", func() {
 		crazyCharsId := "dan:test/ing?danother[stuff]that@shouldn!tbe$in&the" + GenerateUniqueCredentialName()
 
 		By("setting a value with lots of special characters", func() {
-			session := RunCommand("set", "-n", crazyCharsId, "-t", "password", "-v", "woof-woof")
+			session := RunCommand("set", "-n", crazyCharsId, "-t", "password", "-w", "woof-woof")
 			Eventually(session).Should(Exit(0))
 		})
 
@@ -62,7 +62,7 @@ var _ = Describe("handling special characters", func() {
 		edgeCaseId := "&gunk=x/bar/cr@zytown108" + GenerateUniqueCredentialName()
 
 		By("setting a value with lots of special characters", func() {
-			session := RunCommand("set", "-n", edgeCaseId, "-t", "password", "-v", "find-me")
+			session := RunCommand("set", "-n", edgeCaseId, "-t", "password", "-w", "find-me")
 			Eventually(session).Should(Exit(0))
 		})
 
@@ -81,7 +81,7 @@ var _ = Describe("handling special characters", func() {
 		deleteId := "?testParam=foo&gunk=x/bar/piv0t@l" + GenerateUniqueCredentialName()
 
 		By("setting a value with lots of special characters", func() {
-			session := RunCommand("set", "-n", deleteId, "-t", "password", "-v", "find-me")
+			session := RunCommand("set", "-n", deleteId, "-t", "password", "-w", "find-me")
 			Eventually(session).Should(Exit(0))
 		})
 

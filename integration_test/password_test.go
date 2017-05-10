@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("Password test", func() {
 	It("should set a password", func() {
-		session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "password", "-v", "some_value")
+		session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "password", "-w", "some_value")
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())

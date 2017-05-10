@@ -47,18 +47,18 @@ var _ = Describe("Race condition tests", func() {
 
 	Describe("when setting a new secret in multiple threads with `--no-overwrite`", func() {
 		It("should return the same value for both", func() {
-			rsaSecretName := GenerateUniqueCredentialName()
+			passwordSecretName := GenerateUniqueCredentialName()
 
 			waitForSession1 := make(chan *Session)
 			waitForSession2 := make(chan *Session)
 
 			go func() {
-				session := RunCommand("set", "-n", rsaSecretName, "-v", "test-value", "--no-overwrite")
+				session := RunCommand("set", "-n", passwordSecretName, "-w", "test-value", "--no-overwrite", "-t", "password")
 				waitForSession1 <- session
 			}()
 
 			go func() {
-				session := RunCommand("set", "-n", rsaSecretName, "-v", "test-value", "--no-overwrite")
+				session := RunCommand("set", "-n", passwordSecretName, "-w", "test-value", "--no-overwrite", "-t", "password")
 				waitForSession2 <- session
 			}()
 
