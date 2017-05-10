@@ -70,4 +70,25 @@ var _ = Describe("Creating a User", func() {
 			})
 		})
 	})
+
+	Describe("Setting a User value", func() {
+		name := GenerateUniqueCredentialName()
+
+		Describe("including all parameters", func() {
+			It("should set the user value", func() {
+				username := "test"
+				password := "password"
+				session := RunCommand("set", "-n", name, "-t", "user", "-z", username, "-w", password)
+				stdOut := string(session.Out.Contents())
+				Eventually(session).Should(Exit(0))
+
+				Expect(stdOut).To(ContainSubstring(`name: /` + name))
+				Expect(stdOut).To(ContainSubstring(`type: user`))
+				Expect(stdOut).To(ContainSubstring(`username: ` + username))
+				Expect(stdOut).To(ContainSubstring(`password: ` + password))
+				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
+
+			})
+		})
+	})
 })
