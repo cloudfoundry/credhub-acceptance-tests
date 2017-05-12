@@ -20,8 +20,6 @@ func TestBbrIntegrationTest(t *testing.T) {
 
 var config test_helpers.Config
 var tmpDir string
-var bbrBinaryPath string
-var credhubCliBinaryPath string
 
 var _ = BeforeSuite(func() {
 	SetDefaultEventuallyTimeout(15 * time.Minute)
@@ -33,16 +31,8 @@ var _ = BeforeSuite(func() {
 	tmpDir, err = ioutil.TempDir("", "BBR_CREDHUB_TEST")
 	Expect(err).NotTo(HaveOccurred())
 
-	bbrBinaryPath = MustHaveEnv("BBR_PATH")
-	credhubCliBinaryPath = MustHaveEnv("CREDHUB_CLI_PATH")
 })
 
 var _ = AfterSuite(func() {
 	Expect(os.RemoveAll(tmpDir)).To(Succeed())
 })
-
-func MustHaveEnv(keyname string) string {
-	val := os.Getenv(keyname)
-	Expect(val).NotTo(BeEmpty(), "Need "+keyname+" for the test")
-	return val
-}

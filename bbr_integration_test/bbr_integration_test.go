@@ -22,9 +22,9 @@ var _ = Describe("Backup and Restore", func() {
 		By("authenticating against credhub")
 		Eventually(Run(fmt.Sprintf(
 			"%s api --server %s --skip-tls-validation; %s login --skip-tls-validation -u %s -p %s",
-			credhubCliBinaryPath,
+			"credhub",
 			config.ApiUrl,
-			credhubCliBinaryPath,
+			"credhub",
 			config.ApiUsername,
 			config.ApiPassword,
 		))).Should(gexec.Exit(0))
@@ -40,7 +40,7 @@ var _ = Describe("Backup and Restore", func() {
 		By("adding a test credential")
 		Eventually(Run(fmt.Sprintf(
 			"%s set --name %s --value originalsecret",
-			credhubCliBinaryPath,
+			"credhub",
 			credentialName,
 		))).Should(gexec.Exit(0))
 
@@ -48,11 +48,11 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(Run(fmt.Sprintf(
 			"cd %s; %s deployment --target %s --ca-cert %s --username %s --password %s --deployment %s backup",
 			tmpDir,
-			bbrBinaryPath,
-			MustHaveEnv("BOSH_URL"),
+			"bbr",
+			config.Bosh.URL,
 			config.Bosh.CertPath,
-			MustHaveEnv("BOSH_CLIENT"),
-			MustHaveEnv("BOSH_CLIENT_SECRET"),
+			config.Bosh.Client,
+			config.Bosh.ClientSecret,
 			config.Bosh.DeploymentName,
 		))).Should(gexec.Exit(0))
 
@@ -68,7 +68,7 @@ var _ = Describe("Backup and Restore", func() {
 		By("editing the test credential")
 		Eventually(Run(fmt.Sprintf(
 			"%s set --name %s --value updatedsecret",
-			credhubCliBinaryPath,
+			"credhub",
 			credentialName,
 		))).Should(gexec.Exit(0))
 
@@ -76,18 +76,18 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(Run(fmt.Sprintf(
 			"cd %s; %s deployment --target %s --ca-cert %s --username %s --password %s --deployment %s restore",
 			tmpDir,
-			bbrBinaryPath,
-			MustHaveEnv("BOSH_URL"),
+			"bbr",
+			config.Bosh.URL,
 			config.Bosh.CertPath,
-			MustHaveEnv("BOSH_CLIENT"),
-			MustHaveEnv("BOSH_CLIENT_SECRET"),
+			config.Bosh.Client,
+			config.Bosh.ClientSecret,
 			config.Bosh.DeploymentName,
 		))).Should(gexec.Exit(0))
 
 		By("checking if the test credentials was restored")
 		getSession := Run(fmt.Sprintf(
 			"%s get --name %s",
-			credhubCliBinaryPath,
+			"credhub",
 			credentialName,
 		))
 		Eventually(getSession).Should(gexec.Exit(0))
@@ -99,9 +99,9 @@ func CleanupCredhub(path string) {
 	By("Cleaning up credhub bbr test passwords")
 	Eventually(Run(fmt.Sprintf(
 		"%s find -p /%s | tail -n +2 | cut -d\" \" -f1 | xargs -IN %s delete --name N",
-		credhubCliBinaryPath,
+		"credhub",
 		path,
-		credhubCliBinaryPath,
+		"credhub",
 	))).Should(gexec.Exit(0))
 }
 
