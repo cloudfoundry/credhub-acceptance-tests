@@ -23,10 +23,10 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(Run(fmt.Sprintf(
 			"%s api --server %s --skip-tls-validation; %s login --skip-tls-validation -u %s -p %s",
 			credhubCliBinaryPath,
-			credhubUrl,
+			config.ApiUrl,
 			credhubCliBinaryPath,
-			credhubApiUsername,
-			credhubApiPassword,
+			config.ApiUsername,
+			config.ApiPassword,
 		))).Should(gexec.Exit(0))
 
 		CleanupCredhub(bbrTestPath)
@@ -50,17 +50,17 @@ var _ = Describe("Backup and Restore", func() {
 			tmpDir,
 			bbrBinaryPath,
 			MustHaveEnv("BOSH_URL"),
-			boshCertPath,
+			config.Bosh.CertPath,
 			MustHaveEnv("BOSH_CLIENT"),
 			MustHaveEnv("BOSH_CLIENT_SECRET"),
-			deploymentName,
+			config.Bosh.DeploymentName,
 		))).Should(gexec.Exit(0))
 
 		By("asserting that the backup archive exists and contains a pg dump file")
 		Eventually(Run(fmt.Sprintf(
 			"cd %s/%s; tar zxvf %s; [ -f %s ]",
 			tmpDir,
-			deploymentName,
+			config.Bosh.DeploymentName,
 			"credhub-0.tgz",
 			"./credhub/credhubdb_dump",
 		))).Should(gexec.Exit(0))
@@ -78,10 +78,10 @@ var _ = Describe("Backup and Restore", func() {
 			tmpDir,
 			bbrBinaryPath,
 			MustHaveEnv("BOSH_URL"),
-			boshCertPath,
+			config.Bosh.CertPath,
 			MustHaveEnv("BOSH_CLIENT"),
 			MustHaveEnv("BOSH_CLIENT_SECRET"),
-			deploymentName,
+			config.Bosh.DeploymentName,
 		))).Should(gexec.Exit(0))
 
 		By("checking if the test credentials was restored")

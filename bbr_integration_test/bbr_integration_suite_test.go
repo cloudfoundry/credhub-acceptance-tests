@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"testing"
 	"time"
+
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 func TestBbrIntegrationTest(t *testing.T) {
@@ -16,12 +18,8 @@ func TestBbrIntegrationTest(t *testing.T) {
 	RunSpecs(t, "Backup and Restore integration suite")
 }
 
-var credhubUrl string
-var credhubApiUsername string
-var credhubApiPassword string
-var deploymentName string
+var config test_helpers.Config
 var tmpDir string
-var boshCertPath string
 var bbrBinaryPath string
 var credhubCliBinaryPath string
 
@@ -29,14 +27,12 @@ var _ = BeforeSuite(func() {
 	SetDefaultEventuallyTimeout(15 * time.Minute)
 
 	var err error
+	config, err = test_helpers.LoadConfig()
+	Expect(err).NotTo(HaveOccurred())
+
 	tmpDir, err = ioutil.TempDir("", "BBR_CREDHUB_TEST")
 	Expect(err).NotTo(HaveOccurred())
 
-	credhubUrl = MustHaveEnv("CREDHUB_URL")
-	credhubApiUsername = MustHaveEnv("CREDHUB_API_USERNAME")
-	credhubApiPassword = MustHaveEnv("CREDHUB_API_PASSWORD")
-	deploymentName = MustHaveEnv("CREDHUB_DEPLOYMENT_NAME")
-	boshCertPath = MustHaveEnv("BOSH_CERT_PATH")
 	bbrBinaryPath = MustHaveEnv("BBR_PATH")
 	credhubCliBinaryPath = MustHaveEnv("CREDHUB_CLI_PATH")
 })

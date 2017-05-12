@@ -1,20 +1,21 @@
 package test_helpers
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"path"
 	"strconv"
 	"time"
-	"io/ioutil"
-	"os/exec"
-	"encoding/json"
-	"path"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"os"
 )
 
 var (
-	CommandPath    string
+	CommandPath string
 )
 
 func GenerateUniqueCredentialName() string {
@@ -31,11 +32,20 @@ func RunCommand(args ...string) *Session {
 	return session
 }
 
+type BoshConfig struct {
+	URL            string `json:"url"`
+	Client         string `json:"client"`
+	ClientSecret   string `json:"client_secret"`
+	CertPath       string `json:"cert_path"`
+	DeploymentName string `json:"deployment_name"`
+}
+
 type Config struct {
-	ApiUrl         string `json:"api_url"`
-	ApiUsername    string `json:"api_username"`
-	ApiPassword    string `json:"api_password"`
-	CredentialRoot string `json:"credential_root"`
+	Bosh           *BoshConfig `json:"bosh"`
+	ApiUrl         string      `json:"api_url"`
+	ApiUsername    string      `json:"api_username"`
+	ApiPassword    string      `json:"api_password"`
+	CredentialRoot string      `json:"credential_root"`
 }
 
 func LoadConfig() (Config, error) {
