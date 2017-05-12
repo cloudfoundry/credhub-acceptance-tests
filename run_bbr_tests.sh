@@ -12,7 +12,7 @@ cat <<EOF > config.json
     "client":"${BOSH_CLIENT}",
     "client_secret":"${BOSH_CLIENT_SECRET}",
     "cert_path":"${BOSH_CERT_PATH}",
-    "deployment_name":"${CREDHUB_DEPLOYMENT_NAME}",
+    "deployment_name":"${CREDHUB_DEPLOYMENT_NAME}"
   }
 }
 EOF
