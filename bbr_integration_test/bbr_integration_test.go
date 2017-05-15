@@ -3,9 +3,7 @@ package bbr_integration
 import (
 	"fmt"
 
-	"os/exec"
-
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -17,17 +15,11 @@ var _ = Describe("Backup and Restore", func() {
 	var bbrTestPath = "bbr_test"
 
 	BeforeEach(func() {
-		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, GenerateUniqueCredentialName())
+		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
 		By("authenticating against credhub")
-		Eventually(Run(fmt.Sprintf(
-			"%s api --server %s --skip-tls-validation; %s login --skip-tls-validation -u %s -p %s",
-			"credhub",
-			config.ApiUrl,
-			"credhub",
-			config.ApiUsername,
-			config.ApiPassword,
-		))).Should(gexec.Exit(0))
+		RunCommand("credhub", "api", "--server", config.ApiUrl, "--skip-tls-validation")
+		RunCommand("credhub", "login", "--skip-tls-validation", "-u", config.ApiUsername, "-p", config.ApiPassword)
 
 		CleanupCredhub(bbrTestPath)
 	})
@@ -38,58 +30,25 @@ var _ = Describe("Backup and Restore", func() {
 
 	It("Successfully backs up and restores a Credhub release", func() {
 		By("adding a test credential")
-		Eventually(Run(fmt.Sprintf(
-			"%s set --name %s --value originalsecret",
-			"credhub",
-			credentialName,
-		))).Should(gexec.Exit(0))
+		RunCommand("credhub", "set", "--name", credentialName, "--value", "originalsecret")
 
 		By("running bbr backup")
-		Eventually(Run(fmt.Sprintf(
-			"cd %s; %s deployment --target %s --ca-cert %s --username %s --password %s --deployment %s backup",
-			tmpDir,
-			"bbr",
-			config.Bosh.URL,
-			config.Bosh.CertPath,
-			config.Bosh.Client,
-			config.Bosh.ClientSecret,
-			config.Bosh.DeploymentName,
-		))).Should(gexec.Exit(0))
+		RunCommand("bbr", "deployment", "--target", config.Bosh.URL, "--ca-cert", config.Bosh.CertPath, "--username",
+			config.Bosh.Client, "--password", config.Bosh.ClientSecret, "--deployment", config.Bosh.DeploymentName, "backup")
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		Eventually(Run(fmt.Sprintf(
-			"cd %s/%s; tar zxvf %s; [ -f %s ]",
-			tmpDir,
-			config.Bosh.DeploymentName,
-			"credhub-0.tgz",
-			"./credhub/credhubdb_dump",
-		))).Should(gexec.Exit(0))
+		RunCommand("tar", "zxvf", config.Bosh.DeploymentName+"/credhub-0.tgz")
+		Eventually(RunCommand("ls", "./credhub/credhubdb_dump")).Should(gexec.Exit(0))
 
 		By("editing the test credential")
-		Eventually(Run(fmt.Sprintf(
-			"%s set --name %s --value updatedsecret",
-			"credhub",
-			credentialName,
-		))).Should(gexec.Exit(0))
+		RunCommand("credhub", "set", "--name", credentialName, "--value", "updatedsecret")
 
 		By("running bbr restore")
-		Eventually(Run(fmt.Sprintf(
-			"cd %s; %s deployment --target %s --ca-cert %s --username %s --password %s --deployment %s restore",
-			tmpDir,
-			"bbr",
-			config.Bosh.URL,
-			config.Bosh.CertPath,
-			config.Bosh.Client,
-			config.Bosh.ClientSecret,
-			config.Bosh.DeploymentName,
-		))).Should(gexec.Exit(0))
+		RunCommand("bbr", "deployment", "--target", config.Bosh.URL, "--ca-cert", config.Bosh.CertPath, "--username",
+			config.Bosh.Client, "--password", config.Bosh.ClientSecret, "--deployment", config.Bosh.DeploymentName, "restore")
 
 		By("checking if the test credentials was restored")
-		getSession := Run(fmt.Sprintf(
-			"%s get --name %s",
-			"credhub",
-			credentialName,
-		))
+		getSession := RunCommand("credhub", "get", "--name", credentialName)
 		Eventually(getSession).Should(gexec.Exit(0))
 		Eventually(getSession.Out).Should(gbytes.Say("value: originalsecret"))
 	})
@@ -97,16 +56,8 @@ var _ = Describe("Backup and Restore", func() {
 
 func CleanupCredhub(path string) {
 	By("Cleaning up credhub bbr test passwords")
-	Eventually(Run(fmt.Sprintf(
-		"%s find -p /%s | tail -n +2 | cut -d\" \" -f1 | xargs -IN %s delete --name N",
-		"credhub",
-		path,
-		"credhub",
-	))).Should(gexec.Exit(0))
-}
-
-func Run(command string) *gexec.Session {
-	session, err := gexec.Start(exec.Command("sh", "-c", command), GinkgoWriter, GinkgoWriter)
-	Expect(err).NotTo(HaveOccurred())
-	return session
+	RunCommand(
+		"sh", "-c",
+		fmt.Sprintf("credhub find -p /%s | tail -n +2 | cut -d\" \" -f1 | xargs -IN credhub delete --name N", path),
+	)
 }
