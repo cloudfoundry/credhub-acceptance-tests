@@ -2,6 +2,15 @@
 
 set -eu
 
+API_URL=${API_URL:-https://10.244.0.2:8844}
+USERNAME=${USERNAME:-credhub_cli}
+PASSWORD=${PASSWORD:-credhub_cli_password}
+BOSH_URL=${BOSH_URL:-https://192.168.50.4:25555}
+BOSH_CLIENT=${BOSH_CLIENT:-admin}
+BOSH_CLIENT_SECRET=${BOSH_CLIENT_SECRET:-admin}
+BOSH_CERT_PATH=${BOSH_CERT_PATH:-$HOME/workspace/bosh-lite/ca/certs/ca.crt}
+CREDHUB_DEPLOYMENT_NAME=${CREDHUB_DEPLOYMENT_NAME:-credhub-lite}
+
 cat <<EOF > config.json
 {
   "api_url": "${API_URL}",

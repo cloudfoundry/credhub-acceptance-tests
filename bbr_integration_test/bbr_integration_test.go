@@ -26,6 +26,7 @@ var _ = Describe("Backup and Restore", func() {
 
 	AfterEach(func() {
 		CleanupCredhub(bbrTestPath)
+		CleanupArtifacts()
 	})
 
 	It("Successfully backs up and restores a Credhub release", func() {
@@ -37,7 +38,7 @@ var _ = Describe("Backup and Restore", func() {
 			config.Bosh.Client, "--password", config.Bosh.ClientSecret, "--deployment", config.Bosh.DeploymentName, "backup")
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		RunCommand("tar", "zxvf", config.Bosh.DeploymentName+"/credhub-0.tgz")
+		RunCommand("tar", "zxvf", config.Bosh.DeploymentName+"/"+config.Bosh.DeploymentName+"-0.tgz")
 		Eventually(RunCommand("ls", "./credhub/credhubdb_dump")).Should(gexec.Exit(0))
 
 		By("editing the test credential")
@@ -60,4 +61,14 @@ func CleanupCredhub(path string) {
 		"sh", "-c",
 		fmt.Sprintf("credhub find -p /%s | tail -n +2 | cut -d\" \" -f1 | xargs -IN credhub delete --name N", path),
 	)
+}
+
+func CleanupArtifacts() {
+	By("Cleaning up bbr test artifacts")
+	RunCommand(
+		"rm", "-rf",
+		fmt.Sprintf("%s", config.Bosh.DeploymentName),
+	)
+
+	RunCommand("rm", "-rf", "credhub")
 }
