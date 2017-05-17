@@ -4,9 +4,9 @@ set -eu
 
 cat <<EOF > config.json
 {
-  "api_url": "${CREDHUB_URL}",
-  "api_username":"${CREDHUB_API_USERNAME}",
-  "api_password":"${CREDHUB_API_PASSWORD}",
+  "api_url": "${API_URL}",
+  "api_username":"${USERNAME}",
+  "api_password":"${PASSWORD}",
   "bosh": {
     "url":"${BOSH_URL}",
     "client":"${BOSH_CLIENT}",
