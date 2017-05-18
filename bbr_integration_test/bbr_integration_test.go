@@ -43,6 +43,9 @@ var _ = Describe("Backup and Restore", func() {
 
 		By("editing the test credential")
 		RunCommand("credhub", "set", "--name", credentialName, "--value", "updatedsecret")
+		editSession := RunCommand("credhub", "get", "--name", credentialName)
+		Eventually(editSession).Should(gexec.Exit(0))
+		Eventually(editSession.Out).Should(gbytes.Say("value: updatedsecret"))
 
 		By("running bbr restore")
 		RunCommand("bbr", "deployment", "--target", config.Bosh.URL, "--ca-cert", config.Bosh.CertPath, "--username",
