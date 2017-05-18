@@ -31,7 +31,7 @@ var _ = Describe("Backup and Restore", func() {
 
 	It("Successfully backs up and restores a Credhub release", func() {
 		By("adding a test credential")
-		RunCommand("credhub", "set", "--name", credentialName, "--value", "originalsecret")
+		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "originalsecret")
 
 		By("running bbr backup")
 		RunCommand("bbr", "deployment", "--target", config.Bosh.URL, "--ca-cert", config.Bosh.CertPath, "--username",
@@ -42,7 +42,7 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(RunCommand("ls", "./credhub/credhubdb_dump")).Should(gexec.Exit(0))
 
 		By("editing the test credential")
-		RunCommand("credhub", "set", "--name", credentialName, "--value", "updatedsecret")
+		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "updatedsecret")
 		editSession := RunCommand("credhub", "get", "--name", credentialName)
 		Eventually(editSession).Should(gexec.Exit(0))
 		Eventually(editSession.Out).Should(gbytes.Say("value: updatedsecret"))
