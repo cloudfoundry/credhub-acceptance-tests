@@ -38,7 +38,7 @@ var _ = Describe("Backup and Restore", func() {
 			config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		RunCommand("tar", "zxvf", "credhub/bosh-0.tgz")
+		RunCommand("tar", "xvf", "credhub/bosh-0.tar")
 		Eventually(RunCommand("ls", "./credhub/credhubdb_dump")).Should(gexec.Exit(0))
 
 		By("editing the test credential")
