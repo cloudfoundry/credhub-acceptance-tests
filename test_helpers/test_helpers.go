@@ -33,11 +33,9 @@ func RunCommand(args ...string) *Session {
 }
 
 type BoshConfig struct {
-	URL            string `json:"url"`
-	Client         string `json:"client"`
-	ClientSecret   string `json:"client_secret"`
-	CertPath       string `json:"cert_path"`
-	DeploymentName string `json:"deployment_name"`
+	Host              string `json:"host"`
+	SshUsername       string `json:"bosh_ssh_username"`
+	SshPrivateKeyPath string `json:"bosh_ssh_private_key_path"`
 }
 
 type Config struct {
