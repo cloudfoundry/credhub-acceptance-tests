@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"regexp"
 )
 
 var _ =	It("should set, get, and delete a new value secret", func() {
@@ -35,6 +36,17 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 
 		Expect(stdOut).To(ContainSubstring(`type: value`))
 		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
+
+		re := regexp.MustCompile("id: (.*?)\n")
+		credentialId := re.FindStringSubmatch(stdOut)
+
+		session = RunCommand("get", "--id", credentialId[1])
+		stdOut = string(session.Out.Contents())
+
+		Eventually(session).Should(Exit(0))
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
+
 	})
 
 	By("deleting the secret", func() {
