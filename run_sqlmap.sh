@@ -15,6 +15,8 @@ AUTH_FILE="${CREDENTIAL_ROOT}/auth_file.pem"
 SQLMAP_LEVEL="${SQLMAP_LEVEL:-5}"
 SQLMAP_RISK="${SQLMAP_RISK:-3}"
 
+BASEDIR="$(dirname ${0})"
+
 setup_certs() {
     client_ca_cert_path="${CREDENTIAL_ROOT}/client_ca_cert.pem"
     client_ca_key_path="${CREDENTIAL_ROOT}/client_ca_key.pem"
@@ -24,7 +26,7 @@ setup_certs() {
     echo "${CLIENT_CA_CERT}" > ${CREDENTIAL_ROOT}/client_ca_cert.pem
     echo "${CLIENT_CA_KEY}" > ${CREDENTIAL_ROOT}/client_ca_key.pem
 
-    ./generate_certs.py \
+    "${BASEDIR}/generate_certs.py" \
         -outputPath "${CREDENTIAL_ROOT}" \
         -caCert "${client_ca_cert_path}" \
         -caKey "${client_ca_key_path}"
@@ -38,7 +40,7 @@ run_sqlmap() {
     data="${3:-}"
     log_file="$(mktemp)"
 
-    sqlmap_command="python /sqlmap/sqlmap.py
+    sqlmap_command="sqlmap
         -u ${url}
         --auth-file ${AUTH_FILE}
         --dbms ${DATABASE_TYPE}
