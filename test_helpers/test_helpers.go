@@ -44,6 +44,7 @@ type Config struct {
 	ApiUsername    string      `json:"api_username"`
 	ApiPassword    string      `json:"api_password"`
 	CredentialRoot string      `json:"credential_root"`
+	UAACa	       string	   `json:"uaa_ca"`
 }
 
 func LoadConfig() (Config, error) {
@@ -64,6 +65,8 @@ func LoadConfig() (Config, error) {
 }
 
 func TargetAndLogin(cfg Config) {
-	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
+	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
+	uaa_ca := cfg.UAACa
+	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--ca-cert", credhub_ca, "--ca-cert", uaa_ca)
 	Eventually(session).Should(Exit(0))
 }
