@@ -11,7 +11,9 @@ cat <<EOF > config.json
     "host":"${API_IP}:22",
     "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
     "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
-  }
+  },
+  "credential_root":"${CREDENTIAL_ROOT}",
+  "uaa_ca":"${UAA_CA}"
 }
 EOF
 
