@@ -70,3 +70,8 @@ func TargetAndLogin(cfg Config) {
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--ca-cert", credhub_ca, "--ca-cert", uaa_ca)
 	Eventually(session).Should(Exit(0))
 }
+
+func TargetAndLoginSkipTls(cfg Config) {
+	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
+	Eventually(session).Should(Exit(0))
+}
