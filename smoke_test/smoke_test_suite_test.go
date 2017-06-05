@@ -31,7 +31,7 @@ var _ = BeforeEach(func() {
 	cfg, err = LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 
-	TargetAndLogin(cfg)
+	TargetAndLoginSkipTls(cfg)
 })
 
 func TestSmokeTest(t *testing.T) {
