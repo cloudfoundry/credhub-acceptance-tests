@@ -4,30 +4,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	"io/ioutil"
-	"runtime"
-	"os"
 )
-
-var _ = BeforeEach(func() {
-	var err error
-	homeDir, err = ioutil.TempDir("", "cm-test")
-	Expect(err).NotTo(HaveOccurred())
-
-	if runtime.GOOS == "windows" {
-		os.Setenv("USERPROFILE", homeDir)
-	} else {
-		os.Setenv("HOME", homeDir)
-	}
-
-	cfg, err = LoadConfig()
-	Expect(err).NotTo(HaveOccurred())
-
-	// These happen before each test due to the lack of a BeforeAll
-	// (https://github.com/onsi/ginkgo/issues/70) :(
-	// If the tests are slow, they should be runnable in parallel with the -p option.
-	TargetAndLoginSkipTls(cfg)
-})
 
 var _ = Describe("Smoke Test", func() {
 
