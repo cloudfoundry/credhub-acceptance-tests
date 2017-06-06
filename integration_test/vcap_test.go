@@ -37,23 +37,21 @@ var _ = Describe("vcap interpolation of secrets", func() {
 			token := strings.TrimSpace(string(session.Out.Contents()))
 
 			postData := `{` +
-				`  "VCAP_SERVICES": {` +
-				`   "p-config-server": [` +
-				`      {` +
-				`        "credentials": {` +
-				`          "credhub-ref": "((/` + credentialName + `))"` +
-				`        },` +
-				`        "label": "p-config-server"` +
-				`      }` +
-				`    ]` +
-				`  }` +
-				`}`;
+				`"p-config-server": [` +
+				`   {` +
+				`     "credentials": {` +
+				`       "credhub-ref": "((/` + credentialName + `))"` +
+				`     },` +
+				`     "label": "p-config-server"` +
+				`   }` +
+				` ]` +
+				`}`
 
-			result, statusCode, err := postJSON(config.ApiUrl + "/api/v1/vcap", postData, token)
+			result, statusCode, err := postJSON(config.ApiUrl + "/api/v1/interpolate", postData, token)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(statusCode).To(Equal(200))
 
-			Expect(result).To(Equal(`{"VCAP_SERVICES":{"p-config-server":[{"credentials":{"password":"bob has a password","username":"bob"},"label":"p-config-server"}]}}`))
+			Expect(result).To(Equal(`{"p-config-server":[{"credentials":{"password":"bob has a password","username":"bob"},"label":"p-config-server"}]}`))
 		})
 	})
 })
