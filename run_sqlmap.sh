@@ -40,8 +40,11 @@ run_sqlmap() {
     data="${3:-}"
     log_file="$(mktemp)"
 
+    # choose level 3 verbosity as it shows injected payloads
+    # https://github.com/sqlmapproject/sqlmap/wiki/Usage#output-verbosity
     sqlmap_command="sqlmap
         -u ${url}
+        -v 3
         --auth-file ${AUTH_FILE}
         --dbms ${DATABASE_TYPE}
         -H \"content-type: application/json\"
