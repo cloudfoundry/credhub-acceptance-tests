@@ -49,6 +49,7 @@ run_sqlmap() {
         -H \"content-type: application/json\"
         --level ${SQLMAP_LEVEL}
         --risk ${SQLMAP_RISK}
+        --random-agent
         --batch
         --fresh-queries
         --flush-session
