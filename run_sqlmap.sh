@@ -44,7 +44,6 @@ run_sqlmap() {
     # https://github.com/sqlmapproject/sqlmap/wiki/Usage#output-verbosity
     sqlmap_command="sqlmap
         -u ${url}
-        -v 3
         --auth-file ${AUTH_FILE}
         --dbms ${DATABASE_TYPE}
         -H \"content-type: application/json\"
