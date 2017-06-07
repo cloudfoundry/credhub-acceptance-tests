@@ -12,8 +12,8 @@ set -eu
 CREDENTIAL_ROOT="$(mktemp -d)"
 AUTH_FILE="${CREDENTIAL_ROOT}/auth_file.pem"
 # Defaults level and risk to maximum to increase test coverage
-SQLMAP_LEVEL="${SQLMAP_LEVEL:-5}"
-SQLMAP_RISK="${SQLMAP_RISK:-3}"
+SQLMAP_LEVEL="${SQLMAP_LEVEL:-3}"
+SQLMAP_RISK="${SQLMAP_RISK:-2}"
 
 BASEDIR="$(dirname ${0})"
 
