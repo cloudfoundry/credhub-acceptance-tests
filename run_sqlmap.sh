@@ -12,8 +12,8 @@ set -eu
 CREDENTIAL_ROOT="$(mktemp -d)"
 AUTH_FILE="${CREDENTIAL_ROOT}/auth_file.pem"
 # Defaults level and risk to maximum to increase test coverage
-SQLMAP_LEVEL="${SQLMAP_LEVEL:-3}"
-SQLMAP_RISK="${SQLMAP_RISK:-2}"
+SQLMAP_LEVEL="${SQLMAP_LEVEL:-1}"
+SQLMAP_RISK="${SQLMAP_RISK:-1}"
 
 BASEDIR="$(dirname ${0})"
 
@@ -98,7 +98,7 @@ run_tests() {
     # FIND tests
     run_sqlmap "${API_URL}/api/v1/data?path=/sqlmap" # find by path
     run_sqlmap "${API_URL}/api/v1/data?name-like=sqlmap" # find by name like
-#    run_sqlmap "${API_URL}/api/v1/data?paths=true" # find paths - disabled because it can take too long
+    run_sqlmap "${API_URL}/api/v1/data?paths=true" # find paths - disabled because it can take too long
 
     # Clean up after ourselves
     curl "${API_URL}/api/v1/data?name=${password_cred}" \
