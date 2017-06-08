@@ -34,7 +34,7 @@ var _ = Describe("Backup and Restore", func() {
 		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "originalsecret")
 
 		By("running bbr backup")
-		RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
+		RunCommand("bbr", "director", "--artifactname", "credhub", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
 			config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
 
 		By("asserting that the backup archive exists and contains a pg dump file")
@@ -48,7 +48,7 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(editSession.Out).Should(gbytes.Say("value: updatedsecret"))
 
 		By("running bbr restore")
-		RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
+		RunCommand("bbr", "director", "--artifactname", "credhub", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
 			config.Bosh.SshUsername, "--host", config.Bosh.Host, "restore")
 
 		By("checking if the test credentials was restored")
