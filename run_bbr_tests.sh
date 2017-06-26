@@ -4,6 +4,7 @@ set -eu
 
 cat <<EOF > config.json
 {
+  "director_host":"${API_IP}",
   "api_url": "https://${API_IP}:8844",
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",

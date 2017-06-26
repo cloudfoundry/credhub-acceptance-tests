@@ -45,6 +45,7 @@ type Config struct {
 	ApiPassword    string      `json:"api_password"`
 	CredentialRoot string      `json:"credential_root"`
 	UAACa	       string	   `json:"uaa_ca"`
+	DirectorHost   string      `json:"director_host"`
 }
 
 func LoadConfig() (Config, error) {

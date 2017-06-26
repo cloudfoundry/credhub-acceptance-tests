@@ -34,22 +34,24 @@ var _ = Describe("Backup and Restore", func() {
 		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "originalsecret")
 
 		By("running bbr backup")
-		RunCommand("bbr", "director", "--artifactname", "credhub", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
-			config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
+		RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath,
+			"--username", config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		RunCommand("tar", "xvf", "credhub/bosh-0.tar")
-		Eventually(RunCommand("ls", "./credhub/credhubdb_dump")).Should(gexec.Exit(0))
+		RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhub.tar", config.DirectorHost))
+		Eventually(RunCommand("ls", "credhubdb_dump")).Should(gexec.Exit(0))
 
 		By("editing the test credential")
 		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "updatedsecret")
+
 		editSession := RunCommand("credhub", "get", "--name", credentialName)
 		Eventually(editSession).Should(gexec.Exit(0))
 		Eventually(editSession.Out).Should(gbytes.Say("value: updatedsecret"))
 
 		By("running bbr restore")
-		RunCommand("bbr", "director", "--artifactname", "credhub", "--private-key-path", config.Bosh.SshPrivateKeyPath, "--username",
-			config.Bosh.SshUsername, "--host", config.Bosh.Host, "restore")
+		RunCommand("sh", "-c",
+			fmt.Sprintf("bbr director --private-key-path %s --username %s --host %s restore --artifact-path ./%s*Z/",
+				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host,config.DirectorHost))
 
 		By("checking if the test credentials was restored")
 		getSession := RunCommand("credhub", "get", "--name", credentialName)
@@ -68,5 +70,6 @@ func CleanupCredhub(path string) {
 
 func CleanupArtifacts() {
 	By("Cleaning up bbr test artifacts")
-	RunCommand("rm", "-rf", "credhub")
+	RunCommand("rm", "-rf", "credhubdb_dump")
+	RunCommand("sh", "-c", fmt.Sprintf("rm -rf %s*Z", config.DirectorHost))
 }
