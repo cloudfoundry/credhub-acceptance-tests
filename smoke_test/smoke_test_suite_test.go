@@ -18,6 +18,8 @@ var (
 )
 
 var _ = BeforeEach(func() {
+	CommandPath = "credhub"
+
 	var err error
 	homeDir, err = ioutil.TempDir("", "cm-test")
 	Expect(err).NotTo(HaveOccurred())
@@ -38,12 +40,6 @@ func TestSmokeTest(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "SmokeTest Suite")
 }
-
-var _ = SynchronizedBeforeSuite(func() []byte {
-	return []byte("credhub")
-}, func(cli_path []byte) {
-	CommandPath = string(cli_path)
-})
 
 var _ = SynchronizedAfterSuite(func() {}, func() {
 	CleanupBuildArtifacts()
