@@ -34,11 +34,40 @@ var _ = Describe("Certificates Test", func() {
 			Eventually(session).Should(Exit(1))
 			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate attribute must be set. Please validate your input and retry your request."))
 		})
+
+		It("should allow you to set a certificate with a named CA", func() {
+			caName := GenerateUniqueCredentialName()
+			certName := GenerateUniqueCredentialName()
+			session := RunCommand("generate", "-n", caName, "-t", "certificate", "--is-ca", "-c", "commonName")
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+			type certificateValue struct {
+				Ca          string `yaml:"ca,omitempty"`
+				Certificate string `yaml:"certificate,omitempty"`
+			}
+			type certificate struct {
+				Value certificateValue `yaml:"value"`
+			}
+
+			cert := certificate{}
+			err := yaml.Unmarshal([]byte(stdOut), &cert)
+			Expect(err).To(BeNil())
+
+			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakeytoo", "--ca-name", caName)
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+
+			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
+			Expect(stdOut).To(ContainSubstring(`type: certificate`))
+			Expect(stdOut).To(MatchRegexp(`ca: |\s+` + cert.Value.Certificate))
+			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
+		})
 	})
 
 	Describe("CAs and Certificates", func() {
 		Describe("certificate chains", func() {
-			It("should build the chain with an intermediate CA"	, func() {
+			It("should build the chain with an intermediate CA", func() {
 				rootCaName := GenerateUniqueCredentialName()
 				intermediateCaName := GenerateUniqueCredentialName()
 				leafCertificateName := GenerateUniqueCredentialName()
@@ -241,7 +270,7 @@ var _ = Describe("Certificates Test", func() {
 // prefix should be "Certificate" or "Ca"
 func CertFromPem(input string, ca bool) *x509.Certificate {
 	type certificateValue struct {
-		Ca string `yaml:"ca,omitempty"`
+		Ca          string `yaml:"ca,omitempty"`
 		Certificate string `yaml:"certificate,omitempty"`
 	}
 	type certificate struct {
