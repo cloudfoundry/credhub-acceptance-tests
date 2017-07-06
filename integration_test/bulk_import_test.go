@@ -37,6 +37,9 @@ var _ = Describe("Import test", func() {
 	})
 
 	It("should save the credentials on CredHub", func() {
+		RunCommand("generate", "-n", "ca-certificate", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
+		RunCommand("import", "-f", "../test_helpers/bulk_import.yml")
+
 		session := RunCommand("get", "-n", "/director/deployment/blobstore - agent")
 		Eventually(session).Should(Exit(0))
 		stdOut := string(session.Out.Contents())
