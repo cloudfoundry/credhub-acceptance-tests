@@ -49,17 +49,21 @@ var _ = Describe("Certificates Test", func() {
 				Value certificateValue `yaml:"value"`
 			}
 
-			cert := certificate{}
-			err := yaml.Unmarshal([]byte(stdOut), &cert)
+			caCert := certificate{}
+			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
 			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakeytoo", "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
+			cert := certificate{}
+			err = yaml.Unmarshal([]byte(stdOut), &cert)
+			Expect(err).To(BeNil())
+
+			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(MatchRegexp(`ca: |\s+` + cert.Value.Certificate))
 			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
 			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
 		})
