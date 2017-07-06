@@ -8,12 +8,34 @@ import (
 )
 
 var _ = Describe("Import test", func() {
-	It("should import credentials from a file", func() {
-		RunCommand("generate", "-n", "ca-certificate", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
+	var (
+		credentialNames []string
+		session *Session
+	)
 
-		session := RunCommand("import", "-f", "../test_helpers/bulk_import.yml")
+	BeforeEach(func() {
+		session = RunCommand("generate", "-n", "ca-certificate", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
 		Eventually(session).Should(Exit(0))
+		credentialNames = []string{"ca-certificate"}
 
+		session = RunCommand("import", "-f", "../test_helpers/bulk_import.yml")
+		Eventually(session).Should(Exit(0))
+		credentialNames = append(credentialNames,  "/director/deployment/blobstore - agent")
+		credentialNames = append(credentialNames,  "/director/deployment/blobstore - director")
+		credentialNames = append(credentialNames,  "/director/deployment/bosh-ca")
+		credentialNames = append(credentialNames,  "/director/deployment/bosh-cert")
+		credentialNames = append(credentialNames,  "/director/deployment/ssh-cred")
+		credentialNames = append(credentialNames,  "/director/deployment/rsa-cred")
+	})
+
+	AfterEach(func() {
+		for _, credentialName := range credentialNames {
+			session = RunCommand("delete", "-n", credentialName)
+			Eventually(session).Should(Exit(0))
+		}
+	})
+
+	It("should import credentials from a file", func() {
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - agent`))
 		Expect(stdOut).To(ContainSubstring(`type: password`))
@@ -34,13 +56,22 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`value:`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/ssh-cred`))
+		Expect(stdOut).To(ContainSubstring(`type: ssh`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`ssh-rsa`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/rsa-cred`))
+		Expect(stdOut).To(ContainSubstring(`type: rsa`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 	})
 
 	It("should save the credentials on CredHub", func() {
-		RunCommand("generate", "-n", "ca-certificate", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
-		RunCommand("import", "-f", "../test_helpers/bulk_import.yml")
-
-		session := RunCommand("get", "-n", "/director/deployment/blobstore - agent")
+		session = RunCommand("get", "-n", "/director/deployment/blobstore - agent")
 		Eventually(session).Should(Exit(0))
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - agent`))
@@ -70,6 +101,24 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`type: certificate`))
 		Expect(stdOut).To(ContainSubstring(`value:`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+
+		session = RunCommand("get", "-n", "/director/deployment/ssh-cred")
+		Eventually(session).Should(Exit(0))
+		stdOut = string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/ssh-cred`))
+		Expect(stdOut).To(ContainSubstring(`type: ssh`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`ssh-rsa`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+
+		session = RunCommand("get", "-n", "/director/deployment/rsa-cred")
+		Eventually(session).Should(Exit(0))
+		stdOut = string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/rsa-cred`))
+		Expect(stdOut).To(ContainSubstring(`type: rsa`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 	})
 

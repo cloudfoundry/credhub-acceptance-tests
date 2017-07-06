@@ -146,3 +146,76 @@ credentials:
       Pm1I6bG/sE9mM9u2cwj7bF8sOMOOAt0j7rjJnzjj3VVrC/FdmLwpIXj0mNPePc08
       H6645HHxzIlq0LurlUULZAsmMWN16r8WVjIvJaMkL5if5SjerU4SrA==
       -----END RSA PRIVATE KEY-----
+- name: /director/deployment/ssh-cred
+  type: ssh
+  value:
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAqW3uno8Sp44XFAKpE4NFBJ/CFkjymSepMcp/esZb214y/udC
+      TKtuLzCElo48x543Q4NIOUNWwcaLH+GxuqkfUYFSIGAGqUcxPVFJKvbTeLg/kHrg
+      dnMxPrlqH/WMc7SMOU/zqDhugpz4Ehr1BTytKvhJXBALeQ2vl6wSUeFZKEEF77sI
+      8RZBZs55mCiukKNkeGXfIl3ZdnyUTYF6u+QApzhXKoTwkpuK/MZoGdcT3UvY8FaX
+      7cltgmTrdgmYYVB+CXdeNmOvlqBVp0HbLghsqM6UXCCWRajdXnlkTYEnBSlzEoBG
+      koo5vet8RYAVTAPvUVf6f2RFjzoBWSwl9WjRhwIDAQABAoIBAQCn3jDPTshX1ROO
+      kvg8ShKG+1bMx6f+EOq1V4Io/gGi/tkd77mjxzKbdMHZfcJAscTlklxryAlcYsAT
+      bYWvgMNz+OKLCzluXQgvTatl8zohYMQx/V0KXyWKlSDN23c2aMuKOWob4RW1OZsc
+      LTNY5f5ZFblxisAjR2kTqLxZ/iFdHDo3cUgmJdv+wda1xb9vVvgwsz15ST5A2t17
+      1ikkQepV8mrSnh5Abv4sUOF/ln9df6ogst053yevPxHZZb0Uu0cQk+8MXJDT6DCC
+      DqcbrHiIiSxaVgTs2TOUbRk0cnleEJUdXKq/7obH5+UknuJ5B6x/XqPvUs7KX9po
+      Al8uK9YBAoGBAN089eBpNEOBC6OyRC3HviqbGLmYUlSC0dyJXeirDSdXxRgXfTtz
+      ITLxl47vcqfJzWMbrt8VOVhyvjRslSRB+fT29TmV4Yk0/N9YTVzi2SB3DHd/rv28
+      w3YMdhjD6G7jrxsVh6Hvp9Ly9P2seB9Xh2PfDVQan4pDUEZUtrtcv66HAoGBAMQN
+      B0Kj9BpqUTvYaky7Mo5782j+Z+L7DP3op/DhweRamcIEbV63ZfFiD25ZUfak4+go
+      lm4w+vdEEW1MTFAYAOaQ38uYgK2593/XKSkvYz5YIMj4VOm2PRRpF/ui2IOVKeNM
+      Kma6dqpPkSnd7zudp974/csOKPxT6OxVwyV/W4UBAoGBAJ7Gs0dc+W9A29OdiqS4
+      Z1g4eyQnl16jjG2UAFuM9yG3MfI6WVwjIj5neHfSjRyyDb8FDRl5J/C8WJlTHC4r
+      U3JlElVDpdtMtfasbsks3NsZ1U6lyja8FCNSiib34oZCzVbIutCTKISSbRTphEQq
+      Ezavy+cCPGGEMcZn4cTRqZddAoGAJgGkk623J9vOjbyBtwhfX7H12TfgqecjeKG+
+      1PrfHMbXof47ua3yLF5nQWw9cIQ8zof3ybrjHEZs3nR5ItnUat5RFGYnJAa2TWlH
+      yH0wTyjEilFiHMDAjJFnHdhPAwtKyI6+dZXWZWPxb11gAH2qypYYlWHUXj5iHFbv
+      8vgCpQECgYA2V3KxN5qna7ydNu+LXH6R9cYYzQbxQyRMBn+/9IO5PvuqOBipvAvh
+      vDVeIhdi4tH7zFSVjO3DbjdM06Uco/bW4vv5Lnx5QYyGEdW7lTTdMtOAaYSvdl8z
+      bNF7bmTW7+e5lvYQN525ETiAGYGewB7EbQidBDZoYtpkVdeoFtfL/Q==
+      -----END RSA PRIVATE KEY-----
+    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpbe6ejxKnjhcUAqkTg0UEn8IWSPKZJ6kxyn96xlvbXjL+50JMq24vMISWjjzHnjdDg0g5Q1bBxosf4bG6qR9RgVIgYAapRzE9UUkq9tN4uD+QeuB2czE+uWof9YxztIw5T/OoOG6CnPgSGvUFPK0q+ElcEAt5Da+XrBJR4VkoQQXvuwjxFkFmznmYKK6Qo2R4Zd8iXdl2fJRNgXq75ACnOFcqhPCSm4r8xmgZ1xPdS9jwVpftyW2CZOt2CZhhUH4Jd142Y6+WoFWnQdsuCGyozpRcIJZFqN1eeWRNgScFKXMSgEaSijm963xFgBVMA+9RV/p/ZEWPOgFZLCX1aNGH
+- name: /director/deployment/rsa-cred
+  type: rsa
+  value:
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEA1ViJduJrB8KWAJABirUay7j6U0g4ZamVNNEVqqVsysZeUROI
+      gG++wtfYyO2I9uOLk8b3MMOdAoFgLdVVvIHNPOjLlGHAQpWDbuaqxJhpVgJG0RMo
+      hy1IOswqw2Aw0EFehigs8YlrA2VB8DSlRegCk4MARfKYIlmpp+USdtc19rkrdNMI
+      OfXm4QCdeWmuBl/JdQyzSyw3EM27/wJf2ti42y3sil3Ehw7NJ3r0+f2vwIsdg11i
+      GvdefZf0cMuN2Z6X1YYOf+xldqb0t6lNj584QIVJvsMmmlQIlwZtneIgwczZYa/m
+      94GrqBlEQkGEDY6YIDaLp9lnFvgSlC9udDKV0QIDAQABAoIBAQC8Suzf+Qs/iRR8
+      oJxLwHVK0hJUyIvF5fri55n4xxGSkasSYWv69yTksD4Lb+GPDNrWbScjabG8UVUC
+      fqOxwNnT5R4v8moOGgkrKvgSlPV6zH2V7xO44lU6V5FyaAYM93SmcPThpEfHcmnU
+      x5IKda84Y8ks8uQkhQAAR2OZcW2WNtBSn9nNN1KRAni5TNGIGFsr+OVRgMiZfc/+
+      DVKV8uiRiq5gJYbEWyCcbTtJXyzqIp18DfEbk814LUk9NCwkKfjWMl2QCYl1cqAu
+      FvT8EXHLx/lvaNJu7kV1kMmkkwgSd3SqjPqIYLmVR9YoBP7UVN+WJe3PKS53kX/o
+      795aqjgBAoGBAPTuUoRmQ8Y3CpaDvym5NX5cCYiS81eVzJ/IrcYKqTkPUQurAYTl
+      1cq2ns1BUGi7Ysgvc/9xDGdr9pLGfNik9hvuXQL4/3UEzRKvP0gXkNvFFfhfriWZ
+      1tFtJLip+Eb2f3TgfEch7Tm7t817WoOS86/KFL8wx5BYj0jqXlC+2YhRAoGBAN78
+      zCJqmydQihomxhUMG+hstfSOy4euoqeE08pPst8moy/Tzf/qJ1CYiODR3yJb2+4j
+      hopcrCt8NlNKx+bFKOJxLE/7J4OhBJBU3xUVYfIKxPwxWQo6BMQ/5AVLhrB/gGab
+      YxMH3biHtzE1/O23SlD01sru7+TFSZCteB9mslWBAoGAVKg7JUAjlNNZeYS4Ajfd
+      4Xr2YJpKOa+xNlkqlxUAQJSmsp28vK6kIpjUcqVsoYaDMiYUtenhG64ZX8nzRP5f
+      gm/0/h4KTewG5bpk6QocK5oHaf3IN37g3SoYUyuMgRqaG0+sJPn5AMd9VCyasHeO
+      eugiG6NElwPFIrK/PrF4hsECgYEAheFZ3sAK74vXnuPwwepHR0Ed7fteD9S2K8YA
+      MtOvHXPhPnH4mNJJUIaEiBb51XM5lL0XpjMF3AXzyAZ6BwAREAPLCypMCye9ybpr
+      RglUiTIWGyS1xQIYoouJp/Q0pfunZ/ObhG2QnZ4+SvmTJlaJ9BlMbQMQXVZmWMsN
+      +Cx8ngECgYA6ho9JpQx31tAU717LfAIy07HnYd+dQpkei6mbSfg18uHUygQ7/Z9t
+      fD1mfRx04gZ9TgonIhwwDe5Ghc96/EJVmJfOCJvFjfppSnjndmW6O69kDdobOGvx
+      baYbylB8pZTVchHeDqrywscDhn+thbkooAV33OLAi6BB8Y3PFJSNiQ==
+      -----END RSA PRIVATE KEY-----
+    public_key: |
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1ViJduJrB8KWAJABirUa
+      y7j6U0g4ZamVNNEVqqVsysZeUROIgG++wtfYyO2I9uOLk8b3MMOdAoFgLdVVvIHN
+      POjLlGHAQpWDbuaqxJhpVgJG0RMohy1IOswqw2Aw0EFehigs8YlrA2VB8DSlRegC
+      k4MARfKYIlmpp+USdtc19rkrdNMIOfXm4QCdeWmuBl/JdQyzSyw3EM27/wJf2ti4
+      2y3sil3Ehw7NJ3r0+f2vwIsdg11iGvdefZf0cMuN2Z6X1YYOf+xldqb0t6lNj584
+      QIVJvsMmmlQIlwZtneIgwczZYa/m94GrqBlEQkGEDY6YIDaLp9lnFvgSlC9udDKV
+      0QIDAQAB
+      -----END PUBLIC KEY-----
