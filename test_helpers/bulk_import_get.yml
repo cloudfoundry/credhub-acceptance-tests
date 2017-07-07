@@ -1,11 +1,11 @@
 credentials:
-- name: /director/deployment/blobstore - agent
+- name: /director/deployment/blobstore - agent2
   type: password
   value: gx4ll8193j5rw0wljgqo
-- name: /director/deployment/blobstore - director
+- name: /director/deployment/blobstore - director2
   type: value
   value: y14ck84ef51dnchgk4kp
-- name: /director/deployment/bosh-ca
+- name: /director/deployment/bosh-ca2
   type: certificate
   value:
     ca: |
@@ -88,10 +88,10 @@ credentials:
       KIWM596sXqYSnc4OaWYelz4+YIV32r/hmhhZZ+i8EIy2oSHau4jwt/LaLM+QCiRr
       MPv/c+/JCPEqhL9atvvbRz58wwz0Bag07mYbN5tHFtRbHz9iQd8EMJ4=
       -----END RSA PRIVATE KEY-----
-- name: /director/deployment/bosh-cert
+- name: /director/deployment/bosh-cert2
   type: certificate
   value:
-    ca_name: /ca-certificate
+    ca_name: /ca-certificate2
     certificate: |
       -----BEGIN CERTIFICATE-----
       MIIEIjCCAwqgAwIBAgIULN7G53mKa1yzFlhdl1Y3OPZXWL0wDQYJKoZIhvcNAQEL
@@ -146,7 +146,7 @@ credentials:
       Pm1I6bG/sE9mM9u2cwj7bF8sOMOOAt0j7rjJnzjj3VVrC/FdmLwpIXj0mNPePc08
       H6645HHxzIlq0LurlUULZAsmMWN16r8WVjIvJaMkL5if5SjerU4SrA==
       -----END RSA PRIVATE KEY-----
-- name: /director/deployment/ssh-cred
+- name: /director/deployment/ssh-cred2
   type: ssh
   value:
     private_key: |
@@ -178,7 +178,7 @@ credentials:
       bNF7bmTW7+e5lvYQN525ETiAGYGewB7EbQidBDZoYtpkVdeoFtfL/Q==
       -----END RSA PRIVATE KEY-----
     public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpbe6ejxKnjhcUAqkTg0UEn8IWSPKZJ6kxyn96xlvbXjL+50JMq24vMISWjjzHnjdDg0g5Q1bBxosf4bG6qR9RgVIgYAapRzE9UUkq9tN4uD+QeuB2czE+uWof9YxztIw5T/OoOG6CnPgSGvUFPK0q+ElcEAt5Da+XrBJR4VkoQQXvuwjxFkFmznmYKK6Qo2R4Zd8iXdl2fJRNgXq75ACnOFcqhPCSm4r8xmgZ1xPdS9jwVpftyW2CZOt2CZhhUH4Jd142Y6+WoFWnQdsuCGyozpRcIJZFqN1eeWRNgScFKXMSgEaSijm963xFgBVMA+9RV/p/ZEWPOgFZLCX1aNGH
-- name: /director/deployment/rsa-cred
+- name: /director/deployment/rsa-cred2
   type: rsa
   value:
     private_key: |
