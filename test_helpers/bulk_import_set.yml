@@ -219,3 +219,8 @@ credentials:
       QIVJvsMmmlQIlwZtneIgwczZYa/m94GrqBlEQkGEDY6YIDaLp9lnFvgSlC9udDKV
       0QIDAQAB
       -----END PUBLIC KEY-----
+- name: /director/deployment/user1
+  type: user
+  value:
+    password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf
+    username: dan-user1

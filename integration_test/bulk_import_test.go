@@ -50,6 +50,13 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/user1`))
+		Expect(stdOut).To(ContainSubstring(`type: user`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf`))
+		Expect(stdOut).To(ContainSubstring(`username: dan-user1`))
+		Expect(stdOut).To(ContainSubstring(`password_hash:`))
+
 		afterSet()
 	})
 
@@ -106,6 +113,16 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
 		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 
+		session = RunCommand("get", "-n", "/director/deployment/user2")
+		Eventually(session).Should(Exit(0))
+		stdOut = string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/user2`))
+		Expect(stdOut).To(ContainSubstring(`type: user`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf`))
+		Expect(stdOut).To(ContainSubstring(`username: dan-user2`))
+		Expect(stdOut).To(ContainSubstring(`password_hash:`))
+
 		afterGet()
 	})
 
@@ -123,6 +140,7 @@ func beforeSet() {
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/bosh-cert1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/ssh-cred1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/rsa-cred1")
+	credentialNamesSet = append(credentialNamesSet, "/director/deployment/user1")
 }
 
 func afterSet() {
@@ -144,6 +162,7 @@ func beforeGet() {
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/bosh-cert2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/ssh-cred2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/rsa-cred2")
+	credentialNamesGet = append(credentialNamesGet, "/director/deployment/user2")
 }
 
 func afterGet() {
