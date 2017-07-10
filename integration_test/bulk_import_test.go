@@ -57,6 +57,15 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`username: dan-user1`))
 		Expect(stdOut).To(ContainSubstring(`password_hash:`))
 
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json1`))
+		Expect(stdOut).To(ContainSubstring(`type: json`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`trump:`))
+		Expect(stdOut).To(ContainSubstring(`tweet:`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
+
 		afterSet()
 	})
 
@@ -122,6 +131,18 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf`))
 		Expect(stdOut).To(ContainSubstring(`username: dan-user2`))
 		Expect(stdOut).To(ContainSubstring(`password_hash:`))
+
+		session = RunCommand("get", "-n", "/director/deployment/json1")
+		Eventually(session).Should(Exit(0))
+		stdOut = string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json1`))
+		Expect(stdOut).To(ContainSubstring(`type: json`))
+		Expect(stdOut).To(ContainSubstring(`value:`))
+		Expect(stdOut).To(ContainSubstring(`trump:`))
+		Expect(stdOut).To(ContainSubstring(`tweet:`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
+		Expect(stdOut).To(ContainSubstring(`- covfefe`))
 
 		afterGet()
 	})

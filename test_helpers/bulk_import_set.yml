@@ -224,3 +224,11 @@ credentials:
   value:
     password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf
     username: dan-user1
+- name: /director/deployment/json1
+  type: json
+  value:
+    trump:
+      tweet:
+      - covfefe
+      - covfefe
+      - covfefe
