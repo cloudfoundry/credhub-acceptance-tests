@@ -18,11 +18,11 @@ var _ = Describe("Import test", func() {
 		beforeSet()
 
 		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - agent1`))
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-agent1`))
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`value: gx4ll8193j5rw0wljgqo`))
 
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - director1`))
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-director1`))
 		Expect(stdOut).To(ContainSubstring(`type: value`))
 		Expect(stdOut).To(ContainSubstring(`value: y14ck84ef51dnchgk4kp`))
 
@@ -72,17 +72,17 @@ var _ = Describe("Import test", func() {
 	It("should save the credentials on CredHub", func() {
 		beforeGet()
 
-		session = RunCommand("get", "-n", "/director/deployment/blobstore - agent2")
+		session = RunCommand("get", "-n", "/director/deployment/blobstore-agent2")
 		Eventually(session).Should(Exit(0))
 		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - agent2`))
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-agent2`))
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`value: gx4ll8193j5rw0wljgqo`))
 
-		session = RunCommand("get", "-n", "/director/deployment/blobstore - director2")
+		session = RunCommand("get", "-n", "/director/deployment/blobstore-director2")
 		Eventually(session).Should(Exit(0))
 		stdOut = string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore - director2`))
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-director2`))
 		Expect(stdOut).To(ContainSubstring(`type: value`))
 		Expect(stdOut).To(ContainSubstring(`value: y14ck84ef51dnchgk4kp`))
 
@@ -155,8 +155,8 @@ func beforeSet() {
 	credentialNamesSet = []string{"ca-certificate1"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_set.yml")
 	Eventually(session).Should(Exit(0))
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore - agent1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore - director1")
+	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore-agent1")
+	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore-director1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/bosh-ca1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/bosh-cert1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/ssh-cred1")
@@ -177,8 +177,8 @@ func beforeGet() {
 	credentialNamesGet = []string{"ca-certificate2"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_get.yml")
 	Eventually(session).Should(Exit(0))
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore - agent2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore - director2")
+	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore-agent2")
+	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore-director2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/bosh-ca2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/bosh-cert2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/ssh-cred2")

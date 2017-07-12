@@ -253,20 +253,6 @@ var _ = Describe("Certificates Test", func() {
 			Eventually(session).Should(Exit(1))
 			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' is not supported. Valid values include digital_signature, non_repudiation, key_encipherment, data_encipherment, key_agreement, key_cert_sign, crl_sign, encipher_only and decipher_only.`))
 		})
-
-		It("should handle secrets whose names have lots of special characters", func() {
-			madDogCAId := "dan:test/ing?danothertbe$in&the[stuff]=that@shouldn!"
-
-			By("setting a value with lots of special characters", func() {
-				session := RunCommand("generate", "-t", "certificate", "-n", madDogCAId, "--common-name", GenerateUniqueCredentialName(), "--is-ca")
-				Eventually(session).Should(Exit(0))
-			})
-
-			By("retrieving the value that was set", func() {
-				session := RunCommand("get", "-n", madDogCAId)
-				Eventually(session).Should(Exit(0))
-			})
-		})
 	})
 })
 

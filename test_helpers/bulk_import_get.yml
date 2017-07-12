@@ -1,8 +1,8 @@
 credentials:
-- name: /director/deployment/blobstore - agent2
+- name: /director/deployment/blobstore-agent2
   type: password
   value: gx4ll8193j5rw0wljgqo
-- name: /director/deployment/blobstore - director2
+- name: /director/deployment/blobstore-director2
   type: value
   value: y14ck84ef51dnchgk4kp
 - name: /director/deployment/bosh-ca2
