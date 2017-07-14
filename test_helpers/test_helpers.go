@@ -66,6 +66,7 @@ func LoadConfig() (Config, error) {
 }
 
 func TargetAndLogin(cfg Config) {
+	CleanEnv()
 	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
 	uaa_ca := cfg.UAACa
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--ca-cert", credhub_ca, "--ca-cert", uaa_ca)
@@ -73,6 +74,12 @@ func TargetAndLogin(cfg Config) {
 }
 
 func TargetAndLoginSkipTls(cfg Config) {
+	CleanEnv()
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
 	Eventually(session).Should(Exit(0))
+}
+
+func CleanEnv() {
+	os.Unsetenv("CREDHUB_SECRET")
+	os.Unsetenv("CREDHUB_CLIENT")
 }
