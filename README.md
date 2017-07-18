@@ -27,7 +27,9 @@ cat <<EOF > config.json
 {
   "api_url": "https://${YOUR_IP_HERE}:8844",
   "api_username":"${YOUR_USERNAME}",
-  "api_password":"${YOUR_PASSWORD}"
+  "api_password":"${YOUR_PASSWORD}",
+  "credential_root":"${YOUR_CREDHUB_CA_PATH}",
+  "uaa_ca":"${UAA_CA_PEM_FILE}"
 }
 EOF
 ```
@@ -36,4 +38,24 @@ Runs local CredHub testing via:
 
 ```sh
 ./run_tests.sh
+```
+
+### Run Application Smoke Tests
+
+Target your desired environment:
+
+```sh
+cat <<EOF > config.json
+{
+  "api_url": "https://${YOUR_IP_HERE}:8844",
+  "api_username":"${YOUR_USERNAME}",
+  "api_password":"${YOUR_PASSWORD}"
+}
+EOF
+```
+
+Run smoke test suite via:
+
+```sh
+./run_smoke_tests.sh
 ```
