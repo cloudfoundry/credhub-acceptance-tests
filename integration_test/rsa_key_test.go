@@ -11,7 +11,7 @@ import (
 var _ = Describe("RSA key test", func() {
 	Describe("setting an RSA key", func() {
 		It("should be able to set an rsa key", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "rsa", "-U", "iamapublickey", "-P", credentialValue)
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "rsa", "-u", "iamapublickey", "-p", credentialValue)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))

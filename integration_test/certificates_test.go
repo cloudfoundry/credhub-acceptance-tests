@@ -17,7 +17,7 @@ var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakey", "--root-string=someca")
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakey", "--root=someca")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -53,7 +53,7 @@ var _ = Describe("Certificates Test", func() {
 			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
-			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakeytoo", "--ca-name", caName)
+			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakeytoo", "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
