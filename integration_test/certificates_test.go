@@ -17,7 +17,7 @@ var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate-string=iamacertificate", "--private-string=iamakey", "--root-string=someca")
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakey", "--root=someca")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))

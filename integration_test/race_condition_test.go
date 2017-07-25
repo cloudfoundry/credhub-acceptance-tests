@@ -83,12 +83,12 @@ var _ = Describe("Race condition tests", func() {
 			waitForSession2 := make(chan *Session)
 
 			go func() {
-				session := RunCommand("set", "-n", rsaSecretName, "-t", "ssh", "-P", "something")
+				session := RunCommand("set", "-n", rsaSecretName, "-t", "ssh", "-p", "something")
 				waitForSession1 <- session
 			}()
 
 			go func() {
-				session := RunCommand("set", "-n", rsaSecretName, "-t", "rsa", "-P", "something")
+				session := RunCommand("set", "-n", rsaSecretName, "-t", "rsa", "-p", "something")
 				waitForSession2 <- session
 			}()
 

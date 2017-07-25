@@ -12,7 +12,7 @@ var _ = Describe("SSH key test", func() {
 	Describe("setting an SSH key", func() {
 		It("should be able to set an ssh key", func() {
 			base64DecodablePublicKey := "public"
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "ssh", "-U", base64DecodablePublicKey, "-P", credentialValue)
+			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "ssh", "-u", base64DecodablePublicKey, "-p", credentialValue)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
