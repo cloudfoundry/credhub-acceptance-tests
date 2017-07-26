@@ -9,10 +9,10 @@ import (
 var _ = Describe("Smoke Test", func() {
 
 	Describe("certificates", func() {
-		certificate := "smoke_test_value" + GenerateUniqueCredentialName()
+		certificate := "t_value" + GenerateUniqueCredentialName()
 		It("can CRD certificates", func() {
 			By("should be able to set a certificate", func() {
-				session := RunCommand("set", "-n", certificate, "-t", "certificate", "--certificate-string", "iamacertificate")
+				session := RunCommand("set", "-n", certificate, "-t", "certificate", "--certificate", "iamacertificate")
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
