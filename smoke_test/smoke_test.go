@@ -41,7 +41,7 @@ var _ = Describe("Smoke Test", func() {
 
 				Eventually(session).Should(Exit(1))
 
-				Expect(stdErr).To(ContainSubstring(`Credential not found. Please validate your input and retry your request.`))
+				Expect(stdErr).To(ContainSubstring(`The request could not be completed because the credential does not exist or you do not have sufficient authorization.`))
 			})
 		})
 	})

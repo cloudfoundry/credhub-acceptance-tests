@@ -15,7 +15,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 		session := RunCommand("get", "-n", credentialName)
 		stdErr := string(session.Err.Contents())
 
-		Expect(stdErr).To(ContainSubstring(`Credential not found. Please validate your input and retry your request.`))
+		Expect(stdErr).To(ContainSubstring(`The request could not be completed because the credential does not exist or you do not have sufficient authorization.`))
 		Eventually(session).Should(Exit(1))
 	})
 
