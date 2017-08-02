@@ -18,10 +18,10 @@ var _ = Describe("Backup and Restore", func() {
 		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
 		By("authenticating against credhub")
-		session := RunCommand("credhub", "api", "--server", config.ApiUrl, "--skip-tls-validation")
+		session := RunCommand("credhub", "api", "--server", config.ApiUrl)
 		Eventually(session).Should(Exit(0))
 
-		session = RunCommand("credhub", "login", "--skip-tls-validation", "-u", config.ApiUsername, "-p", config.ApiPassword)
+		session = RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword)
 		Eventually(session).Should(Exit(0))
 
 		CleanupCredhub(bbrTestPath)
