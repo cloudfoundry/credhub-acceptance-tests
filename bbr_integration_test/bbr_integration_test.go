@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"github.com/onsi/gomega/gexec"
+	. "github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Backup and Restore", func() {
@@ -18,8 +18,11 @@ var _ = Describe("Backup and Restore", func() {
 		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
 		By("authenticating against credhub")
-		RunCommand("credhub", "api", "--server", config.ApiUrl, "--skip-tls-validation")
-		RunCommand("credhub", "login", "--skip-tls-validation", "-u", config.ApiUsername, "-p", config.ApiPassword)
+		session := RunCommand("credhub", "api", "--server", config.ApiUrl, "--skip-tls-validation")
+		Eventually(session).Should(Exit(0))
+
+		session = RunCommand("credhub", "login", "--skip-tls-validation", "-u", config.ApiUsername, "-p", config.ApiPassword)
+		Eventually(session).Should(Exit(0))
 
 		CleanupCredhub(bbrTestPath)
 	})
@@ -31,31 +34,36 @@ var _ = Describe("Backup and Restore", func() {
 
 	It("Successfully backs up and restores a Credhub release", func() {
 		By("adding a test credential")
-		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "originalsecret")
+		session := RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "originalsecret")
+		Eventually(session).Should(Exit(0))
 
 		By("running bbr backup")
-		RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath,
+		session = RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath,
 			"--username", config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
+		Eventually(session).Should(Exit(0))
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhub.tar", config.DirectorHost))
-		Eventually(RunCommand("ls", "credhubdb_dump")).Should(gexec.Exit(0))
+		session = RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhub.tar", config.DirectorHost))
+		Eventually(session).Should(Exit(0))
+		Eventually(RunCommand("ls", "credhubdb_dump")).Should(Exit(0))
 
 		By("editing the test credential")
-		RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "updatedsecret")
+		session = RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "updatedsecret")
+		Eventually(session).Should(Exit(0))
 
 		editSession := RunCommand("credhub", "get", "--name", credentialName)
-		Eventually(editSession).Should(gexec.Exit(0))
+		Eventually(editSession).Should(Exit(0))
 		Eventually(editSession.Out).Should(gbytes.Say("value: updatedsecret"))
 
 		By("running bbr restore")
-		RunCommand("sh", "-c",
+		session = RunCommand("sh", "-c",
 			fmt.Sprintf("bbr director --private-key-path %s --username %s --host %s restore --artifact-path ./%s*Z/",
 				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host,config.DirectorHost))
+		Eventually(session).Should(Exit(0))
 
 		By("checking if the test credentials was restored")
 		getSession := RunCommand("credhub", "get", "--name", credentialName)
-		Eventually(getSession).Should(gexec.Exit(0))
+		Eventually(getSession).Should(Exit(0))
 		Eventually(getSession.Out).Should(gbytes.Say("value: originalsecret"))
 	})
 })
