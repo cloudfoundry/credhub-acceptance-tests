@@ -6,7 +6,7 @@ API_URL=${API_URL:-https://localhost:9000}
 USERNAME=${USERNAME:-credhub}
 PASSWORD=${PASSWORD:-password}
 
-cat <<EOF > config.json
+cat <<EOF > test_config.json
 {
   "api_url": "${API_URL}",
   "api_username":"${USERNAME}",

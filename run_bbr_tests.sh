@@ -2,7 +2,7 @@
 
 set -eu
 
-cat <<EOF > config.json
+cat <<EOF > test_config.json
 {
   "director_host":"${API_IP}",
   "api_url": "https://${API_IP}:8844",

@@ -8,7 +8,7 @@ PASSWORD=${PASSWORD:-password}
 CREDENTIAL_ROOT=${CREDENTIAL_ROOT:-~/workspace/credhub-release/src/credhub/src/test/resources}
 UAA_CA=${UAA_CA:-~/workspace/credhub-deployments/ca/credhub_root_ca.pem}
 
-cat <<EOF > config.json
+cat <<EOF > test_config.json
 {
   "api_url": "${API_URL}",
   "api_username":"${USERNAME}",

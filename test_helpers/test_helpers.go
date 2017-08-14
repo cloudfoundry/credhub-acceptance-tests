@@ -52,7 +52,7 @@ func LoadConfig() (Config, error) {
 
 	configuration := Config{}
 
-	configurationJson, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "config.json"))
+	configurationJson, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "test_config.json"))
 	if err != nil {
 		return configuration, err
 	}

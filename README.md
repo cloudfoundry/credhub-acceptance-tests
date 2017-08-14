@@ -23,7 +23,7 @@ go get github.com/cloudfoundry-incubator/credhub-cli
 Target your local API by running:
 
 ```sh
-cat <<EOF > config.json
+cat <<EOF > test_config.json
 {
   "api_url": "https://${YOUR_IP_HERE}:8844",
   "api_username":"${YOUR_USERNAME}",
@@ -45,7 +45,7 @@ Runs local CredHub testing via:
 Target your desired environment:
 
 ```sh
-cat <<EOF > config.json
+cat <<EOF > test_config.json
 {
   "api_url": "https://${YOUR_IP_HERE}:8844",
   "api_username":"${YOUR_USERNAME}",
