@@ -3,7 +3,7 @@ package bbr_integration
 import (
 	"fmt"
 
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -15,10 +15,10 @@ var _ = Describe("Backup and Restore", func() {
 	var bbrTestPath = "bbr_test"
 
 	BeforeEach(func() {
-		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, GenerateUniqueCredentialName())
+		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
 		By("authenticating against credhub")
-		TargetAndLogin(config)
+		test_helpers.TargetAndLogin(config)
 
 		CleanupCredhub(bbrTestPath)
 	})
@@ -54,7 +54,7 @@ var _ = Describe("Backup and Restore", func() {
 		By("running bbr restore")
 		session = RunCommand("sh", "-c",
 			fmt.Sprintf("bbr director --private-key-path %s --username %s --host %s restore --artifact-path ./%s*Z/",
-				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host,config.DirectorHost))
+				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host, config.DirectorHost))
 		Eventually(session).Should(Exit(0))
 
 		By("checking if the test credentials was restored")
