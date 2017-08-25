@@ -35,7 +35,7 @@ var _ = Describe("UaaBuilder", func() {
 
 	Describe("ClientCredentialsBuilder", func() {
 		It("builds an OAuthStrategy using client credentials", func() {
-			builder := auth.UaaClientCredentials("credhub_client", "secret")
+			builder := auth.UaaClientCredentials(config.ClientName, config.ClientSecret)
 			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(), credhub.Auth(builder))
 			Expect(err).ToNot(HaveOccurred())
 
