@@ -12,7 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/auth/uaa"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub/auth"
 )
 
 var (
@@ -35,7 +35,7 @@ var _ = BeforeSuite(func() {
 	credhubClient, err =
 		credhub.New(config.ApiUrl,
 			credhub.CaCerts(string(credhub_ca), string(uaa_ca)),
-			credhub.AuthBuilder(uaa.PasswordGrantBuilder("credhub_cli", "", config.ApiUsername, config.ApiPassword)))
+			credhub.Auth(auth.UaaPassword("credhub_cli", "", config.ApiUsername, config.ApiPassword)))
 	Expect(err).ToNot(HaveOccurred())
 })
 
