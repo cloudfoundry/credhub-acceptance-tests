@@ -17,11 +17,8 @@ var _ = Describe("Backup and Restore", func() {
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
-		By("authenticating against credhub")
-		session := RunCommand("credhub", "api", "--server", config.ApiUrl)
-		Eventually(session).Should(Exit(0))
-
-		session = RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword)
+		By("authenticating and targeting against credhub")
+		session := RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword, "--server", config.ApiUrl, "--ca-cert", config.UAACa)
 		Eventually(session).Should(Exit(0))
 
 		CleanupCredhub(bbrTestPath)
