@@ -3,7 +3,7 @@ package bbr_integration
 import (
 	"fmt"
 
-	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -15,14 +15,10 @@ var _ = Describe("Backup and Restore", func() {
 	var bbrTestPath = "bbr_test"
 
 	BeforeEach(func() {
-		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
+		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, GenerateUniqueCredentialName())
 
 		By("authenticating against credhub")
-		session := RunCommand("credhub", "api", "--server", config.ApiUrl)
-		Eventually(session).Should(Exit(0))
-
-		session = RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword)
-		Eventually(session).Should(Exit(0))
+		TargetAndLogin(config)
 
 		CleanupCredhub(bbrTestPath)
 	})
