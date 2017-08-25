@@ -13,7 +13,7 @@ cat <<EOF > test_config.json
     "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
     "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
   },
-  "uaa_ca":"${UAA_CA}"
+  "uaa_ca":"${SERVER_CA_CERT_PATH}"
 }
 EOF
 
