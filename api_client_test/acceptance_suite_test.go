@@ -32,10 +32,13 @@ var _ = BeforeSuite(func() {
 	uaa_ca, err := ioutil.ReadFile(path.Join(config.UAACa))
 	Expect(err).NotTo(HaveOccurred())
 
-	credhubClient, err =
-		credhub.New(config.ApiUrl,
-			credhub.CaCerts(string(credhub_ca), string(uaa_ca)),
-			credhub.Auth(auth.UaaPassword("credhub_cli", "", config.ApiUsername, config.ApiPassword)))
+	credhubClient, err = credhub.New(config.ApiUrl,
+		credhub.CaCerts(string(credhub_ca), string(uaa_ca)),
+		credhub.Auth(
+			auth.UaaPassword("credhub_cli", "", config.ApiUsername, config.ApiPassword),
+		),
+	)
+
 	Expect(err).ToNot(HaveOccurred())
 })
 
