@@ -22,7 +22,7 @@ var _ = Describe("UaaBuilder", func() {
 			refreshToken := oauth.RefreshToken()
 
 			builder := auth.Uaa("credhub_cli", "", config.ApiUsername, config.ApiPassword, accessToken, refreshToken)
-			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(), credhub.Auth(builder))
+			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(true), credhub.Auth(builder))
 			Expect(err).ToNot(HaveOccurred())
 
 			oauth = ch.Auth.(*auth.OAuthStrategy)
@@ -37,7 +37,7 @@ var _ = Describe("UaaBuilder", func() {
 	Describe("ClientCredentialsBuilder", func() {
 		It("builds an OAuthStrategy using client credentials", func() {
 			builder := auth.UaaClientCredentials(config.ClientName, config.ClientSecret)
-			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(), credhub.Auth(builder))
+			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(true), credhub.Auth(builder))
 			Expect(err).ToNot(HaveOccurred())
 
 			_, err = ch.FindByPath("/something")
