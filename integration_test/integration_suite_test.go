@@ -22,7 +22,7 @@ const credentialValue = "FAKE-CREDENTIAL-VALUE"
 
 func TestCommands(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Commands Suite")
+	RunSpecs(t, "Integration Suite")
 }
 
 var _ = BeforeEach(func() {

@@ -6,6 +6,7 @@ import (
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Certificate Credential Type", func() {
@@ -18,9 +19,9 @@ var _ = Describe("Certificate Credential Type", func() {
 		}
 
 		setCert := values.Certificate{
-			Ca:          "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
-			Certificate: "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----",
-			PrivateKey:  "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
+			Ca:          test_helpers.VALID_CERTIFICATE_CA,
+			Certificate: test_helpers.VALID_CERTIFICATE,
+			PrivateKey:  test_helpers.VALID_CERTIFICATE_PRIVATE_KEY,
 		}
 
 		By("generate a certificate with path " + name)
