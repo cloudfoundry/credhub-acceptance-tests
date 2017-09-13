@@ -21,7 +21,7 @@ var _ = Describe("UaaBuilder", func() {
 			accessToken := oauth.AccessToken()
 			refreshToken := oauth.RefreshToken()
 
-			builder := auth.Uaa("credhub_cli", "", config.ApiUsername, config.ApiPassword, accessToken, refreshToken)
+			builder := auth.Uaa("credhub_cli", "", config.ApiUsername, config.ApiPassword, accessToken, refreshToken, false)
 			ch, err := credhub.New(config.ApiUrl, credhub.SkipTLSValidation(true), credhub.Auth(builder))
 			Expect(err).ToNot(HaveOccurred())
 
