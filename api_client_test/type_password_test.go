@@ -14,7 +14,7 @@ var _ = Describe("Password Credential Type", func() {
 		generatePassword := generate.Password{Length: 10}
 
 		By("generate a password with path " + name)
-		password, err := credhubClient.GeneratePassword(name, generatePassword, false)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(HaveLen(10))
 		firstGeneratedPassword := password.Value
