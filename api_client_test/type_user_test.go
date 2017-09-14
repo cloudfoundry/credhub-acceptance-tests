@@ -43,14 +43,14 @@ var _ = Describe("User Credential Type", func() {
 		Expect(user.Value.User).To(Equal(newUser))
 
 		By("getting the user")
-		user, err = credhubClient.GetUser(name)
+		user, err = credhubClient.GetLatestUser(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value.User).To(Equal(newUser))
 
 		By("deleting the user")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetUser(name)
+		_, err = credhubClient.GetLatestUser(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

@@ -29,14 +29,14 @@ var _ = Describe("Value Credential Type", func() {
 		Expect(value.Value).To(Equal(cred2))
 
 		By("getting the value")
-		value, err = credhubClient.GetValue(name)
+		value, err = credhubClient.GetLatestValue(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred2))
 
 		By("deleting the value")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetValue(name)
+		_, err = credhubClient.GetLatestValue(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

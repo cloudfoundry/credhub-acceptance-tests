@@ -31,14 +31,14 @@ var _ = Describe("JSON Credential Type", func() {
 		Expect([]byte(json.Value)).To(MatchJSON(`{"another_key":"another_value"}`))
 
 		By("getting the json")
-		json, err = credhubClient.GetJSON(name)
+		json, err = credhubClient.GetLatestJSON(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect([]byte(json.Value)).To(MatchJSON(`{"another_key":"another_value"}`))
 
 		By("deleting the json")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetJSON(name)
+		_, err = credhubClient.GetLatestJSON(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

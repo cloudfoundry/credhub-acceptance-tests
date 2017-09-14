@@ -46,14 +46,14 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(rsa.Value).To(Equal(newRSA))
 
 		By("getting the rsa credential")
-		rsa, err = credhubClient.GetRSA(name)
+		rsa, err = credhubClient.GetLatestRSA(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa.Value).To(Equal(newRSA))
 
 		By("deleting the rsa credential")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetRSA(name)
+		_, err = credhubClient.GetLatestRSA(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

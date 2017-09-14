@@ -46,14 +46,14 @@ var _ = Describe("SSH Credential Type", func() {
 		Expect(ssh.Value.SSH).To(Equal(newSSH))
 
 		By("getting the ssh credential")
-		ssh, err = credhubClient.GetSSH(name)
+		ssh, err = credhubClient.GetLatestSSH(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh.Value.SSH).To(Equal(newSSH))
 
 		By("deleting the rsa credential")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetRSA(name)
+		_, err = credhubClient.GetLatestRSA(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

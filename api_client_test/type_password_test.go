@@ -41,14 +41,14 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(password.Value).To(Equal(values.Password("some-password")))
 
 		By("getting the password")
-		password, err = credhubClient.GetPassword(name)
+		password, err = credhubClient.GetLatestPassword(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(values.Password("some-password")))
 
 		By("deleting the password")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetPassword(name)
+		_, err = credhubClient.GetLatestPassword(name)
 		Expect(err).To(HaveOccurred())
 	})
 })

@@ -52,14 +52,14 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(certificate.Value).To(Equal(setCert))
 
 		By("getting the certificate")
-		certificate, err = credhubClient.GetCertificate(name)
+		certificate, err = credhubClient.GetLatestCertificate(name)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).To(Equal(setCert))
 
 		By("deleting the certificate")
 		err = credhubClient.Delete(name)
 		Expect(err).ToNot(HaveOccurred())
-		_, err = credhubClient.GetCertificate(name)
+		_, err = credhubClient.GetLatestCertificate(name)
 		Expect(err).To(HaveOccurred())
 	})
 })
