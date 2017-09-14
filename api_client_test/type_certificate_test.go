@@ -4,9 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
-	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Certificate Credential Type", func() {
@@ -25,7 +25,7 @@ var _ = Describe("Certificate Credential Type", func() {
 		}
 
 		By("generate a certificate with path " + name)
-		certificate, err := credhubClient.GenerateCertificate(name, generateCert, false)
+		certificate, err := credhubClient.GenerateCertificate(name, generateCert, true)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value.Certificate).ToNot(BeEmpty())
 		Expect(certificate.Value.PrivateKey).ToNot(BeEmpty())
@@ -46,18 +46,34 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).ToNot(Equal(firstGeneratedCertificate))
 
-		By("overwriting the certificate with set")
+		By("overwriting the certificate with a provded CA name")
+		generateCA := generate.Certificate{
+			CommonName: "some-ca",
+			SelfSign:   true,
+			IsCA:       true,
+		}
+
+		ca, err := credhubClient.GenerateCertificate("/test-ca", generateCA, true)
+
+		setCert = values.Certificate{
+			CaName:      "/test-ca",
+			Certificate: test_helpers.VALID_CERTIFICATE,
+			PrivateKey:  test_helpers.VALID_CERTIFICATE_PRIVATE_KEY,
+		}
+
 		certificate, err = credhubClient.SetCertificate(name, setCert, true)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(certificate.Value).To(Equal(setCert))
+		Expect(certificate.Value.Ca).To(Equal(ca.Value.Certificate))
 
 		By("getting the certificate")
 		certificate, err = credhubClient.GetLatestCertificate(name)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(certificate.Value).To(Equal(setCert))
+		Expect(certificate.Value.Ca).To(Equal(ca.Value.Certificate))
 
 		By("deleting the certificate")
 		err = credhubClient.Delete(name)
+		Expect(err).ToNot(HaveOccurred())
+		err = credhubClient.Delete("/test-ca")
 		Expect(err).ToNot(HaveOccurred())
 		_, err = credhubClient.GetLatestCertificate(name)
 		Expect(err).To(HaveOccurred())
