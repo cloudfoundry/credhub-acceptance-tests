@@ -132,10 +132,10 @@ var _ = Describe("Import test", func() {
 		Expect(stdOut).To(ContainSubstring(`username: dan-user2`))
 		Expect(stdOut).To(ContainSubstring(`password_hash:`))
 
-		session = RunCommand("get", "-n", "/director/deployment/json1")
+		session = RunCommand("get", "-n", "/director/deployment/json2")
 		Eventually(session).Should(Exit(0))
 		stdOut = string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json1`))
+		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json2`))
 		Expect(stdOut).To(ContainSubstring(`type: json`))
 		Expect(stdOut).To(ContainSubstring(`value:`))
 		Expect(stdOut).To(ContainSubstring(`trump:`))
@@ -162,6 +162,7 @@ func beforeSet() {
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/ssh-cred1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/rsa-cred1")
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/user1")
+	credentialNamesSet = append(credentialNamesSet, "/director/deployment/json1")
 }
 
 func afterSet() {
@@ -184,6 +185,7 @@ func beforeGet() {
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/ssh-cred2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/rsa-cred2")
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/user2")
+	credentialNamesSet = append(credentialNamesSet, "/director/deployment/json2")
 }
 
 func afterGet() {
