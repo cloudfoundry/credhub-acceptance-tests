@@ -3,6 +3,8 @@ package acceptance_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
+	"encoding/json"
 )
 
 var _ = Describe("JSON Credential Type", func() {
@@ -15,25 +17,41 @@ var _ = Describe("JSON Credential Type", func() {
 		cred2 := make(map[string]interface{})
 		cred2["another_key"] = "another_value"
 
+		var unmarshalled values.JSON
+
 		By("setting the json for the first time returns same json")
-		json, err := credhubClient.SetJSON(name, cred, false)
+		jsonValue, err := credhubClient.SetJSON(name, cred, true)
+
+		keyValueJson := `{"key":"value"}`
+
+		json.Unmarshal([]byte(keyValueJson), &unmarshalled)
+
 		Expect(err).ToNot(HaveOccurred())
-		Expect([]byte(json.Value)).To(MatchJSON(`{"key":"value"}`))
+		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("setting the json again without overwrite returns same json")
-		json, err = credhubClient.SetJSON(name, cred2, false)
+		jsonValue, err = credhubClient.SetJSON(name, cred2, false)
+
 		Expect(err).ToNot(HaveOccurred())
-		Expect([]byte(json.Value)).To(MatchJSON(`{"key":"value"}`))
+		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("overwriting the json with set")
-		json, err = credhubClient.SetJSON(name, cred2, true)
+		jsonValue, err = credhubClient.SetJSON(name, cred2, true)
+
+		otherKeyValueJson := `{"another_key":"another_value"}`
+
+		unmarshalled = nil
+
+		json.Unmarshal([]byte(otherKeyValueJson), &unmarshalled)
+
 		Expect(err).ToNot(HaveOccurred())
-		Expect([]byte(json.Value)).To(MatchJSON(`{"another_key":"another_value"}`))
+		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("getting the json")
-		json, err = credhubClient.GetLatestJSON(name)
+		jsonValue, err = credhubClient.GetLatestJSON(name)
+
 		Expect(err).ToNot(HaveOccurred())
-		Expect([]byte(json.Value)).To(MatchJSON(`{"another_key":"another_value"}`))
+		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("deleting the json")
 		err = credhubClient.Delete(name)
