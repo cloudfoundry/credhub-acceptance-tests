@@ -39,6 +39,9 @@ var _ = Describe("Find", func() {
 		results, err := credhubClient.FindByPath(testCredentialPrefix() + "find-test")
 
 		Expect(err).ToNot(HaveOccurred())
-		Expect(results).To(ConsistOf(expectedPassword1.Base, expectedPassword2.Base))
+
+		findResult1 := credentials.FindByNameResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
+		findResult2 := credentials.FindByNameResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
+		Expect(results).To(ConsistOf(findResult1, findResult2))
 	})
 })
