@@ -42,6 +42,6 @@ var _ = Describe("Find", func() {
 
 		findResult1 := credentials.FindByNameResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
 		findResult2 := credentials.FindByNameResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
-		Expect(results).To(ConsistOf(findResult1, findResult2))
+		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 })
