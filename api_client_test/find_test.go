@@ -58,4 +58,20 @@ var _ = Describe("Find", func() {
 		findResult2 := credentials.FindByNameResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
+
+	Specify("finding all the credential paths", func() {
+		results, err := credhubClient.ShowAllPaths()
+
+		Expect(err).ToNot(HaveOccurred())
+
+		findResult1 := credentials.FindByPathResult{Path: "/"}
+		findResult2 := credentials.FindByPathResult{Path: "/acceptance/"}
+		findResult3 := credentials.FindByPathResult{Path: testCredentialPrefix()}
+		findResult4 := credentials.FindByPathResult{Path: testCredentialPrefix() + "find-test/"}
+
+		Expect(results.Paths).To(ContainElement(findResult1))
+		Expect(results.Paths).To(ContainElement(findResult2))
+		Expect(results.Paths).To(ContainElement(findResult3))
+		Expect(results.Paths).To(ContainElement(findResult4))
+	})
 })
