@@ -44,8 +44,8 @@ var _ = Describe("Find", func() {
 
 		Expect(err).ToNot(HaveOccurred())
 
-		findResult1 := credentials.FindByNameResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
-		findResult2 := credentials.FindByNameResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
+		findResult1 := credentials.FindResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
+		findResult2 := credentials.FindResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 
@@ -54,8 +54,8 @@ var _ = Describe("Find", func() {
 
 		Expect(err).ToNot(HaveOccurred())
 
-		findResult1 := credentials.FindByNameResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
-		findResult2 := credentials.FindByNameResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
+		findResult1 := credentials.FindResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
+		findResult2 := credentials.FindResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 
@@ -64,10 +64,10 @@ var _ = Describe("Find", func() {
 
 		Expect(err).ToNot(HaveOccurred())
 
-		findResult1 := credentials.FindByPathResult{Path: "/"}
-		findResult2 := credentials.FindByPathResult{Path: "/acceptance/"}
-		findResult3 := credentials.FindByPathResult{Path: testCredentialPrefix()}
-		findResult4 := credentials.FindByPathResult{Path: testCredentialPrefix() + "find-test/"}
+		findResult1 := credentials.Path{Path: "/"}
+		findResult2 := credentials.Path{Path: "/acceptance/"}
+		findResult3 := credentials.Path{Path: testCredentialPrefix()}
+		findResult4 := credentials.Path{Path: testCredentialPrefix() + "find-test/"}
 
 		Expect(results.Paths).To(ContainElement(findResult1))
 		Expect(results.Paths).To(ContainElement(findResult2))
