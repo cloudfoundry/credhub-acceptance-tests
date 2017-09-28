@@ -30,6 +30,8 @@ var _ = Describe("Getting Credentials", func() {
 		Expect(credential.Name).To(Equal(name))
 		Expect(credential.Value).To(Equal(secondPassword))
 		Expect(credential.Value).ToNot(Equal(firstPassword))
+
+		Expect(credhubClient.Delete(name)).NotTo(HaveOccurred())
 	})
 
 	Specify("GetNVersions", func() {
@@ -58,6 +60,8 @@ var _ = Describe("Getting Credentials", func() {
 		Expect(credentials[0].Name).To(Equal(name))
 		Expect(credentials[0].Value).To(Equal(thirdPassword))
 		Expect(credentials[1].Value).To(Equal(secondPassword))
+
+		Expect(credhubClient.Delete(name)).NotTo(HaveOccurred())
 	})
 
 	Specify("GetAllVersions", func() {
@@ -88,6 +92,8 @@ var _ = Describe("Getting Credentials", func() {
 		Expect(credentials[0].Value).To(Equal(thirdPassword))
 		Expect(credentials[1].Value).To(Equal(secondPassword))
 		Expect(credentials[2].Value).To(Equal(firstPassword))
+
+		Expect(credhubClient.Delete(name)).NotTo(HaveOccurred())
 	})
 
 	Specify("GetById", func() {
@@ -106,5 +112,7 @@ var _ = Describe("Getting Credentials", func() {
 
 		Expect(credential.Name).To(Equal(name))
 		Expect(credential.Value).To(Equal(string(password.Value)))
+
+		Expect(credhubClient.Delete(name)).NotTo(HaveOccurred())
 	})
 })
