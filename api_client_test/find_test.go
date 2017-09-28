@@ -44,8 +44,8 @@ var _ = Describe("Find", func() {
 
 		Expect(err).ToNot(HaveOccurred())
 
-		findResult1 := credentials.FindResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
-		findResult2 := credentials.FindResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
+		findResult1 := credentials.Base{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
+		findResult2 := credentials.Base{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 
@@ -54,8 +54,8 @@ var _ = Describe("Find", func() {
 
 		Expect(err).ToNot(HaveOccurred())
 
-		findResult1 := credentials.FindResult{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
-		findResult2 := credentials.FindResult{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
+		findResult1 := credentials.Base{Name: passwordName1, VersionCreatedAt: expectedPassword1.VersionCreatedAt}
+		findResult2 := credentials.Base{Name: passwordName2, VersionCreatedAt: expectedPassword2.VersionCreatedAt}
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 
