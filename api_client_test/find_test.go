@@ -4,11 +4,12 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
-	"time"
 	"fmt"
 	"strconv"
+	"time"
+
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 )
 
 var _ = Describe("Find", func() {
@@ -60,7 +61,7 @@ var _ = Describe("Find", func() {
 	})
 
 	Specify("finding all the credential paths", func() {
-		results, err := credhubClient.ShowAllPaths()
+		results, err := credhubClient.FindAllPaths()
 
 		Expect(err).ToNot(HaveOccurred())
 
