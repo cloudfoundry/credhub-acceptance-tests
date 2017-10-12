@@ -32,7 +32,7 @@ var _ = Describe("RSA Credential Type", func() {
 
 		By("setting the rsa keys again without overwrite returns the same")
 		newRSA := values.RSA{PrivateKey: "private key", PublicKey: "public key"}
-		rsa, err = credhubClient.SetRSA(name, newRSA, false)
+		rsa, err = credhubClient.SetRSA(name, newRSA, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa).To(Equal(generatedRSA))
 
@@ -42,7 +42,7 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(rsa).ToNot(Equal(generatedRSA))
 
 		By("overwriting with set")
-		rsa, err = credhubClient.SetRSA(name, newRSA, true)
+		rsa, err = credhubClient.SetRSA(name, newRSA, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa.Value).To(Equal(newRSA))
 

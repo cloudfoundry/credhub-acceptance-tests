@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
 	"encoding/json"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("JSON Credential Type", func() {
@@ -20,7 +21,7 @@ var _ = Describe("JSON Credential Type", func() {
 		var unmarshalled values.JSON
 
 		By("setting the json for the first time returns same json")
-		jsonValue, err := credhubClient.SetJSON(name, cred, true)
+		jsonValue, err := credhubClient.SetJSON(name, cred, credhub.Overwrite)
 
 		keyValueJson := `{"key":"value"}`
 
@@ -30,13 +31,13 @@ var _ = Describe("JSON Credential Type", func() {
 		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("setting the json again without overwrite returns same json")
-		jsonValue, err = credhubClient.SetJSON(name, cred2, false)
+		jsonValue, err = credhubClient.SetJSON(name, cred2, credhub.NoOverwrite)
 
 		Expect(err).ToNot(HaveOccurred())
 		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
 		By("overwriting the json with set")
-		jsonValue, err = credhubClient.SetJSON(name, cred2, true)
+		jsonValue, err = credhubClient.SetJSON(name, cred2, credhub.Overwrite)
 
 		otherKeyValueJson := `{"another_key":"another_value"}`
 

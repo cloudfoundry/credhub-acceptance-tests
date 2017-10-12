@@ -32,7 +32,7 @@ var _ = Describe("SSH Credential Type", func() {
 
 		By("setting the ssh keys again without overwrite returns the same ssh")
 		newSSH := values.SSH{PrivateKey: "private key", PublicKey: "public key"}
-		ssh, err = credhubClient.SetSSH(name, newSSH, false)
+		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh).To(Equal(generatedSSH))
 
@@ -42,7 +42,7 @@ var _ = Describe("SSH Credential Type", func() {
 		Expect(ssh).ToNot(Equal(generatedSSH))
 
 		By("overwriting with set")
-		ssh, err = credhubClient.SetSSH(name, newSSH, true)
+		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh.Value.SSH).To(Equal(newSSH))
 

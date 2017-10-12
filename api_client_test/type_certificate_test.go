@@ -38,7 +38,7 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(certificate.Value).To(Equal(firstGeneratedCertificate))
 
 		By("setting the certificate again without overwrite returns same certificate")
-		certificate, err = credhubClient.SetCertificate(name, setCert, false)
+		certificate, err = credhubClient.SetCertificate(name, setCert, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).To(Equal(firstGeneratedCertificate))
 
@@ -62,7 +62,7 @@ var _ = Describe("Certificate Credential Type", func() {
 			PrivateKey:  test_helpers.VALID_CERTIFICATE_PRIVATE_KEY,
 		}
 
-		certificate, err = credhubClient.SetCertificate(name, setCert, true)
+		certificate, err = credhubClient.SetCertificate(name, setCert, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value.Ca).To(Equal(ca.Value.Certificate))
 

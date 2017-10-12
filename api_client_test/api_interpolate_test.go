@@ -6,6 +6,7 @@ import (
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("InterpolateString", func() {
@@ -16,7 +17,7 @@ var _ = Describe("InterpolateString", func() {
 
 		var unmarshalled values.JSON
 
-		_, err := credhubClient.SetJSON(name, cred, true)
+		_, err := credhubClient.SetJSON(name, cred, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		keyValueJson := `{"firstKey":"this is a value for the first key"}`
 		json.Unmarshal([]byte(keyValueJson), &unmarshalled)
