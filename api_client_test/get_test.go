@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("Getting Credentials", func() {
@@ -15,12 +16,12 @@ var _ = Describe("Getting Credentials", func() {
 
 		By("generate a password with path " + name)
 
-		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		firstPassword := string(password.Value)
 
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		secondPassword := string(password.Value)
@@ -41,16 +42,16 @@ var _ = Describe("Getting Credentials", func() {
 
 		By("generate a password with path " + name)
 
-		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		secondPassword := string(password.Value)
 
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		thirdPassword := string(password.Value)
@@ -71,17 +72,17 @@ var _ = Describe("Getting Credentials", func() {
 
 		By("generate a password with path " + name)
 
-		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		firstPassword := string(password.Value)
 
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		secondPassword := string(password.Value)
 
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		thirdPassword := string(password.Value)
@@ -103,7 +104,7 @@ var _ = Describe("Getting Credentials", func() {
 
 		By("generate a password with path " + name)
 
-		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())
 		firstPasswordId := string(password.Id)

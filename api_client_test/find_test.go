@@ -10,6 +10,7 @@ import (
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("Find", func() {
@@ -26,10 +27,10 @@ var _ = Describe("Find", func() {
 
 		generatePassword := generate.Password{Length: 10}
 
-		expectedPassword1, err = credhubClient.GeneratePassword(passwordName1, generatePassword, true)
+		expectedPassword1, err = credhubClient.GeneratePassword(passwordName1, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 
-		expectedPassword2, err = credhubClient.GeneratePassword(passwordName2, generatePassword, true)
+		expectedPassword2, err = credhubClient.GeneratePassword(passwordName2, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 	})
 

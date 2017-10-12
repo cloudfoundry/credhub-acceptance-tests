@@ -9,6 +9,7 @@ import (
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("RSA Credential Type", func() {
@@ -17,7 +18,7 @@ var _ = Describe("RSA Credential Type", func() {
 		opts := generate.RSA{KeyLength: 2048}
 
 		By("generate rsa keys with path " + name)
-		generatedRSA, err := credhubClient.GenerateRSA(name, opts, false)
+		generatedRSA, err := credhubClient.GenerateRSA(name, opts, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		block, _ := pem.Decode([]byte(generatedRSA.Value.PrivateKey))
 		privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
@@ -25,7 +26,7 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(privateKey.N.BitLen()).To(Equal(2048))
 
 		By("generate the rsa keys again without overwrite returns same rsa")
-		rsa, err := credhubClient.GenerateRSA(name, opts, false)
+		rsa, err := credhubClient.GenerateRSA(name, opts, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa).To(Equal(generatedRSA))
 
@@ -36,7 +37,7 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(rsa).To(Equal(generatedRSA))
 
 		By("overwriting with generate")
-		rsa, err = credhubClient.GenerateRSA(name, opts, true)
+		rsa, err = credhubClient.GenerateRSA(name, opts, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa).ToNot(Equal(generatedRSA))
 

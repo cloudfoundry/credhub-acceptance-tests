@@ -7,6 +7,7 @@ import (
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("Certificate Credential Type", func() {
@@ -25,14 +26,14 @@ var _ = Describe("Certificate Credential Type", func() {
 		}
 
 		By("generate a certificate with path " + name)
-		certificate, err := credhubClient.GenerateCertificate(name, generateCert, true)
+		certificate, err := credhubClient.GenerateCertificate(name, generateCert, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value.Certificate).ToNot(BeEmpty())
 		Expect(certificate.Value.PrivateKey).ToNot(BeEmpty())
 		firstGeneratedCertificate := certificate.Value
 
 		By("generate the certificate again without overwrite returns same certificate")
-		certificate, err = credhubClient.GenerateCertificate(name, generateCert, false)
+		certificate, err = credhubClient.GenerateCertificate(name, generateCert, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).To(Equal(firstGeneratedCertificate))
 
@@ -42,7 +43,7 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(certificate.Value).To(Equal(firstGeneratedCertificate))
 
 		By("overwriting the certificate with generate")
-		certificate, err = credhubClient.GenerateCertificate(name, generateCert, true)
+		certificate, err = credhubClient.GenerateCertificate(name, generateCert, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).ToNot(Equal(firstGeneratedCertificate))
 
@@ -53,7 +54,7 @@ var _ = Describe("Certificate Credential Type", func() {
 			IsCA:       true,
 		}
 
-		ca, err := credhubClient.GenerateCertificate("/test-ca", generateCA, true)
+		ca, err := credhubClient.GenerateCertificate("/test-ca", generateCA, credhub.Overwrite)
 
 		setCert = values.Certificate{
 			CaName:      "/test-ca",

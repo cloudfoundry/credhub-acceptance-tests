@@ -6,6 +6,7 @@ import (
 
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("Password Credential Type", func() {
@@ -14,13 +15,13 @@ var _ = Describe("Password Credential Type", func() {
 		generatePassword := generate.Password{Length: 10}
 
 		By("generate a password with path " + name)
-		password, err := credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(HaveLen(10))
 		firstGeneratedPassword := password.Value
 
 		By("generate the password again without overwrite returns same password")
-		password, err = credhubClient.GeneratePassword(name, generatePassword, false)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
@@ -30,7 +31,7 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
 		By("overwriting the password with generate")
-		password, err = credhubClient.GeneratePassword(name, generatePassword, true)
+		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(HaveLen(10))
 		Expect(password.Value).ToNot(Equal(firstGeneratedPassword))

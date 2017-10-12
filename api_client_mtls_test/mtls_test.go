@@ -44,7 +44,7 @@ var _ = Describe("library with mtls authentication", func() {
 
 			Expect(err).ToNot(HaveOccurred())
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, true)
+			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 			Expect(err).ToNot(HaveOccurred())
 		})
 	})
@@ -59,7 +59,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, true)
+			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(ContainSubstring("unknown certificate"))
 		})
@@ -75,7 +75,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, true)
+			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 
 			Expect(err.Error()).To(Equal("invalid_token"))
 		})
@@ -92,7 +92,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, true)
+			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 
 			Expect(err.Error()).To(Equal("invalid_token"))
 		})
