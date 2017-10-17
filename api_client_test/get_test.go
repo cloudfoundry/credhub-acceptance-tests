@@ -21,6 +21,8 @@ var _ = Describe("Getting Credentials", func() {
 		Expect(password.Value).ToNot(BeEmpty())
 		firstPassword := string(password.Value)
 
+		credhubClient.GetLatestPassword(name)
+
 		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).ToNot(BeEmpty())

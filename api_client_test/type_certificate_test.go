@@ -42,6 +42,8 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).To(Equal(firstGeneratedCertificate))
 
+		credhubClient.GetLatestCertificate(name)
+
 		By("overwriting the certificate with generate")
 		certificate, err = credhubClient.GenerateCertificate(name, generateCert, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())

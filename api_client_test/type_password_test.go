@@ -30,6 +30,8 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
+		credhubClient.GetLatestPassword(name)
+
 		By("overwriting the password with generate")
 		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
