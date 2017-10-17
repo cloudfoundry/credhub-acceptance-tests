@@ -26,7 +26,7 @@ var _ = Describe("User Credential Type", func() {
 		Expect(user.Value).To(Equal(generatedUser))
 
 		username := "name"
-		newUser := values.User{Username: &username, Password: "password"}
+		newUser := values.User{Username: username, Password: "password"}
 
 		By("setting the user again without overwrite returns same user")
 		user, err = credhubClient.SetUser(name, newUser, credhub.NoOverwrite)
