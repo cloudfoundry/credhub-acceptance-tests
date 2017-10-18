@@ -36,8 +36,6 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa).To(Equal(generatedRSA))
 
-		credhubClient.GetLatestRSA(name)
-
 		By("overwriting with generate")
 		rsa, err = credhubClient.GenerateRSA(name, opts, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())

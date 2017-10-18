@@ -36,8 +36,6 @@ var _ = Describe("SSH Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh).To(Equal(generatedSSH))
 
-		credhubClient.GetLatestSSH(name)
-
 		By("overwriting with generate")
 		ssh, err = credhubClient.GenerateSSH(name, opts, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())

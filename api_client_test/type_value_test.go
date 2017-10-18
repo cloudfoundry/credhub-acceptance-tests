@@ -24,8 +24,6 @@ var _ = Describe("Value Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred))
 
-		credhubClient.GetLatestValue(name)
-
 		By("overwriting the value with set")
 		value, err = credhubClient.SetValue(name, cred2, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())

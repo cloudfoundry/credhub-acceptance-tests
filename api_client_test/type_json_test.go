@@ -36,8 +36,6 @@ var _ = Describe("JSON Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(jsonValue.Value).To(Equal(unmarshalled))
 
-		credhubClient.GetLatestJSON(name)
-
 		By("overwriting the json with set")
 		jsonValue, err = credhubClient.SetJSON(name, cred2, credhub.Overwrite)
 

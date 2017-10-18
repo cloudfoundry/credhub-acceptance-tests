@@ -33,8 +33,6 @@ var _ = Describe("User Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value).To(Equal(generatedUser))
 
-		credhubClient.GetLatestUser(name)
-
 		By("overwriting the user with generate")
 		user, err = credhubClient.GenerateUser(name, opts, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
