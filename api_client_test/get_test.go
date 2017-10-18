@@ -91,7 +91,6 @@ var _ = Describe("Getting Credentials", func() {
 
 		credentials, err := credhubClient.GetAllVersions(name)
 
-		Expect(credentials).To(HaveLen(3))
 		Expect(credentials[0].Name).To(Equal(name))
 		Expect(credentials[0].Value).To(Equal(thirdPassword))
 		Expect(credentials[1].Value).To(Equal(secondPassword))
