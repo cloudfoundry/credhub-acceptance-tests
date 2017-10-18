@@ -20,7 +20,7 @@ var (
 	credhubClient     *credhub.CredHub
 )
 
-var _ = BeforeSuite(func() {
+var _ = BeforeEach(func() {
 	var err error
 
 	config, err := LoadConfig()
