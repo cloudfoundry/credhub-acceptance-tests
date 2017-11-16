@@ -17,14 +17,15 @@ var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakey", "--root=someca")
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakey", "--root=" + VALID_CERTIFICATE_CA)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`ca: someca`))
+			Expect(stdOut).To(ContainSubstring(`ca: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_CA_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`certificate: `))
 			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
