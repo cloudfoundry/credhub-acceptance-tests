@@ -4,8 +4,8 @@
 [[projects]]
   name = "github.com/cloudfoundry-incubator/credhub-acceptance-tests"
   packages = ["test_helpers"]
-  revision = "81f1b54580d305946abc5cf617d91b0e1f67a346"
-  version = "1.6.4"
+  revision = "eb234d2cca235430a26fe29e8781a061ceeb00ef"
+  version = "1.3.0"
 
 [[projects]]
   name = "github.com/onsi/ginkgo"

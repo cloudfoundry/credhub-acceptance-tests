@@ -17,11 +17,8 @@ var _ = Describe("Backup and Restore", func() {
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
 
-		By("authenticating against credhub")
-		session := RunCommand("credhub", "api", "--server", config.ApiUrl)
-		Eventually(session).Should(Exit(0))
-
-		session = RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword)
+		By("authenticating and targeting against credhub")
+		session := RunCommand("credhub", "login", "-u", config.ApiUsername, "-p", config.ApiPassword, "--server", config.ApiUrl, "--ca-cert", config.UAACa)
 		Eventually(session).Should(Exit(0))
 
 		CleanupCredhub(bbrTestPath)
@@ -58,7 +55,7 @@ var _ = Describe("Backup and Restore", func() {
 		By("running bbr restore")
 		session = RunCommand("sh", "-c",
 			fmt.Sprintf("bbr director --private-key-path %s --username %s --host %s restore --artifact-path ./%s*Z/",
-				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host,config.DirectorHost))
+				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host, config.DirectorHost))
 		Eventually(session).Should(Exit(0))
 
 		By("checking if the test credentials was restored")

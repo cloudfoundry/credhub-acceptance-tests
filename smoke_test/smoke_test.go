@@ -12,13 +12,13 @@ var _ = Describe("Smoke Test", func() {
 		certificate := "t_value" + GenerateUniqueCredentialName()
 		It("can CRD certificates", func() {
 			By("should be able to set a certificate", func() {
-				session := RunCommand("set", "-n", certificate, "-t", "certificate", "--certificate", "iamacertificate")
+				session := RunCommand("set", "-n", certificate, "-t", "certificate", "--certificate", VALID_CERTIFICATE)
 				stdOut := string(session.Out.Contents())
 
 				Eventually(session).Should(Exit(0))
 
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(MatchRegexp(`certificate: |\s+iamacertificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |`))
 			})
 
 			By("should be able to get the certificate", func() {
@@ -28,7 +28,7 @@ var _ = Describe("Smoke Test", func() {
 				Eventually(session).Should(Exit(0))
 
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(MatchRegexp(`certificate: |\s+iamacertificate`))
+				Expect(stdOut).To(MatchRegexp(`certificate: |`))
 			})
 
 			By("should be able to delete the certificate", func() {
