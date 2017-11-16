@@ -52,11 +52,12 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("overwriting the certificate with `set`", func() {
-				session := RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", "fake-certificate")
+				session := RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", VALID_CERTIFICATE)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(ContainSubstring(`certificate: fake-certificate`))
+				Expect(stdOut).To(ContainSubstring(`certificate: `))
+				Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			})
 		})
 	})

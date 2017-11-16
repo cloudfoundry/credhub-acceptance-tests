@@ -17,7 +17,7 @@ var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakey", "--root=someca")
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakey", "--root=someca")
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -25,7 +25,8 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
 			Expect(stdOut).To(ContainSubstring(`ca: someca`))
-			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`certificate: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
 		})
 
@@ -53,7 +54,7 @@ var _ = Describe("Certificates Test", func() {
 			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
-			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakeytoo", "--ca-name", caName)
+			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakeytoo", "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
@@ -64,7 +65,8 @@ var _ = Describe("Certificates Test", func() {
 			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`certificate: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
 		})
 	})
