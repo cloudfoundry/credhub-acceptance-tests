@@ -5,19 +5,20 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 
+	"strings"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
-	"strings"
 )
 
 var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakey", "--root=" + VALID_CERTIFICATE_CA)
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private=iamakey", "--root="+VALID_CERTIFICATE_CA)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -40,7 +41,7 @@ var _ = Describe("Certificates Test", func() {
 		It("should allow you to set a certificate with a named CA", func() {
 			caName := GenerateUniqueCredentialName()
 			certName := GenerateUniqueCredentialName()
-			session := RunCommand("generate", "-n", caName, "-t", "certificate", "--is-ca", "-c", "commonName")
+			session := RunCommand("set", "-n", caName, "-t", "certificate", "--certificate="+ALTERNATE_CA_PUBLIC_KEY, "--private="+ALTERNATE_CA_PRIVATE_KEY)
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
 			type certificateValue struct {
@@ -55,7 +56,7 @@ var _ = Describe("Certificates Test", func() {
 			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
-			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakeytoo", "--ca-name", caName)
+			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate="+ALTERNATE_CERTIFICATE_SIGNED_BY_CA_PUBLIC_KEY, "--private=iamakeytoo", "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
@@ -67,7 +68,7 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
 			Expect(stdOut).To(ContainSubstring(`certificate: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(ALTERNATE_CERTIFICATE_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
 		})
 	})

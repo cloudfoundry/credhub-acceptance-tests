@@ -5,9 +5,9 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
 	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/values"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
 )
 
 var _ = Describe("Certificate Credential Type", func() {
@@ -47,19 +47,18 @@ var _ = Describe("Certificate Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(certificate.Value).ToNot(Equal(firstGeneratedCertificate))
 
-		By("overwriting the certificate with a provded CA name")
-		generateCA := generate.Certificate{
-			CommonName: "some-ca",
-			SelfSign:   true,
-			IsCA:       true,
+		By("overwriting the certificate with a provided CA name")
+		setCA := values.Certificate{
+			Certificate: test_helpers.ALTERNATE_CA_PUBLIC_KEY,
+			PrivateKey:  test_helpers.ALTERNATE_CA_PRIVATE_KEY,
 		}
 
-		ca, err := credhubClient.GenerateCertificate("/test-ca", generateCA, credhub.Overwrite)
+		ca, err := credhubClient.SetCertificate("/test-ca", setCA, credhub.Overwrite)
 
 		setCert = values.Certificate{
 			CaName:      "/test-ca",
-			Certificate: test_helpers.VALID_CERTIFICATE,
-			PrivateKey:  test_helpers.VALID_CERTIFICATE_PRIVATE_KEY,
+			Certificate: test_helpers.ALTERNATE_CERTIFICATE_SIGNED_BY_CA_PUBLIC_KEY,
+			PrivateKey:  test_helpers.ALTERNATE_CERTIFICATE_SIGNED_BY_CA_PRIVATE_KEY,
 		}
 
 		certificate, err = credhubClient.SetCertificate(name, setCert, credhub.Overwrite)
