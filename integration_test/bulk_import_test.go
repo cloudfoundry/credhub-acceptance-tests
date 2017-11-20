@@ -1,15 +1,16 @@
 package integration
 
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
+
 var (
 	credentialNamesSet []string
 	credentialNamesGet []string
-	session *Session
+	session            *Session
 )
 
 var _ = Describe("Import test", func() {
@@ -150,9 +151,9 @@ var _ = Describe("Import test", func() {
 })
 
 func beforeSet() {
-	session = RunCommand("generate", "-n", "ca-certificate1", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
+	session = RunCommand("set", "-n", "ca-certificate", "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
 	Eventually(session).Should(Exit(0))
-	credentialNamesSet = []string{"ca-certificate1"}
+	credentialNamesSet = []string{"ca-certificate"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_set.yml")
 	Eventually(session).Should(Exit(0))
 	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore-agent1")
@@ -173,9 +174,9 @@ func afterSet() {
 }
 
 func beforeGet() {
-	session = RunCommand("generate", "-n", "ca-certificate2", "-t", "certificate", "-c", "credhub-ca", "-o", "pivotal", "-u", "credhub", "-i", "nyc", "-s", "NY", "-y", "US", "--is-ca", "--self-sign")
+	session = RunCommand("set", "-n", "ca-certificate", "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
 	Eventually(session).Should(Exit(0))
-	credentialNamesGet = []string{"ca-certificate2"}
+	credentialNamesGet = []string{"ca-certificate"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_get.yml")
 	Eventually(session).Should(Exit(0))
 	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore-agent2")
