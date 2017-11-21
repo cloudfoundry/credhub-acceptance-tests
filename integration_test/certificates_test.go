@@ -17,7 +17,7 @@ var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakey", "--root=" + VALID_CERTIFICATE_CA)
+			session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=" + VALID_CERTIFICATE_PRIVATE_KEY, "--root=" + VALID_CERTIFICATE_CA)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -28,7 +28,8 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_CA_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`certificate: `))
 			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
+			Expect(stdOut).To(ContainSubstring(`private_key: `))
+			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
 		})
 
 		It("should require a certificate type", func() {
@@ -55,7 +56,7 @@ var _ = Describe("Certificates Test", func() {
 			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
-			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=iamakeytoo", "--ca-name", caName)
+			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=" + VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
@@ -68,7 +69,8 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
 			Expect(stdOut).To(ContainSubstring(`certificate: `))
 			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
+			Expect(stdOut).To(ContainSubstring(`private_key: `))
+			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
 		})
 	})
 
