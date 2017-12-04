@@ -15,6 +15,11 @@ var (
 
 var _ = Describe("Import test", func() {
 
+	BeforeEach(func() {
+		session = RunCommand("set", "-n", "ca-certificate", "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
+		Eventually(session).Should(Exit(0))
+	})
+
 	It("should import credentials from a file", func() {
 		beforeSet()
 
@@ -151,19 +156,18 @@ var _ = Describe("Import test", func() {
 })
 
 func beforeSet() {
-	session = RunCommand("set", "-n", "ca-certificate", "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
-	Eventually(session).Should(Exit(0))
-	credentialNamesSet = []string{"ca-certificate"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_set.yml")
 	Eventually(session).Should(Exit(0))
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore-agent1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/blobstore-director1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/bosh-ca1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/bosh-cert1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/ssh-cred1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/rsa-cred1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/user1")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/json1")
+	credentialNamesSet = []string{
+		"/director/deployment/blobstore-agent1",
+		"/director/deployment/blobstore-director1",
+		"/director/deployment/bosh-ca1",
+		"/director/deployment/bosh-cert1",
+		"/director/deployment/ssh-cred1",
+		"/director/deployment/rsa-cred1",
+		"/director/deployment/user1",
+		"/director/deployment/json1",
+	}
 }
 
 func afterSet() {
@@ -174,19 +178,18 @@ func afterSet() {
 }
 
 func beforeGet() {
-	session = RunCommand("set", "-n", "ca-certificate", "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
-	Eventually(session).Should(Exit(0))
-	credentialNamesGet = []string{"ca-certificate"}
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_get.yml")
 	Eventually(session).Should(Exit(0))
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore-agent2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/blobstore-director2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/bosh-ca2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/bosh-cert2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/ssh-cred2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/rsa-cred2")
-	credentialNamesGet = append(credentialNamesGet, "/director/deployment/user2")
-	credentialNamesSet = append(credentialNamesSet, "/director/deployment/json2")
+	credentialNamesGet = []string{
+		"/director/deployment/blobstore-agent2",
+		"/director/deployment/blobstore-director2",
+		"/director/deployment/bosh-ca2",
+		"/director/deployment/bosh-cert2",
+		"/director/deployment/ssh-cred2",
+		"/director/deployment/rsa-cred2",
+		"/director/deployment/user2",
+		"/director/deployment/json2",
+	}
 }
 
 func afterGet() {
