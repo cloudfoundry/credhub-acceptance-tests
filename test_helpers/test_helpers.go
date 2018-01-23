@@ -75,6 +75,19 @@ func TargetAndLogin(cfg Config) {
 	Eventually(session).Should(Exit(0))
 }
 
+func TargetAndLoginWithClientCredentials(cfg Config) {
+	CleanEnv()
+	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
+	uaa_ca := cfg.UAACa
+	credhub_ca_contents, _ := ioutil.ReadFile(credhub_ca)
+	uaa_ca_contents, _ := ioutil.ReadFile(uaa_ca)
+
+	os.Setenv("CREDHUB_SECRET", cfg.ClientSecret)
+	os.Setenv("CREDHUB_CLIENT", cfg.ClientName)
+	os.Setenv("CREDHUB_SERVER", cfg.ApiUrl)
+	os.Setenv("CREDHUB_CA_CERT", string(uaa_ca_contents)+string(credhub_ca_contents))
+}
+
 func TargetAndLoginSkipTls(cfg Config) {
 	CleanEnv()
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
@@ -84,4 +97,6 @@ func TargetAndLoginSkipTls(cfg Config) {
 func CleanEnv() {
 	os.Unsetenv("CREDHUB_SECRET")
 	os.Unsetenv("CREDHUB_CLIENT")
+	os.Unsetenv("CREDHUB_SERVER")
+	os.Unsetenv("CREDHUB_CA_CERT")
 }

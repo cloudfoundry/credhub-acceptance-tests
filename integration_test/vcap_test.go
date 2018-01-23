@@ -1,14 +1,15 @@
-package integration_test
+package integration
 
 import (
-. "github.com/onsi/ginkgo"
-. "github.com/onsi/gomega"
-. "github.com/onsi/gomega/gexec"
-. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"crypto/tls"
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"crypto/tls"
+
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gexec"
 )
 
 var (
@@ -47,7 +48,7 @@ var _ = Describe("vcap interpolation of secrets", func() {
 				` ]` +
 				`}`
 
-			result, statusCode, err := postJSON(config.ApiUrl + "/api/v1/interpolate", postData, token)
+			result, statusCode, err := postJSON(config.ApiUrl+"/api/v1/interpolate", postData, token)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(statusCode).To(Equal(200))
 

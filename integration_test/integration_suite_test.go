@@ -6,15 +6,15 @@ import (
 	"runtime"
 	"testing"
 
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var (
-	homeDir     string
-	cfg         Config
+	homeDir string
+	cfg     Config
 )
 
 // We look for these values in the verify-logging CI task to ensure that credentials don't leak
@@ -42,10 +42,11 @@ var _ = BeforeEach(func() {
 	// These happen before each test due to the lack of a BeforeAll
 	// (https://github.com/onsi/ginkgo/issues/70) :(
 	// If the tests are slow, they should be runnable in parallel with the -p option.
-	TargetAndLogin(cfg)
+	TargetAndLoginWithClientCredentials(cfg)
 })
 
 var _ = AfterEach(func() {
+	CleanEnv()
 	os.RemoveAll(homeDir)
 })
 
