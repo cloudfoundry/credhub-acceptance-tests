@@ -20,30 +20,53 @@ check_nmap_version() {
   fi
 }
 
-check_cipher_preference() {
-  expected="${1}"
-
+run_nmap() {
   host_regex="s/.*https\{0,1\}:\/\/\(.*\):[0-9]\{2,\}/\1/g"
   port_regex="s/.*https\{0,1\}:\/\/.*:\([0-9]\{2,\}\)/\1/g"
 
   host="$(echo "${API_URL}" | sed "${host_regex}")"
   port="$(echo "${API_URL}" | sed "${port_regex}")"
+  nmap --script ssl-enum-ciphers -p "${port}" "${host}"
+}
 
-  output="$(nmap --script ssl-enum-ciphers -p "${port}" "${host}")"
+check_cipher_preference() {
+  expected="${1}"
+  output="${2}"
+
   cipher_preference_regex="s/.*cipher preference: \([a-z]\{1,\}\)/\1/g"
   cipher_preference="$(echo "${output}" | grep "cipher preference" | sed "${cipher_preference_regex}")"
 
   if ! echo "${output}" | grep -q "cipher preference: ${expected}"; then
     echo "Unexpected cipher preference: expected \"${expected}\" but was \"${cipher_preference}\""
+    echo "Nmap output: $output"
     exit 1
   else
     echo "Found correct cipher preference"
   fi
 }
 
+check_cipher() {
+ cipher="$1"
+ output="$2"
+ if ! echo "$output" | grep -q "$cipher"; then
+    echo "Did not find cipher in list of supported ciphers: $cipher"
+    echo "Nmap output: $output"
+    exit 1
+ fi
+ echo "Found correct cipher $cipher"
+}
+check_ciphers() {
+  check_cipher "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 3072)" "$output"
+  check_cipher "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 3072)" "$output"
+  check_cipher "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp384r1)" "$output"
+  check_cipher "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp384r1)" "$output"
+
+}
 main() {
   echo "Checking cipher preference for ${API_URL}"
-  check_cipher_preference "server"
+  output=$(run_nmap)
+  check_cipher_preference server "$output"
+  check_ciphers "$output"
 }
 
 main
