@@ -78,7 +78,12 @@ func TargetAndLogin(cfg Config) {
 func TargetAndLoginSkipTls(cfg Config) {
 	CleanEnv()
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
-	Eventually(session).Should(Exit(0))
+	Eventually(session).Should(Exit())
+
+	if session.ExitCode() != 0 {
+		session := RunCommand("login", "-s", cfg.ApiUrl, "--client-name", cfg.ClientName, "--client-secret", cfg.ClientSecret, "--skip-tls-validation")
+		Eventually(session).Should(Exit(0))
+	}
 }
 
 func CleanEnv() {
