@@ -97,4 +97,6 @@ func TargetAndLoginSkipTls(cfg Config) {
 func CleanEnv() {
 	os.Unsetenv("CREDHUB_SECRET")
 	os.Unsetenv("CREDHUB_CLIENT")
+	os.Unsetenv("CREDHUB_SERVER")
+	os.Unsetenv("CREDHUB_CA_CERT")
 }
