@@ -91,3 +91,10 @@ func TargetAndLoginSkipTls(cfg Config) {
 	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
 	Eventually(session).Should(Exit(0))
 }
+
+func CleanEnv() {
+	os.Unsetenv("CREDHUB_SECRET")
+	os.Unsetenv("CREDHUB_CLIENT")
+	os.Unsetenv("CREDHUB_SERVER")
+	os.Unsetenv("CREDHUB_CA_CERT")
+}
