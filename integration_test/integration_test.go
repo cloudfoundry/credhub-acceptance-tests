@@ -42,7 +42,7 @@ var _ = BeforeEach(func() {
 	// These happen before each test due to the lack of a BeforeAll
 	// (https://github.com/onsi/ginkgo/issues/70) :(
 	// If the tests are slow, they should be runnable in parallel with the -p option.
-	TargetAndLogin(cfg)
+	TargetAndLoginWithClientCredentials(cfg)
 })
 
 var _ = AfterEach(func() {
