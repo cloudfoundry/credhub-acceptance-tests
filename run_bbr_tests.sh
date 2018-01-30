@@ -2,6 +2,9 @@
 
 set -eu
 
+CLIENT_NAME: ((postgres_internal_credhub_client.username))
+CLIENT_SECRET: ((postgres_internal_credhub_client.password))
+
 cat <<EOF > config.json
 {
   "director_host":"${API_IP}",
@@ -14,7 +17,9 @@ cat <<EOF > config.json
     "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
   },
   "credential_root":"${CREDENTIAL_ROOT}",
-  "uaa_ca":"${UAA_CA}"
+  "uaa_ca":"${UAA_CA}",
+  "client_name":"${CLIENT_NAME}",
+  "client_secret":"${CLIENT_SECRET}"
 }
 EOF
 
