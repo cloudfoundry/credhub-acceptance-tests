@@ -2,6 +2,9 @@
 
 set -eu
 
+CLIENT_NAME=${CLIENT_NAME:-credhub_client}
+CLIENT_SECRET=${CLIENT_SECRET:-secret}
+
 cat <<EOF > test_config.json
 {
   "director_host":"${API_IP}",
@@ -13,7 +16,9 @@ cat <<EOF > test_config.json
     "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
     "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
   },
-  "uaa_ca":"${SERVER_CA_CERT_PATH}"
+  "uaa_ca":"${SERVER_CA_CERT_PATH}",
+  "client_name":"${CLIENT_NAME}",
+  "client_secret":"${CLIENT_SECRET}"
 }
 EOF
 
