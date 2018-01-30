@@ -7,6 +7,8 @@ USERNAME=${USERNAME:-credhub}
 PASSWORD=${PASSWORD:-password}
 CREDENTIAL_ROOT=${CREDENTIAL_ROOT:-~/workspace/credhub-release/src/credhub/src/test/resources}
 UAA_CA=${UAA_CA:-~/workspace/credhub-deployments/ca/credhub_root_ca.pem}
+CLIENT_NAME=${CLIENT_NAME:-credhub_client}
+CLIENT_SECRET=${CLIENT_SECRET:-secret}
 
 cat <<EOF > test_config.json
 {
@@ -14,7 +16,9 @@ cat <<EOF > test_config.json
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",
   "credential_root":"${CREDENTIAL_ROOT}",
-  "uaa_ca":"${UAA_CA}"
+  "uaa_ca":"${UAA_CA}",
+  "client_name":"${CLIENT_NAME}",
+  "client_secret":"${CLIENT_SECRET}"
 }
 EOF
 
