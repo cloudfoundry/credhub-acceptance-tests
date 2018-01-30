@@ -35,7 +35,7 @@ var _ = BeforeEach(func() {
 	credhubClient, err = credhub.New(config.ApiUrl,
 		credhub.CaCerts(string(credhub_ca), string(uaa_ca)),
 		credhub.Auth(
-			auth.UaaPassword("credhub_cli", "", config.ApiUsername, config.ApiPassword),
+			auth.UaaClientCredentials(config.ClientName, config.ClientSecret),
 		),
 	)
 
