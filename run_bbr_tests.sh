@@ -1,9 +1,8 @@
 #!/bin/bash
 
 set -eu
-
-CLIENT_NAME: ((postgres_internal_credhub_client.username))
-CLIENT_SECRET: ((postgres_internal_credhub_client.password))
+CLIENT_NAME=${CLIENT_NAME:-credhub_client}
+CLIENT_SECRET=${CLIENT_SECRET:-secret}
 
 cat <<EOF > config.json
 {
