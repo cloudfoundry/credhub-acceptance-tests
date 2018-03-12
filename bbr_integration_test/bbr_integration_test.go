@@ -40,7 +40,7 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(session).Should(Exit(0))
 
 		By("asserting that the backup archive exists and contains a pg dump file")
-		session = RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhub.tar", config.DirectorHost))
+		session = RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhubdb.tar", config.DirectorHost))
 		Eventually(session).Should(Exit(0))
 		Eventually(RunCommand("ls", "credhubdb_dump")).Should(Exit(0))
 
@@ -69,7 +69,7 @@ func CleanupCredhub(path string) {
 	By("Cleaning up credhub bbr test passwords")
 	RunCommand(
 		"sh", "-c",
-		fmt.Sprintf("credhub find -p /%s | tail -n +2 | cut -d\" \" -f1 | xargs -IN credhub delete --name N", path),
+		fmt.Sprintf("credhub find -p /%s | tail -n +2 | cut -d\" \" -f3 | cut -d\":\" -f2 | xargs -IN credhub delete --name N", path),
 	)
 }
 
