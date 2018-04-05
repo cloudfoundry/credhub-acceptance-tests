@@ -23,4 +23,4 @@ cat <<EOF > test_config.json
 EOF
 
 ./generate_certs.py -caKey ${CREDENTIAL_ROOT}/client_ca_private.pem -caCert ${CREDENTIAL_ROOT}/client_ca_cert.pem
-ginkgo -r -p -skipPackage smoke_test,bbr_integration_test -randomizeAllSpecs -randomizeSuites
+ginkgo -r -p -randomizeAllSpecs -randomizeSuites
