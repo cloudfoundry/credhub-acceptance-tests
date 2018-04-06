@@ -12,9 +12,15 @@ CLIENT_SECRET=${CLIENT_SECRET:-secret}
 
 cat <<EOF > test_config.json
 {
+  "director_host":"${API_IP}",
   "api_url": "${API_URL}",
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",
+  "bosh": {
+    "host":"${API_IP}:22",
+    "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
+    "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
+  },
   "credential_root":"${CREDENTIAL_ROOT}",
   "uaa_ca":"${UAA_CA}",
   "client_name":"${CLIENT_NAME}",
@@ -23,4 +29,4 @@ cat <<EOF > test_config.json
 EOF
 
 ./generate_certs.py -caKey ${CREDENTIAL_ROOT}/client_ca_private.pem -caCert ${CREDENTIAL_ROOT}/client_ca_cert.pem
-ginkgo -r -p -skipPackage smoke_test,bbr_integration_test -randomizeAllSpecs -randomizeSuites
+ginkgo -r -p -skipPackage smoke_test -randomizeAllSpecs -randomizeSuites
