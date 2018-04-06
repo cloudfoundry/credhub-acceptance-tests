@@ -9,13 +9,20 @@ CREDENTIAL_ROOT=${CREDENTIAL_ROOT:-~/workspace/credhub-release/src/credhub/src/t
 UAA_CA=${UAA_CA:-~/workspace/credhub-deployments/ca/credhub_root_ca.pem}
 CLIENT_NAME=${CLIENT_NAME:-credhub_client}
 CLIENT_SECRET=${CLIENT_SECRET:-secret}
+BOSH_SSH_USERNAME=bbr
 
 cat <<EOF > test_config.json
 {
+  "director_host":"${API_IP}",
   "api_url": "${API_URL}",
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",
   "credential_root":"${CREDENTIAL_ROOT}",
+  "bosh": {
+    "host":"${API_IP}:22",
+    "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
+    "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
+  },
   "uaa_ca":"${UAA_CA}",
   "client_name":"${CLIENT_NAME}",
   "client_secret":"${CLIENT_SECRET}"
