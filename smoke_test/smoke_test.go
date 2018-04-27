@@ -1,9 +1,10 @@
 package smoke_test
+
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Smoke Test", func() {
@@ -46,4 +47,3 @@ var _ = Describe("Smoke Test", func() {
 		})
 	})
 })
-

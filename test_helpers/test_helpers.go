@@ -104,4 +104,5 @@ func CleanEnv() {
 	os.Unsetenv("CREDHUB_CLIENT")
 	os.Unsetenv("CREDHUB_SERVER")
 	os.Unsetenv("CREDHUB_CA_CERT")
+	os.Unsetenv("CREDHUB_PROXY")
 }

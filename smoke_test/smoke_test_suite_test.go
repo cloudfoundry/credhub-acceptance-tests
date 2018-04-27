@@ -3,18 +3,19 @@ package smoke_test
 import (
 	"testing"
 
+	"io/ioutil"
+	"os"
+	"runtime"
+
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	"io/ioutil"
-	"runtime"
-	"os"
 )
 
 var (
-	homeDir     string
-	cfg         Config
+	homeDir string
+	cfg     Config
 )
 
 var _ = BeforeEach(func() {
