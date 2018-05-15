@@ -56,8 +56,8 @@ check_cipher() {
  echo "Found correct cipher $cipher"
 }
 check_ciphers() {
-  check_cipher "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 3072)" "$output"
-  check_cipher "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 3072)" "$output"
+  check_cipher "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 4096)" "$output"
+  check_cipher "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 4096)" "$output"
   check_cipher "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp384r1)" "$output"
   check_cipher "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp384r1)" "$output"
 
