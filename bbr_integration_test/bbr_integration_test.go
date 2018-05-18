@@ -3,6 +3,9 @@ package bbr_integration
 import (
 	"fmt"
 
+	"io/ioutil"
+	"os"
+
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,6 +16,7 @@ import (
 var _ = Describe("Backup and Restore", func() {
 	var credentialName string
 	var bbrTestPath = "bbr_test"
+	var bbrDirectory string
 
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("%s/%s", bbrTestPath, test_helpers.GenerateUniqueCredentialName())
@@ -22,11 +26,16 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(session).Should(Exit(0))
 
 		CleanupCredhub(bbrTestPath)
+
+		var err error
+		bbrDirectory, err = ioutil.TempDir("", "bbr")
+		Expect(err).NotTo(HaveOccurred())
 	})
 
 	AfterEach(func() {
 		CleanupCredhub(bbrTestPath)
 		CleanupArtifacts()
+		os.RemoveAll(bbrDirectory)
 	})
 
 	It("Successfully backs up and restores a Credhub release", func() {
@@ -35,14 +44,12 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(session).Should(Exit(0))
 
 		By("running bbr backup")
-		session = RunCommand("bbr", "director", "--private-key-path", config.Bosh.SshPrivateKeyPath,
-			"--username", config.Bosh.SshUsername, "--host", config.Bosh.Host, "backup")
+		session = RunCommand("bbr", "deployment", "--username", config.Bosh.Client, "--password", config.Bosh.ClientSecret, "--deployment", config.DeploymentName, "--target", config.Bosh.Environment, "--ca-cert", config.Bosh.CaCertPath, "backup", "--artifact-path", bbrDirectory)
 		Eventually(session).Should(Exit(0))
 
-		By("asserting that the backup archive exists and contains a pg dump file")
-		session = RunCommand("sh", "-c", fmt.Sprintf("tar -xvf ./%s*Z/bosh*credhub.tar", config.DirectorHost))
+		By("asserting that the backup archive exists and contains a database dump file")
+		session = RunCommand("sh", "-c", fmt.Sprintf("tar tf %s/%s*/*credhubdb.tar ./credhubdb_dump", bbrDirectory, config.DeploymentName))
 		Eventually(session).Should(Exit(0))
-		Eventually(RunCommand("ls", "credhubdb_dump")).Should(Exit(0))
 
 		By("editing the test credential")
 		session = RunCommand("credhub", "set", "--name", credentialName, "--type", "password", "-w", "updatedsecret")
@@ -54,8 +61,9 @@ var _ = Describe("Backup and Restore", func() {
 
 		By("running bbr restore")
 		session = RunCommand("sh", "-c",
-			fmt.Sprintf("bbr director --private-key-path %s --username %s --host %s restore --artifact-path ./%s*Z/",
-				config.Bosh.SshPrivateKeyPath, config.Bosh.SshUsername, config.Bosh.Host, config.DirectorHost))
+			fmt.Sprintf("bbr deployment --username %s --password %s --deployment %s --target %s --ca-cert %s restore --artifact-path %s/%s*",
+				config.Bosh.Client, config.Bosh.ClientSecret, config.DeploymentName, config.Bosh.Environment, config.Bosh.CaCertPath, bbrDirectory, config.DeploymentName),
+		)
 		Eventually(session).Should(Exit(0))
 
 		By("checking if the test credentials was restored")

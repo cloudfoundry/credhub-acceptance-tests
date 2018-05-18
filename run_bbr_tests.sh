@@ -12,13 +12,15 @@ cat <<EOF > test_config.json
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",
   "bosh": {
-    "host":"${API_IP}:22",
-    "bosh_ssh_username":"${BOSH_SSH_USERNAME}",
-    "bosh_ssh_private_key_path":"${BOSH_SSH_PRIVATE_KEY_PATH}"
+    "bosh_environment":"$BOSH_ENVIRONMENT",
+    "bosh_client":"$BOSH_CLIENT",
+    "bosh_client_secret":"$BOSH_CLIENT_SECRET",
+    "bosh_ca_cert_path":"$BOSH_CA_CERT_PATH"
   },
   "uaa_ca":"${SERVER_CA_CERT_PATH}",
   "client_name":"${CLIENT_NAME}",
-  "client_secret":"${CLIENT_SECRET}"
+  "client_secret":"${CLIENT_SECRET}",
+  "deployment_name":"$DEPLOYMENT_NAME"
 }
 EOF
 
