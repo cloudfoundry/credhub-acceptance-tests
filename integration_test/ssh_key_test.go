@@ -18,8 +18,7 @@ var _ = Describe("SSH key test", func() {
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(ContainSubstring(`type: ssh`))
-			Expect(stdOut).To(ContainSubstring(`public_key: ` + base64DecodablePublicKey))
-			Expect(stdOut).To(ContainSubstring("private_key: " + credentialValue))
+			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 		})
 	})
 
