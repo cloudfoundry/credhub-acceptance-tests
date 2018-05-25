@@ -24,12 +24,7 @@ var _ = Describe("Certificates Test", func() {
 
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`ca: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_CA_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`certificate: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: `))
-			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 		})
 
 		It("should require a certificate type", func() {
@@ -44,33 +39,16 @@ var _ = Describe("Certificates Test", func() {
 			session := RunCommand("set", "-n", caName, "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
-			type certificateValue struct {
-				Ca          string `yaml:"ca,omitempty"`
-				Certificate string `yaml:"certificate,omitempty"`
-			}
-			type certificate struct {
-				Value certificateValue `yaml:"value"`
-			}
 
-			caCert := certificate{}
-			err := yaml.Unmarshal([]byte(stdOut), &caCert)
-			Expect(err).To(BeNil())
 
 			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=" + VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
-			cert := certificate{}
-			err = yaml.Unmarshal([]byte(stdOut), &cert)
-			Expect(err).To(BeNil())
-
-			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
+			
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`certificate: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: `))
-			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 		})
 	})
 
