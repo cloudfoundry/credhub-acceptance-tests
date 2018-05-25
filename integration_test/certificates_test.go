@@ -24,9 +24,7 @@ var _ = Describe("Certificates Test", func() {
 
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`ca: someca`))
-			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
-			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
+			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 		})
 
 		It("should require a certificate type", func() {
