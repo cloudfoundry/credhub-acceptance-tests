@@ -84,10 +84,7 @@ var _ = Describe("Creating a User", func() {
 
 				Expect(stdOut).To(ContainSubstring(`name: /` + name))
 				Expect(stdOut).To(ContainSubstring(`type: user`))
-				Expect(stdOut).To(ContainSubstring(`username: ` + username))
-				Expect(stdOut).To(ContainSubstring(`password: ` + password))
-				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
-
+				Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 			})
 		})
 	})
