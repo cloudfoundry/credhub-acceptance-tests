@@ -17,8 +17,7 @@ var _ = Describe("RSA key test", func() {
 			Eventually(session).Should(Exit(0))
 
 			Expect(stdOut).To(ContainSubstring(`type: rsa`))
-			Expect(stdOut).To(ContainSubstring(`public_key: iamapublickey`))
-			Expect(stdOut).To(ContainSubstring("private_key: " + credentialValue))
+			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
 		})
 	})
 
