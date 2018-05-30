@@ -10,7 +10,9 @@ import (
 
 var _ = Describe("Password test", func() {
 	It("should set a password", func() {
-		session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "password", "-w", "some_value")
+		credName := GenerateUniqueCredentialName()
+		RunCommand("set", "-n", credName, "-t", "password", "-w", "some_value")
+		session := RunCommand("get", "-n", credName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -19,7 +21,9 @@ var _ = Describe("Password test", func() {
 	})
 
 	It("should generate a password", func() {
-		session := RunCommand("generate", "-n", GenerateUniqueCredentialName(), "-t", "password")
+		credName := GenerateUniqueCredentialName()
+		RunCommand("generate", "-n", credName, "-t", "password")
+		session := RunCommand("get", "-n", credName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -32,7 +36,8 @@ var _ = Describe("Password test", func() {
 		valueRegexp := regexp.MustCompile(`value: \D*`)
 
 		By("first generating a password with no numbers", func() {
-			session := RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			session := RunCommand("get", "-n", generatedPasswordId)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())

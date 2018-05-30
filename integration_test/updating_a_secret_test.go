@@ -13,7 +13,8 @@ var _ = Describe("updating a secret", func() {
 			credentialName := GenerateUniqueCredentialName()
 
 			By("setting a new value secret", func() {
-				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
+				RunCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
+				session := RunCommand("get", "-n", credentialName)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
@@ -22,7 +23,8 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("setting the value secret again", func() {
-				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
+				RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
+				session := RunCommand("get", "-n", credentialName)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
@@ -42,7 +44,8 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("generating a new certificate signed by the CA", func() {
-				session := RunCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
+				RunCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
+				session := RunCommand("get", "-n", credentialname)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
@@ -52,7 +55,8 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("overwriting the certificate with `set`", func() {
-				session := RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", "fake-certificate")
+				RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", "fake-certificate")
+				session := RunCommand("get", "-n", credentialname)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))

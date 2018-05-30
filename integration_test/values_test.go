@@ -20,7 +20,8 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 	})
 
 	By("setting a new value secret", func() {
-		session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
+		RunCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
+		session := RunCommand("get", "-n", credentialName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())

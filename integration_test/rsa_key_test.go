@@ -11,7 +11,9 @@ import (
 var _ = Describe("RSA key test", func() {
 	Describe("setting an RSA key", func() {
 		It("should be able to set an rsa key", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "rsa", "-u", "iamapublickey", "-p", credentialValue)
+			credName := GenerateUniqueCredentialName()
+			RunCommand("set", "-n", credName, "-t", "rsa", "-u", "iamapublickey", "-p", credentialValue)
+			session := RunCommand("get", "-n", credName)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -25,7 +27,8 @@ var _ = Describe("RSA key test", func() {
 		rsaSecretName := GenerateUniqueCredentialName()
 
 		By("generating the key", func() {
-			session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+			RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+			session := RunCommand("get", "-n", rsaSecretName)
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
@@ -46,7 +49,8 @@ var _ = Describe("RSA key test", func() {
 		rsaSecretName := GenerateUniqueCredentialName()
 
 		By("regenerate should create an new value", func() {
-			session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+			RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+			session := RunCommand("get", "-n", rsaSecretName)
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
