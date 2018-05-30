@@ -14,12 +14,13 @@ var _ = Describe("json secrets", func() {
 
 	It("should set, get, and delete a new json secret", func() {
 		By("setting a new json secret", func() {
-			session := RunCommand("set", "-n", credentialName, "-t", "json", "-v", credentialValue)
+			RunCommand("set", "-n", credentialName, "-t", "json", "-v", credentialValue)
+			session := RunCommand("get", "-n", credentialName)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).To(ContainSubstring(`type: json`))
-			Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+			Expect(stdOut).To(ContainSubstring(credentialYaml))
 		})
 
 		By("getting the new json secret", func() {

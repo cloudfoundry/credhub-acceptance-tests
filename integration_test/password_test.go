@@ -11,12 +11,14 @@ import (
 
 var _ = Describe("Password test", func() {
 	It("should set a password", func() {
-		session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "password", "-w", "some_value")
+		credName := GenerateUniqueCredentialName()
+		RunCommand("set", "-n", credName, "-t", "password", "-w", "some_value")
+		session := RunCommand("get", "-n", credName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: password`))
-		Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+		Expect(stdOut).To(ContainSubstring(`value: some_value`))
 	})
 
 	It("should generate a password", func() {
@@ -33,7 +35,8 @@ var _ = Describe("Password test", func() {
 		valueRegexp := regexp.MustCompile(`value: \D*`)
 
 		By("first generating a password with no numbers", func() {
-			session := RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
+			session := RunCommand("get", "-n", generatedPasswordId)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())

@@ -13,7 +13,8 @@ var _ = Describe("Creating a User", func() {
 
 		Describe("With default parameters", func() {
 			It("should generate a user", func() {
-				session := RunCommand("generate", "-n", name, "-t", "user")
+				RunCommand("generate", "-n", name, "-t", "user")
+				session := RunCommand("get", "-n", name)
 				stdOut := string(session.Out.Contents())
 
 				By("generating the credential first", func() {
@@ -43,7 +44,8 @@ var _ = Describe("Creating a User", func() {
 
 		Describe("with parameters", func() {
 			It("should generate a user with password of length 50", func() {
-				session := RunCommand("generate", "-n", name, "-t", "user", "--length", "50")
+				RunCommand("generate", "-n", name, "-t", "user", "--length", "50")
+				session := RunCommand("get", "-n", name)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 
@@ -58,7 +60,8 @@ var _ = Describe("Creating a User", func() {
 		Describe("with provided username", func() {
 			It("should generate a password, but not the username", func() {
 				username := "test-username"
-				session := RunCommand("generate", "-n", name, "-t", "user", "--username", username)
+				RunCommand("generate", "-n", name, "-t", "user", "--username", username)
+				session := RunCommand("get", "-n", name)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 
@@ -78,14 +81,16 @@ var _ = Describe("Creating a User", func() {
 			It("should set the user value", func() {
 				username := "test"
 				password := "password"
-				session := RunCommand("set", "-n", name, "-t", "user", "-z", username, "-w", password)
+				RunCommand("set", "-n", name, "-t", "user", "-z", username, "-w", password)
+				session := RunCommand("get", "-n", name)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 
 				Expect(stdOut).To(ContainSubstring(`name: /` + name))
 				Expect(stdOut).To(ContainSubstring(`type: user`))
-				Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
-
+				Expect(stdOut).To(ContainSubstring(`username: ` + username))
+				Expect(stdOut).To(ContainSubstring(`password: ` + password))
+				Expect(stdOut).To(MatchRegexp(`password_hash: \$6\$.+\$.+`))
 			})
 		})
 	})

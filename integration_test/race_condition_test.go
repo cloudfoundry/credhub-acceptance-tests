@@ -20,12 +20,14 @@ var _ = Describe("Race condition tests", func() {
 
 			go func() {
 				time.Sleep(150 * time.Millisecond)
-				session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa", "--no-overwrite")
+				RunCommand("generate", "-n", rsaSecretName, "-t", "rsa", "--no-overwrite")
+				session := RunCommand("get", "-n", rsaSecretName)
 				waitForSession1 <- session
 			}()
 
 			go func() {
-				session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa", "--no-overwrite")
+				RunCommand("generate", "-n", rsaSecretName, "-t", "rsa", "--no-overwrite")
+				session := RunCommand("get", "-n", rsaSecretName)
 				waitForSession2 <- session
 			}()
 
