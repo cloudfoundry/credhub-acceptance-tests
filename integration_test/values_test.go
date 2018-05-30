@@ -20,12 +20,13 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 	})
 
 	By("setting a new value secret", func() {
-		session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
+		RunCommand("set", "-n", credentialName, "-t", "value", "-v", credentialValue)
+		session := RunCommand("get", "-n", credentialName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: value`))
-		Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
 	})
 
 	By("getting the new value secret", func() {
