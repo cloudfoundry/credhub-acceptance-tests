@@ -170,7 +170,8 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("regenerating the certificate", func() {
-				session := RunCommand("regenerate", "-n", certificateId)
+				RunCommand("regenerate", "-n", certificateId)
+				session := RunCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 				stdOut := string(session.Out.Contents())
 				cert := CertFromPem(stdOut, false)
@@ -226,7 +227,8 @@ var _ = Describe("Certificates Test", func() {
 			})
 
 			By("regenerating the certificate", func() {
-				session := RunCommand("regenerate", "-n", certificateId)
+				RunCommand("regenerate", "-n", certificateId)
+				session := RunCommand("get", "-n", certificateId)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
