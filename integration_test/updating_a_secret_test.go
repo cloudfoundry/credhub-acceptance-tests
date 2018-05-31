@@ -1,10 +1,10 @@
 package integration_test
 
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("updating a secret", func() {
@@ -19,7 +19,7 @@ var _ = Describe("updating a secret", func() {
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: old value"))
 			})
 
 			By("setting the value secret again", func() {
@@ -29,7 +29,7 @@ var _ = Describe("updating a secret", func() {
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: new value"))
 			})
 		})
 	})
@@ -60,7 +60,8 @@ var _ = Describe("updating a secret", func() {
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+				Expect(stdOut).To(ContainSubstring(`certificate: `))
+				Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			})
 		})
 	})

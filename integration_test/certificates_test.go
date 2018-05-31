@@ -26,7 +26,12 @@ var _ = Describe("Certificates Test", func() {
 
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+			Expect(stdOut).To(ContainSubstring(`ca: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_CA_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(`certificate: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(`private_key: `))
+			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
 		})
 
 		It("should require a certificate type", func() {
@@ -48,7 +53,7 @@ var _ = Describe("Certificates Test", func() {
 				Certificate string `yaml:"certificate,omitempty"`
 			}
 			type certificate struct {
-				Value string `yaml:"value"`
+				Value certificateValue `yaml:"value"`
 			}
 
 			caCert := certificate{}
@@ -66,7 +71,10 @@ var _ = Describe("Certificates Test", func() {
 			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+			Expect(stdOut).To(ContainSubstring(`certificate: `))
+			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
+			Expect(stdOut).To(ContainSubstring(`private_key: `))
+			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
 		})
 	})
 
