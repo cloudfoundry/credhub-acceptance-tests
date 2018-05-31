@@ -13,21 +13,23 @@ var _ = Describe("updating a secret", func() {
 			credentialName := GenerateUniqueCredentialName()
 
 			By("setting a new value secret", func() {
-				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
+				RunCommand("set", "-n", credentialName, "-t", "value", "-v", "old value")
+				session := RunCommand("get", "-n", credentialName)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: old value"))
 			})
 
 			By("setting the value secret again", func() {
-				session := RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
+				RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
+				session := RunCommand("get", "-n", credentialName)
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: new value"))
 			})
 		})
 	})
@@ -42,7 +44,8 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("generating a new certificate signed by the CA", func() {
-				session := RunCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
+				RunCommand("generate", "-n", credentialname, "-t", "certificate", "-c", "bla", "--ca", caName)
+				session := RunCommand("get", "-n", credentialname)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
@@ -52,11 +55,13 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("overwriting the certificate with `set`", func() {
-				session := RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", VALID_CERTIFICATE)
+				RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", VALID_CERTIFICATE)
+				session := RunCommand("get", "-n", credentialname)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring(`certificate: `))
+				Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			})
 		})
 	})
