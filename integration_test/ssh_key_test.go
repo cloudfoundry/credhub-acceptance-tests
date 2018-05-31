@@ -59,7 +59,8 @@ var _ = Describe("SSH key test", func() {
 			initialPublicKey := stdOut[strings.Index(stdOut, "public_key: ssh-rsa"):strings.Index(stdOut, "some comment")]
 			initialPrivateKey := stdOut[strings.Index(stdOut, "-----BEGIN RSA PRIVATE KEY-----"):strings.Index(stdOut, "-----END RSA PRIVATE KEY-----")]
 
-			session = RunCommand("regenerate", "-n", sshSecretName)
+			RunCommand("regenerate", "-n", sshSecretName)
+			session = RunCommand("get", "-n", sshSecretName)
 
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
