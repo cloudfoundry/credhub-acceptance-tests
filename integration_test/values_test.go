@@ -26,7 +26,7 @@ var _ =	It("should set, get, and delete a new value secret", func() {
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: value`))
-		Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+		Expect(stdOut).To(ContainSubstring("value: " + credentialValue))
 	})
 
 	By("getting the new value secret", func() {

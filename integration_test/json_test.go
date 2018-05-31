@@ -20,7 +20,7 @@ var _ = Describe("json secrets", func() {
 
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).To(ContainSubstring(`type: json`))
-			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+			Expect(stdOut).To(ContainSubstring(credentialYaml))
 		})
 
 		By("getting the new json secret", func() {

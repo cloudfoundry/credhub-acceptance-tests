@@ -18,7 +18,7 @@ var _ = Describe("Password test", func() {
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: password`))
-		Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+		Expect(stdOut).To(ContainSubstring(`value: some_value`))
 	})
 
 	It("should generate a password", func() {
