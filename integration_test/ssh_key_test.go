@@ -12,7 +12,9 @@ var _ = Describe("SSH key test", func() {
 	Describe("setting an SSH key", func() {
 		It("should be able to set an ssh key", func() {
 			base64DecodablePublicKey := "public"
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "ssh", "-u", base64DecodablePublicKey, "-p", credentialValue)
+			credName := GenerateUniqueCredentialName()
+			RunCommand("set", "-n", credName, "-t", "ssh", "-u", base64DecodablePublicKey, "-p", credentialValue)
+			session := RunCommand("get", "-n", credName)
 			stdOut := string(session.Out.Contents())
 
 			Eventually(session).Should(Exit(0))
@@ -26,7 +28,8 @@ var _ = Describe("SSH key test", func() {
 		sshSecretName := GenerateUniqueCredentialName()
 
 		By("generating the key", func() {
-			session := RunCommand("generate", "-n", sshSecretName, "-t", "ssh", "-m", "some comment")
+			RunCommand("generate", "-n", sshSecretName, "-t", "ssh", "-m", "some comment")
+			session := RunCommand("get", "-n", sshSecretName)
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
@@ -47,7 +50,8 @@ var _ = Describe("SSH key test", func() {
 		sshSecretName := GenerateUniqueCredentialName()
 
 		By("regenerate should create a new value", func() {
-			session := RunCommand("generate", "-n", sshSecretName, "-t", "ssh", "-m", "some comment")
+			RunCommand("generate", "-n", sshSecretName, "-t", "ssh", "-m", "some comment")
+			session := RunCommand("get", "-n", sshSecretName)
 
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
