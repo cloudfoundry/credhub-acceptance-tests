@@ -25,7 +25,9 @@ var _ = Describe("Certificates Test", func() {
 
 			Expect(stdOut).To(ContainSubstring(`name: /` + name))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+			Expect(stdOut).To(ContainSubstring(`ca: someca`))
+			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`private_key: iamakey`))
 		})
 
 		It("should require a certificate type", func() {
@@ -39,19 +41,39 @@ var _ = Describe("Certificates Test", func() {
 			certName := GenerateUniqueCredentialName()
 			RunCommand("generate", "-n", caName, "-t", "certificate", "--is-ca", "-c", "commonName")
 			session := RunCommand("get", "-n", caName)
+
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
 
+			type certificateValue struct {
+				Ca          string `yaml:"ca,omitempty"`
+				Certificate string `yaml:"certificate,omitempty"`
+			}
+			type certificate struct {
+				Value certificateValue `yaml:"value"`
+			}
 
-			session = RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakeytoo", "--ca-name", caName)
+			caCert := certificate{}
+			err := yaml.Unmarshal([]byte(stdOut), &caCert)
+			Expect(err).To(BeNil())
+
+			RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=iamacertificate", "--private=iamakeytoo", "--ca-name", caName)
 			session = RunCommand("get", "-n", certName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 
+			cert := certificate{}
+			err = yaml.Unmarshal([]byte(stdOut), &cert)
+			Expect(err).To(BeNil())
 
+			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`value: <redacted>`))
+			Expect(stdOut).To(ContainSubstring(`certificate: iamacertificate`))
+			Expect(stdOut).To(ContainSubstring(`private_key: iamakeytoo`))
+
+
+
 		})
 	})
 

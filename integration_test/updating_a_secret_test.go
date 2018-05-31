@@ -19,7 +19,7 @@ var _ = Describe("updating a secret", func() {
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: old value"))
 			})
 
 			By("setting the value secret again", func() {
@@ -29,7 +29,7 @@ var _ = Describe("updating a secret", func() {
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring("value: new value"))
 			})
 		})
 	})
@@ -60,7 +60,7 @@ var _ = Describe("updating a secret", func() {
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
 				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(ContainSubstring("value: <redacted>"))
+				Expect(stdOut).To(ContainSubstring(`certificate: fake-certificate`))
 			})
 		})
 	})
