@@ -12,8 +12,10 @@ import (
 var _ = Describe("Password test", func() {
 	It("should set a password", func() {
 		credName := GenerateUniqueCredentialName()
-		RunCommand("set", "-n", credName, "-t", "password", "-w", "some_value")
-		session := RunCommand("get", "-n", credName)
+		session := RunCommand("set", "-n", credName, "-t", "password", "-w", "some_value")
+		Eventually(session).Should(Exit(0))
+
+		session = RunCommand("get", "-n", credName)
 		Eventually(session).Should(Exit(0))
 
 		stdOut := string(session.Out.Contents())
@@ -38,6 +40,9 @@ var _ = Describe("Password test", func() {
 			session := RunCommand("generate", "-n", generatedPasswordId, "-t", "password", "--exclude-number")
 			Eventually(session).Should(Exit(0))
 
+			session = RunCommand("get", "-n", generatedPasswordId)
+			Eventually(session).Should(Exit(0))
+
 			stdOut := string(session.Out.Contents())
 			Expect(stdOut).To(ContainSubstring(`type: password`))
 			Expect(stdOut).NotTo(MatchRegexp(`value: \S*\d`))
@@ -47,6 +52,9 @@ var _ = Describe("Password test", func() {
 
 		By("then regenerating the password and observing it still has no numbers", func() {
 			session := RunCommand("regenerate", "-n", generatedPasswordId)
+			Eventually(session).Should(Exit(0))
+
+			session = RunCommand("get", "-n", generatedPasswordId)
 			Eventually(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
