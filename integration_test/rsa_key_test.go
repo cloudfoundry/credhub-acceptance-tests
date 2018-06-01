@@ -58,7 +58,9 @@ var _ = Describe("RSA key test", func() {
 			initialPublicKey := stdOut[strings.Index(stdOut, "-----BEGIN PUBLIC KEY-----"):strings.Index(stdOut, "-----END PUBLIC KEY-----")]
 			initialPrivateKey := stdOut[strings.Index(stdOut, "-----BEGIN RSA PRIVATE KEY-----"):strings.Index(stdOut, "-----END RSA PRIVATE KEY-----")]
 			session = RunCommand("regenerate", "-n", rsaSecretName)
+			Eventually(session).Should(Exit(0))
 
+			session = RunCommand("get", "-n", rsaSecretName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
 			Expect(stdOut).NotTo(ContainSubstring(initialPublicKey))
