@@ -77,7 +77,7 @@ var _ = Describe("library with mtls authentication", func() {
 			generatePassword := generate.Password{Length: 10}
 			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 
-			Expect(err.Error()).To(Equal("invalid_token"))
+			Expect(err.Error()).To(Equal("invalid_token: Full authentication is required to access this resource"))
 		})
 
 	})
@@ -94,7 +94,7 @@ var _ = Describe("library with mtls authentication", func() {
 			generatePassword := generate.Password{Length: 10}
 			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
 
-			Expect(err.Error()).To(Equal("invalid_token"))
+			Expect(err.Error()).To(Equal("invalid_token: Full authentication is required to access this resource"))
 		})
 
 	})
