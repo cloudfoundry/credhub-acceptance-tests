@@ -1,9 +1,9 @@
 package acceptance_test
 
 import (
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/permissions"
+	"code.cloudfoundry.org/credhub-cli/credhub"
+	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
+	"code.cloudfoundry.org/credhub-cli/credhub/permissions"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

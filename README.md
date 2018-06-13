@@ -15,7 +15,7 @@ See additional repos for more info:
 Ensure that you have a local version of the CredHub CLI checked out in your $GOPATH
 
 ```sh
-go get github.com/cloudfoundry-incubator/credhub-cli
+go get code.cloudfoundry.org/credhub-cli
 ```
 
 ### Run Tests locally

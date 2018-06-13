@@ -51,7 +51,7 @@ var _ = AfterEach(func() {
 })
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("github.com/cloudfoundry-incubator/credhub-cli")
+	path, err := Build("code.cloudfoundry.org/credhub-cli")
 	Expect(err).NotTo(HaveOccurred())
 
 	return []byte(path)
