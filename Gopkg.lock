@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  name = "github.com/cloudfoundry-incubator/credhub-cli"
+  name = "code.cloudfoundry.org/credhub-cli"
   packages = [
     "credhub",
     "credhub/auth",

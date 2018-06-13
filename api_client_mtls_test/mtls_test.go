@@ -8,8 +8,8 @@ import (
 	"os"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/credentials/generate"
+	"code.cloudfoundry.org/credhub-cli/credhub"
+	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

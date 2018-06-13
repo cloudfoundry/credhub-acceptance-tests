@@ -11,8 +11,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub"
-	"github.com/cloudfoundry-incubator/credhub-cli/credhub/auth"
+	"code.cloudfoundry.org/credhub-cli/credhub"
+	"code.cloudfoundry.org/credhub-cli/credhub/auth"
 )
 
 var (
