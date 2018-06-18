@@ -25,7 +25,7 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
-		By("setting the password again without overwrite returns same password")
+		By("setting the password again without overwrite returns same password if the parameters are the same")
 		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))

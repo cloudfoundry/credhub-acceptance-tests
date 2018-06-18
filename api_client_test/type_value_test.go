@@ -19,7 +19,7 @@ var _ = Describe("Value Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred))
 
-		By("setting the value again without overwrite returns same value")
+		By("setting the value again without overwrite returns same value if the parameters are the same")
 		value, err = credhubClient.SetValue(name, cred2, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred))
