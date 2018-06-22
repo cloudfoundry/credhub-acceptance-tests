@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("Find", func() {
@@ -61,19 +61,4 @@ var _ = Describe("Find", func() {
 		Expect(results.Credentials).To(ConsistOf(findResult1, findResult2))
 	})
 
-	Specify("finding all the credential paths", func() {
-		results, err := credhubClient.FindAllPaths()
-
-		Expect(err).ToNot(HaveOccurred())
-
-		findResult1 := credentials.Path{Path: "/"}
-		findResult2 := credentials.Path{Path: "/acceptance/"}
-		findResult3 := credentials.Path{Path: testCredentialPrefix()}
-		findResult4 := credentials.Path{Path: testCredentialPrefix() + "find-test/"}
-
-		Expect(results.Paths).To(ContainElement(findResult1))
-		Expect(results.Paths).To(ContainElement(findResult2))
-		Expect(results.Paths).To(ContainElement(findResult3))
-		Expect(results.Paths).To(ContainElement(findResult4))
-	})
 })
