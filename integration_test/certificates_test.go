@@ -4,20 +4,25 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"fmt"
+	"io/ioutil"
+	"os/exec"
+
+	"strings"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
-	"strings"
 )
 
 var _ = Describe("Certificates Test", func() {
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
-			RunCommand("set", "-n", name, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=" + VALID_CERTIFICATE_PRIVATE_KEY, "--root=" + VALID_CERTIFICATE_CA)
+			RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--root="+VALID_CERTIFICATE_CA)
 			session := RunCommand("get", "-n", name)
 			stdOut := string(session.Out.Contents())
 
@@ -50,16 +55,16 @@ var _ = Describe("Certificates Test", func() {
 			type certificateValue struct {
 				Ca          string `yaml:"ca,omitempty"`
 				Certificate string `yaml:"certificate,omitempty"`
-				}
+			}
 			type certificate struct {
 				Value certificateValue `yaml:"value"`
-				}
+			}
 
 			caCert := certificate{}
 			err := yaml.Unmarshal([]byte(stdOut), &caCert)
 			Expect(err).To(BeNil())
 
-			RunCommand("set", "-n", certName, "-t", "certificate", "--certificate=" + VALID_CERTIFICATE, "--private=" + VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
+			RunCommand("set", "-n", certName, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
 			session = RunCommand("get", "-n", certName)
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
@@ -68,7 +73,6 @@ var _ = Describe("Certificates Test", func() {
 			err = yaml.Unmarshal([]byte(stdOut), &cert)
 			Expect(err).To(BeNil())
 			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
-			
 			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
 			Expect(stdOut).To(ContainSubstring(`type: certificate`))
 			Expect(stdOut).To(ContainSubstring(`certificate: `))
@@ -87,25 +91,43 @@ var _ = Describe("Certificates Test", func() {
 
 				RunCommand("generate", "-n", rootCaName, "-t", "certificate", "-c", rootCaName, "--is-ca", "--self-sign")
 				session := RunCommand("get", "-n", rootCaName)
-				cert := CertFromPem(string(session.Out.Contents()), false)
-				Expect(cert.Subject.CommonName).To(Equal(rootCaName))
-				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
-				Expect(cert.IsCA).To(Equal(true))
-				Expect(len(cert.SubjectKeyId)).ToNot(Equal(0))
+				rootCert := CertFromPem(string(session.Out.Contents()), false)
+				Expect(rootCert.Subject.CommonName).To(Equal(rootCaName))
+				Expect(rootCert.Issuer.CommonName).To(Equal(rootCaName))
+				Expect(rootCert.IsCA).To(Equal(true))
+				Expect(len(rootCert.SubjectKeyId)).ToNot(Equal(0))
 
 				RunCommand("generate", "-n", intermediateCaName, "-t", "certificate", "-c", intermediateCaName, "--is-ca", "--ca", rootCaName)
 				session = RunCommand("get", "-n", intermediateCaName)
-				cert = CertFromPem(string(session.Out.Contents()), false)
-				Expect(cert.Subject.CommonName).To(Equal(intermediateCaName))
-				Expect(cert.Issuer.CommonName).To(Equal(rootCaName))
-				Expect(cert.IsCA).To(Equal(true))
+				intermediateCert := CertFromPem(string(session.Out.Contents()), false)
+				Expect(intermediateCert.Subject.CommonName).To(Equal(intermediateCaName))
+				Expect(intermediateCert.Issuer.CommonName).To(Equal(rootCert.Subject.CommonName))
+				Expect(intermediateCert.IsCA).To(Equal(true))
 
 				RunCommand("generate", "-n", leafCertificateName, "-t", "certificate", "-c", leafCertificateName, "--ca", intermediateCaName)
 				session = RunCommand("get", "-n", leafCertificateName)
-				cert = CertFromPem(string(session.Out.Contents()), false)
-				Expect(cert.Subject.CommonName).To(Equal(leafCertificateName))
-				Expect(cert.Issuer.CommonName).To(Equal(intermediateCaName))
-				Expect(cert.IsCA).To(Equal(false))
+				leafCert := CertFromPem(string(session.Out.Contents()), false)
+
+				caCerts, err := ioutil.TempFile("", "credhubTestCerts")
+				Expect(err).ToNot(HaveOccurred())
+				pem.Encode(caCerts, &pem.Block{Type: "CERTIFICATE", Bytes: rootCert.Raw})
+				pem.Encode(caCerts, &pem.Block{Type: "CERTIFICATE", Bytes: intermediateCert.Raw})
+				caCerts.Close()
+
+				leafFile, err := ioutil.TempFile("", "leafCert")
+				Expect(err).ToNot(HaveOccurred())
+				pem.Encode(leafFile, &pem.Block{Type: "CERTIFICATE", Bytes: leafCert.Raw})
+				leafFile.Close()
+
+				cmd := exec.Command("openssl", "verify", "-CAfile", caCerts.Name(), leafFile.Name())
+				session, err = Start(cmd, GinkgoWriter, GinkgoWriter)
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(session).Should(Exit(0))
+				Expect(session.Out).To(gbytes.Say(fmt.Sprintf("%s: OK", leafFile.Name())))
+				Expect(leafCert.Subject.CommonName).To(Equal(leafCertificateName))
+				Expect(leafCert.Issuer.CommonName).To(Equal(intermediateCert.Subject.CommonName))
+				Expect(leafCert.IsCA).To(Equal(false))
 			})
 		})
 
