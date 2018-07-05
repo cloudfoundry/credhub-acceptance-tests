@@ -15,34 +15,29 @@ import (
 var _ = Describe("SSH Credential Type", func() {
 	Specify("lifecycle", func() {
 		name := testCredentialPath("some-ssh")
-		opts := generate.SSH{KeyLength: 2048}
+		generateParameters := generate.SSH{KeyLength: 2048}
 
 		By("generate ssh keys with path " + name)
-		generatedSSH, err := credhubClient.GenerateSSH(name, opts, credhub.NoOverwrite)
+		generatedSSH, err := credhubClient.GenerateSSH(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		block, _ := pem.Decode([]byte(generatedSSH.Value.PrivateKey))
 		privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(privateKey.N.BitLen()).To(Equal(2048))
+		Expect(privateKey.N.BitLen()).To(Equal(generateParameters.KeyLength))
 
 		By("generate the ssh keys again without overwrite returns same ssh")
-		ssh, err := credhubClient.GenerateSSH(name, opts, credhub.NoOverwrite)
-		Expect(err).ToNot(HaveOccurred())
-		Expect(ssh).To(Equal(generatedSSH))
-
-		By("setting the ssh keys again without overwrite returns the same ssh if the parameters are the same")
-		newSSH := values.SSH{PrivateKey: "private key", PublicKey: "public key"}
-		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.NoOverwrite)
+		ssh, err := credhubClient.GenerateSSH(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh).To(Equal(generatedSSH))
 
 		By("overwriting with generate")
-		ssh, err = credhubClient.GenerateSSH(name, opts, credhub.Overwrite)
+		ssh, err = credhubClient.GenerateSSH(name, generateParameters, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh).ToNot(Equal(generatedSSH))
 
-		By("overwriting with set")
-		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.Overwrite)
+		By("setting the ssh keys again overwrites previous ssh")
+		newSSH := values.SSH{PrivateKey: "private key", PublicKey: "public key"}
+		ssh, err = credhubClient.SetSSH(name, newSSH)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh.Value.SSH).To(Equal(newSSH))
 

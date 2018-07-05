@@ -12,39 +12,36 @@ import (
 var _ = Describe("Password Credential Type", func() {
 	Specify("lifecycle", func() {
 		name := testCredentialPath("some-password")
-		generatePassword := generate.Password{Length: 10}
+		generateParameters := generate.Password{Length: 10}
 
 		By("generate a password with path " + name)
-		password, err := credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
+		password, err := credhubClient.GeneratePassword(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(HaveLen(10))
-		firstGeneratedPassword := password.Value
+		Expect(password.Value).To(HaveLen(generateParameters.Length))
+		generatedPassword := password.Value
 
 		By("generate the password again without overwrite returns same password")
-		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.NoOverwrite)
+		password, err = credhubClient.GeneratePassword(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(firstGeneratedPassword))
-
-		By("setting the password again without overwrite returns same password if the parameters are the same")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.NoOverwrite)
-		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(firstGeneratedPassword))
+		Expect(password.Value).To(Equal(generatedPassword))
 
 		By("overwriting the password with generate")
-		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
+		password, err = credhubClient.GeneratePassword(name, generateParameters, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(HaveLen(10))
-		Expect(password.Value).ToNot(Equal(firstGeneratedPassword))
+		Expect(password.Value).To(HaveLen(generateParameters.Length))
+		Expect(password.Value).ToNot(Equal(generatedPassword))
 
-		By("overwriting the password with set")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.Overwrite)
+		newPassword := values.Password("some-password")
+
+		By("setting the password again overwrites previous password")
+		password, err = credhubClient.SetPassword(name, newPassword)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(values.Password("some-password")))
+		Expect(password.Value).To(Equal(newPassword))
 
 		By("getting the password")
 		password, err = credhubClient.GetLatestPassword(name)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(values.Password("some-password")))
+		Expect(password.Value).To(Equal(newPassword))
 
 		By("deleting the password")
 		err = credhubClient.Delete(name)

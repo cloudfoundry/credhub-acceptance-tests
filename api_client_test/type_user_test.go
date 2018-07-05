@@ -12,35 +12,30 @@ import (
 var _ = Describe("User Credential Type", func() {
 	Specify("lifecycle", func() {
 		name := testCredentialPath("some-user")
-		opts := generate.User{Length: 10}
+		generateParameters := generate.User{Length: 10}
 
 		By("generate a user with path " + name)
-		user, err := credhubClient.GenerateUser(name, opts, credhub.NoOverwrite)
+		user, err := credhubClient.GenerateUser(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(user.Value.Password).To(HaveLen(10))
+		Expect(user.Value.Password).To(HaveLen(generateParameters.Length))
 		generatedUser := user.Value
 
 		By("generate the user again without overwrite returns same user")
-		user, err = credhubClient.GenerateUser(name, opts, credhub.NoOverwrite)
-		Expect(err).ToNot(HaveOccurred())
-		Expect(user.Value).To(Equal(generatedUser))
-
-		username := "name"
-		newUser := values.User{Username: username, Password: "password"}
-
-		By("setting the user again without overwrite returns same user")
-		user, err = credhubClient.SetUser(name, newUser, credhub.NoOverwrite)
+		user, err = credhubClient.GenerateUser(name, generateParameters, credhub.NoOverwrite)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value).To(Equal(generatedUser))
 
 		By("overwriting the user with generate")
-		user, err = credhubClient.GenerateUser(name, opts, credhub.Overwrite)
+		user, err = credhubClient.GenerateUser(name, generateParameters, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(user.Value.Password).To(HaveLen(10))
+		Expect(user.Value.Password).To(HaveLen(generateParameters.Length))
 		Expect(user.Value).ToNot(Equal(generatedUser))
 
-		By("overwriting the user with set")
-		user, err = credhubClient.SetUser(name, newUser, credhub.Overwrite)
+		username := "name"
+		newUser := values.User{Username: username, Password: "password"}
+
+		By("setting the user again overwrites previous user")
+		user, err = credhubClient.SetUser(name, newUser)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value.User).To(Equal(newUser))
 

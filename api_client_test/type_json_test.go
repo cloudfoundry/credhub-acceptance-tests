@@ -5,7 +5,6 @@ import (
 	. "github.com/onsi/gomega"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	"encoding/json"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("JSON Credential Type", func() {
@@ -18,41 +17,30 @@ var _ = Describe("JSON Credential Type", func() {
 		cred2 := make(map[string]interface{})
 		cred2["another_key"] = "another_value"
 
-		var unmarshalled values.JSON
+		var firstUnmarshalled values.JSON
+		var secondUnmarshalled values.JSON
 
 		By("setting the json for the first time returns same json")
-		jsonValue, err := credhubClient.SetJSON(name, cred, credhub.Overwrite)
+		jsonValue, err := credhubClient.SetJSON(name, cred)
 
-		keyValueJson := `{"key":"value"}`
-
-		json.Unmarshal([]byte(keyValueJson), &unmarshalled)
+		json.Unmarshal([]byte(`{"key":"value"}`), &firstUnmarshalled)
 
 		Expect(err).ToNot(HaveOccurred())
-		Expect(jsonValue.Value).To(Equal(unmarshalled))
+		Expect(jsonValue.Value).To(Equal(firstUnmarshalled))
 
-		By("setting the json again without overwrite returns same json")
-		jsonValue, err = credhubClient.SetJSON(name, cred2, credhub.NoOverwrite)
+		By("setting the json again overwrites previous json")
+		jsonValue, err = credhubClient.SetJSON(name, cred2)
 
-		Expect(err).ToNot(HaveOccurred())
-		Expect(jsonValue.Value).To(Equal(unmarshalled))
-
-		By("overwriting the json with set")
-		jsonValue, err = credhubClient.SetJSON(name, cred2, credhub.Overwrite)
-
-		otherKeyValueJson := `{"another_key":"another_value"}`
-
-		unmarshalled = nil
-
-		json.Unmarshal([]byte(otherKeyValueJson), &unmarshalled)
+		json.Unmarshal([]byte(`{"another_key":"another_value"}`), &secondUnmarshalled)
 
 		Expect(err).ToNot(HaveOccurred())
-		Expect(jsonValue.Value).To(Equal(unmarshalled))
+		Expect(jsonValue.Value).To(Equal(secondUnmarshalled))
 
 		By("getting the json")
 		jsonValue, err = credhubClient.GetLatestJSON(name)
 
 		Expect(err).ToNot(HaveOccurred())
-		Expect(jsonValue.Value).To(Equal(unmarshalled))
+		Expect(jsonValue.Value).To(Equal(secondUnmarshalled))
 
 		By("deleting the json")
 		err = credhubClient.Delete(name)
