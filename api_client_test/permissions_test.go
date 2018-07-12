@@ -18,6 +18,7 @@ var _ = Describe("Getting Credentials", func() {
 		newPermission := permissions.Permission{
 			Actor:      "some-actor",
 			Operations: []string{"read"},
+			Path:		name,
 		}
 
 		_, err = credhubClient.AddPermissions(name, []permissions.Permission{newPermission})
