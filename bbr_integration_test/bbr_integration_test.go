@@ -76,7 +76,7 @@ func CleanupCredhub(path string) {
 	By("Cleaning up credhub bbr test passwords")
 	RunCommand(
 		"sh", "-c",
-		fmt.Sprintf("credhub find -p /%s | tail -n +2 | cut -d\" \" -f3 | cut -d\":\" -f2 | xargs -IN credhub delete --name N", path),
+		fmt.Sprintf("credhub find -p /%s --output-json | jq -r '.credentials[].name' | xargs -IN credhub delete --name N", path),
 	)
 }
 

@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"path"
 	"testing"
-
 	"os"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
@@ -12,6 +11,8 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
+	"fmt"
 )
 
 var (
@@ -21,6 +22,7 @@ var (
 	credhub_ca    []byte
 	uaa_ca        []byte
 	certPath      string
+	credentialName string
 )
 
 var _ = Describe("library with mtls authentication", func() {
@@ -33,6 +35,7 @@ var _ = Describe("library with mtls authentication", func() {
 		uaa_ca, err = ioutil.ReadFile(path.Join(config.UAACa))
 		Expect(err).NotTo(HaveOccurred())
 		certPath = path.Join(os.Getenv("PWD"), "certs")
+		credentialName = fmt.Sprintf("%d", time.Now().UnixNano())
 	})
 
 	Describe("with a certificate signed by a trusted CA", func() {
@@ -44,7 +47,7 @@ var _ = Describe("library with mtls authentication", func() {
 
 			Expect(err).ToNot(HaveOccurred())
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
+			_, err := credhubClient.GeneratePassword(credentialName, generatePassword, credhub.Overwrite)
 			Expect(err).ToNot(HaveOccurred())
 		})
 	})
@@ -59,7 +62,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
+			_, err := credhubClient.GeneratePassword(credentialName, generatePassword, credhub.Overwrite)
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(ContainSubstring("unknown certificate"))
 		})
@@ -75,7 +78,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
+			_, err := credhubClient.GeneratePassword(credentialName, generatePassword, credhub.Overwrite)
 
 			Expect(err.Error()).To(Equal("invalid_token: Full authentication is required to access this resource"))
 		})
@@ -92,7 +95,7 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			generatePassword := generate.Password{Length: 10}
-			_, err := credhubClient.GeneratePassword("test", generatePassword, credhub.Overwrite)
+			_, err := credhubClient.GeneratePassword(credentialName, generatePassword, credhub.Overwrite)
 
 			Expect(err.Error()).To(Equal("invalid_token: Full authentication is required to access this resource"))
 		})

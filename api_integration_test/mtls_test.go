@@ -16,6 +16,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"fmt"
+	"time"
 )
 
 var (
@@ -24,6 +25,11 @@ var (
 )
 
 var _ = Describe("mutual TLS authentication", func() {
+	var credentialName string
+
+	BeforeEach(func() {
+		credentialName = fmt.Sprintf("%d", time.Now().UnixNano())
+	})
 
 	Describe("with a certificate signed by a trusted CA	", func() {
 		BeforeEach(func() {
@@ -33,7 +39,7 @@ var _ = Describe("mutual TLS authentication", func() {
 
 		It("allows the client to hit an authenticated endpoint", func() {
 			postData := map[string]string{
-				"name": "mtlstest",
+				"name": credentialName,
 				"type": "password",
 			}
 			result, err := mtlsPost(
@@ -56,7 +62,7 @@ var _ = Describe("mutual TLS authentication", func() {
 
 		It("prevents the client from hitting an authenticated endpoint", func() {
 			postData := map[string]string{
-				"name": "mtlstest",
+				"name": credentialName,
 				"type": "password",
 			}
 			result, err := mtlsPost(
@@ -79,7 +85,7 @@ var _ = Describe("mutual TLS authentication", func() {
 
 		It("prevents the client from hitting an authenticated endpoint", func() {
 			postData := map[string]string{
-				"name": "mtlstest",
+				"name": credentialName,
 				"type": "password",
 			}
 			result, err := mtlsPost(
@@ -105,7 +111,7 @@ var _ = Describe("mutual TLS authentication", func() {
 
 		It("prevents the client from hitting an authenticated endpoint", func() {
 			postData := map[string]string{
-				"name": "mtlstest",
+				"name": credentialName,
 				"type": "password",
 			}
 			result, err := mtlsPost(
