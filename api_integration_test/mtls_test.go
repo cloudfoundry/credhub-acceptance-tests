@@ -31,13 +31,13 @@ var _ = Describe("mutual TLS authentication", func() {
 		credentialName = fmt.Sprintf("%d", time.Now().UnixNano())
 	})
 
-	Describe("with a certificate signed by a trusted CA	", func() {
+	Describe("with a certificate signed by a trusted CA", func() {
 		BeforeEach(func() {
 			config, err = LoadConfig()
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("allows the client to hit an authenticated endpoint", func() {
+		PIt("allows the client to hit an authenticated endpoint", func() {
 			postData := map[string]string{
 				"name": credentialName,
 				"type": "password",

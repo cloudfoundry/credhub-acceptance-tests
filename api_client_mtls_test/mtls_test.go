@@ -39,7 +39,7 @@ var _ = Describe("library with mtls authentication", func() {
 	})
 
 	Describe("with a certificate signed by a trusted CA", func() {
-		It("can do authenticated operations", func() {
+		PIt("can do authenticated operations", func() {
 			credhubClient, err = credhub.New(config.ApiUrl,
 				credhub.CaCerts(string(credhub_ca), string(uaa_ca)),
 				credhub.ClientCert(path.Join(certPath, "client.pem"),
