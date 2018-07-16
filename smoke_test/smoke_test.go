@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Smoke Test", func() {
+var _ = PDescribe("Smoke Test", func() {
 
 	Describe("certificates", func() {
 		certificate := "t_value" + GenerateUniqueCredentialName()
