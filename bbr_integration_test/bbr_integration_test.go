@@ -48,7 +48,7 @@ var _ = Describe("Backup and Restore", func() {
 		Eventually(session).Should(Exit(0))
 
 		By("asserting that the backup archive exists and contains a database dump file")
-		session = RunCommand("sh", "-c", fmt.Sprintf("tar tf %s/%s*/*credhubdb.tar ./credhubdb_dump", bbrDirectory, config.DeploymentName))
+		session = RunCommand("sh", "-c", fmt.Sprintf("tar tf %s/%s*/*credhub.tar ./credhubdb_dump", bbrDirectory, config.DeploymentName))
 		Eventually(session).Should(Exit(0))
 
 		By("editing the test credential")
