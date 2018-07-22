@@ -5,4 +5,4 @@ config.json
 config.json.old
 test_config.json
 test_config.json.old
-certs/
+/certs/
