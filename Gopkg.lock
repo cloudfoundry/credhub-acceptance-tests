@@ -2,6 +2,7 @@
 
 
 [[projects]]
+  branch = "master"
   name = "code.cloudfoundry.org/credhub-cli"
   packages = [
     "credhub",
@@ -14,19 +15,18 @@
     "credhub/server",
     "errors"
   ]
-  revision = "fbeb23df0fb050ff5cfaf4d0a8de33942cd00d9e"
-  version = "1.7.5"
+  revision = "55d15b91e8ce00af0e7a1ea22f9e95d23ee3a0e0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/cloudfoundry/go-socks5"
+  packages = ["."]
+  revision = "54f73bdb8a8e85a6611d3d29ab9bbf98c2a060d7"
 
 [[projects]]
   name = "github.com/cloudfoundry/socks5-proxy"
   packages = ["."]
-  revision = "a5dbd34501d246ab6c004c9afebb5bd0dd9d7d22"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/genevievelesperance/go-socks5"
-  packages = ["."]
-  revision = "54f73bdb8a8e85a6611d3d29ab9bbf98c2a060d7"
+  revision = "3c6b4eec9c2d16c1dac4c42bdb5f755ba09daff8"
 
 [[projects]]
   branch = "master"
@@ -145,6 +145,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c45f0f4a1571b9d55a5b7b30d60c491ce7eb8e4444c01bfe2f25d7db814bf9d3"
+  inputs-digest = "61684a4ed88eef8eba12e75330c95b704345f26da36edda0b4b91687d43ff58b"
   solver-name = "gps-cdcl"
   solver-version = 1

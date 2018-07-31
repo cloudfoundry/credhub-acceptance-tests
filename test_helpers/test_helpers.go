@@ -69,14 +69,6 @@ func LoadConfig() (Config, error) {
 	return configuration, nil
 }
 
-func TargetAndLogin(cfg Config) {
-	CleanEnv()
-	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
-	uaa_ca := cfg.UAACa
-	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--ca-cert", credhub_ca, "--ca-cert", uaa_ca)
-	Eventually(session).Should(Exit(0))
-}
-
 func TargetAndLoginWithClientCredentials(cfg Config) {
 	CleanEnv()
 	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
@@ -92,13 +84,9 @@ func TargetAndLoginWithClientCredentials(cfg Config) {
 
 func TargetAndLoginSkipTls(cfg Config) {
 	CleanEnv()
-	session := RunCommand("login", "-s", cfg.ApiUrl, "-u", cfg.ApiUsername, "-p", cfg.ApiPassword, "--skip-tls-validation")
-	Eventually(session).Should(Exit())
 
-	if session.ExitCode() != 0 {
-		session := RunCommand("login", "-s", cfg.ApiUrl, "--client-name", cfg.ClientName, "--client-secret", cfg.ClientSecret, "--skip-tls-validation")
-		Eventually(session).Should(Exit(0))
-	}
+	session := RunCommand("login", "-s", cfg.ApiUrl, "--client-name", cfg.ClientName, "--client-secret", cfg.ClientSecret, "--skip-tls-validation")
+	Eventually(session).Should(Exit(0))
 }
 
 func CleanEnv() {
