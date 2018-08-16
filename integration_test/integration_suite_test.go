@@ -36,6 +36,8 @@ var _ = BeforeEach(func() {
 		os.Setenv("HOME", homeDir)
 	}
 
+	os.Unsetenv("CREDHUB_DEBUG")
+
 	cfg, err = LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 

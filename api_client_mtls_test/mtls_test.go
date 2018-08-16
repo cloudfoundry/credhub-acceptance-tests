@@ -41,6 +41,7 @@ var _ = Describe("library with mtls authentication", func() {
 		Expect(err).NotTo(HaveOccurred())
 		certPath = path.Join(os.Getenv("PWD"), "certs")
 		credentialName = fmt.Sprintf("%d", time.Now().UnixNano())
+		os.Unsetenv("CREDHUB_DEBUG")
 	})
 
 	Describe("with a certificate signed by a trusted CA", func() {
@@ -84,7 +85,6 @@ var _ = Describe("library with mtls authentication", func() {
 			var postBody body
 			err = json.Unmarshal(resBody, &postBody)
 			Expect(err).ToNot(HaveOccurred())
-			fmt.Println("****", postBody.Uuid)
 			permissionUuid = postBody.Uuid
 			Expect(resp.StatusCode).To(Equal(201))
 
