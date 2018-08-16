@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Getting Credentials", func() {
-	Specify("GetLatestVersion", func() {
+var _ bool = Describe("Getting Credentials", func() {
+	It("Adds permission", func() {
 		name := testCredentialPath("some-password")
 
 		_, err := credhubClient.GeneratePassword(name, generate.Password{}, credhub.Overwrite)
@@ -21,11 +21,17 @@ var _ = Describe("Getting Credentials", func() {
 			Path:		name,
 		}
 
-		_, err = credhubClient.AddPermissions(name, []permissions.Permission{newPermission})
+		resp, err := credhubClient.AddPermission(newPermission.Path, newPermission.Actor, newPermission.Operations)
+		Expect(resp.Actor).To(Equal("some-actor"))
+		Expect(resp.Operations).To(Equal([]string{"read"}))
+		Expect(resp.Path).To(Equal(name))
 		Expect(err).NotTo(HaveOccurred())
 
-		fetchedPermissions, err := credhubClient.GetPermissions(name)
+		fetchedPermission, err := credhubClient.GetPermission(resp.UUID)
 		Expect(err).NotTo(HaveOccurred())
-		Expect(fetchedPermissions).To(ContainElement(newPermission))
+		Expect(fetchedPermission.Actor).To(Equal(resp.Actor))
+		Expect(fetchedPermission.Operations).To(Equal(resp.Operations))
+		Expect(fetchedPermission.Path).To(Equal(resp.Path))
+		Expect(fetchedPermission.UUID).To(Equal(resp.UUID))
 	})
 })
