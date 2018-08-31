@@ -16,9 +16,34 @@ import (
 	"github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
+	"path"
+	"os"
 )
 
 var _ = Describe("Certificates Test", func() {
+	Describe("finding a certificate", func() {
+		It("should be able to filter by expiry date", func() {
+			certPath := path.Join(os.Getenv("PWD"), "certs")
+			expired := GenerateUniqueCredentialName()
+			cert, err := ioutil.ReadFile(path.Join(certPath, "expired.pem"))
+			Expect(err).NotTo(HaveOccurred())
+			RunCommand("set", "-n", expired, "-t", "certificate", "--certificate="+string(cert))
+
+			willExpire := GenerateUniqueCredentialName()
+			RunCommand("generate", "-n", willExpire, "-t", "certificate", "-d", "15", "-c", willExpire, "--is-ca", "--self-sign")
+
+			wontExpire := GenerateUniqueCredentialName()
+			RunCommand("generate", "-n", wontExpire, "-t", "certificate", "-d", "32", "-c", wontExpire, "--is-ca", "--self-sign")
+
+			session := RunCommand("curl", "-X", "GET", "-p", "api/v1/data?path=/&expires-within-days=30")
+			Eventually(session).Should(Exit(0))
+
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`"name": "/` + expired + `"`))
+			Expect(stdOut).To(ContainSubstring(`"name": "/` + willExpire + `"`))
+			Expect(stdOut).To(Not(ContainSubstring(`"name": "/` + wontExpire + `"`)))
+		})
+	})
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
