@@ -15,7 +15,7 @@
     "credhub/server",
     "errors"
   ]
-  revision = "55d15b91e8ce00af0e7a1ea22f9e95d23ee3a0e0"
+  revision = "328cb27f08f377518bf6ee5c4e334d97d64f00b3"
 
 [[projects]]
   branch = "master"

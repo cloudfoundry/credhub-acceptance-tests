@@ -1,5 +1,5 @@
 build/
-credhub-cli
+/credhub-cli
 *.iml
 config.json
 config.json.old
