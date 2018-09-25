@@ -28,11 +28,6 @@ var _ = Describe("User Credential Type", func() {
 		username := "name"
 		newUser := values.User{Username: username, Password: "password"}
 
-		By("setting the user again without overwrite returns same user")
-		user, err = credhubClient.SetUser(name, newUser, credhub.NoOverwrite)
-		Expect(err).ToNot(HaveOccurred())
-		Expect(user.Value).To(Equal(generatedUser))
-
 		By("overwriting the user with generate")
 		user, err = credhubClient.GenerateUser(name, opts, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
@@ -40,7 +35,7 @@ var _ = Describe("User Credential Type", func() {
 		Expect(user.Value).ToNot(Equal(generatedUser))
 
 		By("overwriting the user with set")
-		user, err = credhubClient.SetUser(name, newUser, credhub.Overwrite)
+		user, err = credhubClient.SetUser(name, newUser)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value.User).To(Equal(newUser))
 

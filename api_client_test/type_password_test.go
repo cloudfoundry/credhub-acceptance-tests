@@ -25,11 +25,6 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
-		By("setting the password again without overwrite returns same password")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.NoOverwrite)
-		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(firstGeneratedPassword))
-
 		By("overwriting the password with generate")
 		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
 		Expect(err).ToNot(HaveOccurred())
@@ -37,7 +32,7 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(password.Value).ToNot(Equal(firstGeneratedPassword))
 
 		By("overwriting the password with set")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.Overwrite)
+		password, err = credhubClient.SetPassword(name, values.Password("some-password"))
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(values.Password("some-password")))
 

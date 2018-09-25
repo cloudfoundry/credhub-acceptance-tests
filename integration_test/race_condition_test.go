@@ -47,35 +47,6 @@ var _ = Describe("Race condition tests", func() {
 		})
 	})
 
-	Describe("when setting a new secret in multiple threads with `--no-overwrite`", func() {
-		It("should return the same value for both", func() {
-			passwordSecretName := GenerateUniqueCredentialName()
-
-			waitForSession1 := make(chan *Session)
-			waitForSession2 := make(chan *Session)
-
-			go func() {
-				session := RunCommand("set", "-n", passwordSecretName, "-w", "test-value", "--no-overwrite", "-t", "password")
-				waitForSession1 <- session
-			}()
-
-			go func() {
-				session := RunCommand("set", "-n", passwordSecretName, "-w", "test-value", "--no-overwrite", "-t", "password")
-				waitForSession2 <- session
-			}()
-
-			session1 := <-waitForSession1
-			session2 := <-waitForSession2
-
-			Eventually(session1).Should(Exit(0))
-			Eventually(session2).Should(Exit(0))
-			stdOut1 := string(session1.Out.Contents())
-			stdOut2 := string(session2.Out.Contents())
-
-			Expect(stdOut1).To(Equal(stdOut2))
-		})
-	})
-
 	Describe("when setting one secret name for two types", func() {
 		It("should return a type mismatch error", func() {
 			rsaSecretName := GenerateUniqueCredentialName()
