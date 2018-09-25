@@ -84,7 +84,6 @@ var _ = Describe("library with mtls authentication", func() {
 			var postBody body
 			err = json.Unmarshal(resBody, &postBody)
 			Expect(err).ToNot(HaveOccurred())
-			fmt.Println("****", postBody.Uuid)
 			permissionUuid = postBody.Uuid
 			Expect(resp.StatusCode).To(Equal(201))
 
