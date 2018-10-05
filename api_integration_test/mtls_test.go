@@ -12,10 +12,10 @@ import (
 	"path"
 	"testing"
 
+	"fmt"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"fmt"
 )
 
 var (
@@ -114,7 +114,6 @@ var _ = Describe("mutual TLS authentication", func() {
 				"server_ca_cert.pem",
 				"unknown.pem",
 				"unknown_key.pem")
-
 
 			// Okay, so golang 1.7.x **sometimes** doesn't seem to send certs that the server won't accept...
 			// Here we assert that, if there was an error, it should be the server rejecting the cert, and
