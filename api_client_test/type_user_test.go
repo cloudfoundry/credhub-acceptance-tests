@@ -4,9 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("User Credential Type", func() {
@@ -28,10 +28,10 @@ var _ = Describe("User Credential Type", func() {
 		username := "name"
 		newUser := values.User{Username: username, Password: "password"}
 
-		By("setting the user again without overwrite returns same user")
-		user, err = credhubClient.SetUser(name, newUser, credhub.NoOverwrite)
+		By("setting the user again without overwrite returns a new user")
+		user, err = credhubClient.SetUser(name, newUser)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(user.Value).To(Equal(generatedUser))
+		Expect(user.Value).NotTo(Equal(generatedUser))
 
 		By("overwriting the user with generate")
 		user, err = credhubClient.GenerateUser(name, opts, credhub.Overwrite)
@@ -40,7 +40,7 @@ var _ = Describe("User Credential Type", func() {
 		Expect(user.Value).ToNot(Equal(generatedUser))
 
 		By("overwriting the user with set")
-		user, err = credhubClient.SetUser(name, newUser, credhub.Overwrite)
+		user, err = credhubClient.SetUser(name, newUser)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(user.Value.User).To(Equal(newUser))
 

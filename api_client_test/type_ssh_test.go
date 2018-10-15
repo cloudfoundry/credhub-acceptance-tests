@@ -7,9 +7,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("SSH Credential Type", func() {
@@ -32,9 +32,9 @@ var _ = Describe("SSH Credential Type", func() {
 
 		By("setting the ssh keys again without overwrite returns the same ssh")
 		newSSH := values.SSH{PrivateKey: "private key", PublicKey: "public key"}
-		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.NoOverwrite)
+		ssh, err = credhubClient.SetSSH(name, newSSH)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(ssh).To(Equal(generatedSSH))
+		Expect(ssh).ToNot(Equal(generatedSSH))
 
 		By("overwriting with generate")
 		ssh, err = credhubClient.GenerateSSH(name, opts, credhub.Overwrite)
@@ -42,7 +42,7 @@ var _ = Describe("SSH Credential Type", func() {
 		Expect(ssh).ToNot(Equal(generatedSSH))
 
 		By("overwriting with set")
-		ssh, err = credhubClient.SetSSH(name, newSSH, credhub.Overwrite)
+		ssh, err = credhubClient.SetSSH(name, newSSH)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(ssh.Value.SSH).To(Equal(newSSH))
 

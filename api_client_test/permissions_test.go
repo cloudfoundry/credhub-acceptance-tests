@@ -15,12 +15,12 @@ var _ = Describe("Getting Credentials", func() {
 		_, err := credhubClient.GeneratePassword(name, generate.Password{}, credhub.Overwrite)
 		Expect(err).NotTo(HaveOccurred())
 
-		newPermission := permissions.Permission{
+		newPermission := permissions.V1_Permission{
 			Actor:      "some-actor",
 			Operations: []string{"read"},
 		}
 
-		_, err = credhubClient.AddPermissions(name, []permissions.Permission{newPermission})
+		_, err = credhubClient.AddPermission(name, "some-actor", []string{"read"})
 		Expect(err).NotTo(HaveOccurred())
 
 		fetchedPermissions, err := credhubClient.GetPermissions(name)

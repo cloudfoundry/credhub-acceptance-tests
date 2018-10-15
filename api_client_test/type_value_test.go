@@ -5,7 +5,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("Value Credential Type", func() {
@@ -15,17 +14,17 @@ var _ = Describe("Value Credential Type", func() {
 		cred2 := values.Value("another string value")
 
 		By("setting the value for the first time returns same value")
-		value, err := credhubClient.SetValue(name, cred, credhub.NoOverwrite)
+		value, err := credhubClient.SetValue(name, cred)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred))
 
-		By("setting the value again without overwrite returns same value")
-		value, err = credhubClient.SetValue(name, cred2, credhub.NoOverwrite)
+		By("setting the value again without overwrite returns a new value")
+		value, err = credhubClient.SetValue(name, cred2)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(value.Value).To(Equal(cred))
+		Expect(value.Value).NotTo(Equal(cred))
 
 		By("overwriting the value with set")
-		value, err = credhubClient.SetValue(name, cred2, credhub.Overwrite)
+		value, err = credhubClient.SetValue(name, cred2)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(value.Value).To(Equal(cred2))
 

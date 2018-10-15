@@ -4,9 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("Password Credential Type", func() {
@@ -25,10 +25,10 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(firstGeneratedPassword))
 
-		By("setting the password again without overwrite returns same password")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.NoOverwrite)
+		By("setting the password again without overwrite returns a new password")
+		password, err = credhubClient.SetPassword(name, values.Password("some-password"))
 		Expect(err).ToNot(HaveOccurred())
-		Expect(password.Value).To(Equal(firstGeneratedPassword))
+		Expect(password.Value).NotTo(Equal(firstGeneratedPassword))
 
 		By("overwriting the password with generate")
 		password, err = credhubClient.GeneratePassword(name, generatePassword, credhub.Overwrite)
@@ -37,7 +37,7 @@ var _ = Describe("Password Credential Type", func() {
 		Expect(password.Value).ToNot(Equal(firstGeneratedPassword))
 
 		By("overwriting the password with set")
-		password, err = credhubClient.SetPassword(name, values.Password("some-password"), credhub.Overwrite)
+		password, err = credhubClient.SetPassword(name, values.Password("some-password"))
 		Expect(err).ToNot(HaveOccurred())
 		Expect(password.Value).To(Equal(values.Password("some-password")))
 

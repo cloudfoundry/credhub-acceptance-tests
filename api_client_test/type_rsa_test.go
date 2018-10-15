@@ -7,9 +7,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("RSA Credential Type", func() {
@@ -30,11 +30,11 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa).To(Equal(generatedRSA))
 
-		By("setting the rsa keys again without overwrite returns the same")
+		By("setting the rsa keys again without overwrite returns a new value")
 		newRSA := values.RSA{PrivateKey: "private key", PublicKey: "public key"}
-		rsa, err = credhubClient.SetRSA(name, newRSA, credhub.NoOverwrite)
+		rsa, err = credhubClient.SetRSA(name, newRSA)
 		Expect(err).ToNot(HaveOccurred())
-		Expect(rsa).To(Equal(generatedRSA))
+		Expect(rsa).NotTo(Equal(generatedRSA))
 
 		By("overwriting with generate")
 		rsa, err = credhubClient.GenerateRSA(name, opts, credhub.Overwrite)
@@ -42,7 +42,7 @@ var _ = Describe("RSA Credential Type", func() {
 		Expect(rsa).ToNot(Equal(generatedRSA))
 
 		By("overwriting with set")
-		rsa, err = credhubClient.SetRSA(name, newRSA, credhub.Overwrite)
+		rsa, err = credhubClient.SetRSA(name, newRSA)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(rsa.Value).To(Equal(newRSA))
 
