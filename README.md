@@ -37,7 +37,7 @@ EOF
 Runs local CredHub testing via:
 
 ```sh
-./run_tests.sh
+./scripts/run_tests.sh
 ```
 
 ### Run Application Smoke Tests
@@ -57,5 +57,5 @@ EOF
 Run smoke test suite via:
 
 ```sh
-./run_smoke_tests.sh
+./scripts/run_smoke_tests.sh
 ```
