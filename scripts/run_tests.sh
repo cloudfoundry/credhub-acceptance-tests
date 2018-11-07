@@ -2,6 +2,8 @@
 
 set -eu
 
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
+
 API_URL=${API_URL:-https://localhost:9000}
 USERNAME=${USERNAME:-credhub}
 PASSWORD=${PASSWORD:-password}
@@ -22,5 +24,7 @@ cat <<EOF > test_config.json
 }
 EOF
 
-./generate_certs.py -caKey ${CREDENTIAL_ROOT}/client_ca_private.pem -caCert ${CREDENTIAL_ROOT}/client_ca_cert.pem
-ginkgo -r -p -skipPackage smoke_test,bbr_integration_test -randomizeAllSpecs -randomizeSuites
+pushd "$BASEDIR" >/dev/null
+  ./scripts/generate_certs.py -caKey ${CREDENTIAL_ROOT}/client_ca_private.pem -caCert ${CREDENTIAL_ROOT}/client_ca_cert.pem
+  ginkgo -r -p -skipPackage smoke_test,bbr_integration_test -randomizeAllSpecs -randomizeSuites
+popd >/dev/null
