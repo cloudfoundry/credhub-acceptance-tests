@@ -7,26 +7,29 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/exec"
-
 	"strings"
+	"time"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
-	"path"
-	"os"
 )
 
 var _ = Describe("Certificates Test", func() {
 	Describe("finding a certificate", func() {
 		It("should be able to filter by expiry date", func() {
-			certPath := path.Join(os.Getenv("PWD"), "certs")
 			expired := GenerateUniqueCredentialName()
-			cert, err := ioutil.ReadFile(path.Join(certPath, "expired.pem"))
+			cert, _, err := GenerateSelfSigned(CertOptions{
+				CommonName: "expired-cert",
+				NotBefore:  time.Now().Add(time.Hour * 24 * -10),
+				NotAfter:   time.Now().Add(time.Hour * 24 * -5),
+			})
 			Expect(err).NotTo(HaveOccurred())
+
 			RunCommand("set", "-n", expired, "-t", "certificate", "--certificate="+string(cert))
 
 			willExpire := GenerateUniqueCredentialName()
@@ -44,6 +47,7 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(Not(ContainSubstring(`"name": "/` + wontExpire + `"`)))
 		})
 	})
+
 	Describe("setting a certificate", func() {
 		It("should be able to set a certificate", func() {
 			name := GenerateUniqueCredentialName()
@@ -61,7 +65,6 @@ var _ = Describe("Certificates Test", func() {
 			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
 			Expect(stdOut).To(ContainSubstring(`private_key: `))
 			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
-
 		})
 
 		It("should require a certificate type", func() {

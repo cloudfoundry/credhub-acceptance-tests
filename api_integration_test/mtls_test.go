@@ -5,81 +5,86 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"os"
-	"path"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/auth"
-	"encoding/pem"
-	"fmt"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"strings"
-	"time"
-)
-
-var (
-	config Config
-	err    error
+	uuid "github.com/satori/go.uuid"
 )
 
 var _ = Describe("mutual TLS authentication", func() {
-	var credentialName string
+	const CredhubClientCommonName = "credhub_test_client"
+
+	var (
+		config         Config
+		credhubCA      []byte
+		uaaCA          []byte
+		clientCACert   []byte
+		clientCAKey    []byte
+		credentialName string
+		appGuid        string
+	)
+
+	BeforeSuite(func() {
+		var err error
+		config, err = LoadConfig()
+		Expect(err).NotTo(HaveOccurred())
+
+		credhubCA, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
+		Expect(err).NotTo(HaveOccurred())
+
+		uaaCA, err = ioutil.ReadFile(filepath.Join(config.UAACa))
+		Expect(err).NotTo(HaveOccurred())
+
+		clientCACert, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
+		Expect(err).NotTo(HaveOccurred())
+		clientCAKey, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
+		Expect(err).NotTo(HaveOccurred())
+	})
 
 	BeforeEach(func() {
-		credentialName = fmt.Sprintf("%d", time.Now().UnixNano())
+		credentialName = fmt.Sprintf("api-integration-test-%d", time.Now().UnixNano())
+		appGuid = uuid.NewV4().String()
 	})
 
 	Describe("with a certificate signed by a trusted CA", func() {
 		var (
 			adminCredHubClient *credhub.CredHub
-			credhubCa          []byte
-			uaaCa              []byte
 			permissionUuid     string
 		)
+
 		BeforeEach(func() {
-			config, err = LoadConfig()
-			Expect(err).NotTo(HaveOccurred())
-			credhubCa, err = ioutil.ReadFile(path.Join(config.CredentialRoot, "server_ca_cert.pem"))
-			Expect(err).NotTo(HaveOccurred())
-			uaaCa, err = ioutil.ReadFile(path.Join(config.UAACa))
-			Expect(err).NotTo(HaveOccurred())
-
-			certPath := path.Join(os.Getenv("PWD"), "certs")
-
-			certBytes, err := ioutil.ReadFile(path.Join(certPath, "client.pem"))
-			Expect(err).ToNot(HaveOccurred())
-
-			block, pemByte := pem.Decode([]byte(strings.TrimSpace(string(certBytes))))
-			pemCertsByte := append(block.Bytes, pemByte...)
-			cert, err := x509.ParseCertificate(pemCertsByte)
-			Expect(err).ToNot(HaveOccurred())
-
-			userID := "mtls-" + cert.Subject.OrganizationalUnit[0]
-			vals := map[string]interface{}{
-				"actor":      userID,
+			permissions := map[string]interface{}{
+				"actor":      "mtls-app:" + appGuid,
 				"path":       "/*",
 				"operations": []string{"read", "write", "delete"},
 			}
 
+			var err error
 			adminCredHubClient, err = credhub.New(config.ApiUrl,
-				credhub.CaCerts(string(credhubCa), string(uaaCa)),
+				credhub.CaCerts(string(credhubCA), string(uaaCA)),
 				credhub.Auth(
 					auth.UaaClientCredentials(config.ClientName, config.ClientSecret),
 				))
 			Expect(err).ToNot(HaveOccurred())
 
-			resp, err := adminCredHubClient.Request("POST", "/api/v2/permissions", nil, vals, false)
+			resp, err := adminCredHubClient.Request("POST", "/api/v2/permissions", nil, permissions, false)
 			Expect(err).ToNot(HaveOccurred())
 			defer resp.Body.Close()
 
 			var resBody []byte
 			resBody, err = ioutil.ReadAll(resp.Body)
+			Expect(err).NotTo(HaveOccurred())
 
 			type body struct {
 				Uuid string `json:"uuid"`
@@ -99,88 +104,60 @@ var _ = Describe("mutual TLS authentication", func() {
 		})
 
 		It("allows the client to hit an authenticated endpoint", func() {
-			postData := map[string]string{
-				"name": credentialName,
-				"type": "password",
-			}
-			result, err := mtlsPost(
-				config.ApiUrl+"/api/v1/data",
-				postData,
-				"server_ca_cert.pem",
-				"client.pem",
-				"client_key.pem")
+			cert, key, err := GenerateSigned(CertOptions{
+				CommonName:         CredhubClientCommonName,
+				OrganizationalUnit: "app:" + appGuid,
+			}, clientCACert, clientCAKey)
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(err).To(BeNil())
+			postData := map[string]string{"name": credentialName, "type": "password"}
+			result, err := mtlsPost(config.ApiUrl+"/api/v1/data", postData, credhubCA, cert, key)
+			Expect(err).NotTo(HaveOccurred())
 			Expect(result).To(MatchRegexp(`"type":"password"`))
 		})
 	})
 
 	Describe("with an expired certificate", func() {
-		BeforeEach(func() {
-			config, err = LoadConfig()
-			Expect(err).NotTo(HaveOccurred())
-		})
-
 		It("prevents the client from hitting an authenticated endpoint", func() {
-			postData := map[string]string{
-				"name": credentialName,
-				"type": "password",
-			}
-			result, err := mtlsPost(
-				config.ApiUrl+"/api/v1/data",
-				postData,
-				"server_ca_cert.pem",
-				"expired.pem",
-				"expired_key.pem")
+			cert, key, err := GenerateSigned(CertOptions{
+				CommonName: CredhubClientCommonName,
+				NotBefore:  time.Now().Add(time.Hour * 24 * -10),
+				NotAfter:   time.Now().Add(time.Hour * 24 * -5),
+			}, clientCACert, clientCAKey)
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(err.Error()).To(ContainSubstring("unknown certificate"))
+			postData := map[string]string{"name": credentialName, "type": "password"}
+			result, err := mtlsPost(config.ApiUrl+"/api/v1/data", postData, credhubCA, cert, key)
+			Expect(err).To(MatchError(ContainSubstring("unknown certificate")))
 			Expect(result).To(BeEmpty())
 		})
 	})
 
 	Describe("with a self-signed certificate", func() {
-		BeforeEach(func() {
-			config, err = LoadConfig()
-			Expect(err).NotTo(HaveOccurred())
-		})
-
 		It("prevents the client from hitting an authenticated endpoint", func() {
-			postData := map[string]string{
-				"name": credentialName,
-				"type": "password",
-			}
-			result, err := mtlsPost(
-				config.ApiUrl+"/api/v1/data",
-				postData,
-				"server_ca_cert.pem",
-				"selfsigned.pem",
-				"selfsigned_key.pem")
+			cert, key, err := GenerateSelfSigned(CertOptions{})
+			Expect(err).NotTo(HaveOccurred())
+
+			postData := map[string]string{"name": credentialName, "type": "password"}
+			result, err := mtlsPost(config.ApiUrl+"/api/v1/data", postData, credhubCA, cert, key)
 
 			// golang doesn't seem to send self-signed certs
 			// server.ssl.client-auth=want (https://tools.ietf.org/html/rfc5246#section-7.4.4)
 			// That is why, we are asserting on OAuth authorization failure here.
-			Expect(err).To(BeNil())
+			Expect(err).NotTo(HaveOccurred())
 			Expect(result).To(MatchRegexp(".*Full authentication is required to access this resource"))
 		})
 	})
 
 	Describe("with a certificate signed by an unknown CA", func() {
-		BeforeEach(func() {
-			config, err = LoadConfig()
-			Expect(err).NotTo(HaveOccurred())
-		})
-
 		It("prevents the client from hitting an authenticated endpoint", func() {
-			postData := map[string]string{
-				"name": credentialName,
-				"type": "password",
-			}
-			result, err := mtlsPost(
-				config.ApiUrl+"/api/v1/data",
-				postData,
-				"server_ca_cert.pem",
-				"unknown.pem",
-				"unknown_key.pem")
+			caCert, caKey, err := GenerateSelfSigned(CertOptions{})
+			Expect(err).NotTo(HaveOccurred())
+			cert, key, err := GenerateSigned(CertOptions{}, caCert, caKey)
+			Expect(err).NotTo(HaveOccurred())
+
+			postData := map[string]string{"name": credentialName, "type": "password"}
+			result, err := mtlsPost(config.ApiUrl+"/api/v1/data", postData, credhubCA, cert, key)
 
 			// Okay, so golang 1.7.x **sometimes** doesn't seem to send certs that the server won't accept...
 			// Here we assert that, if there was an error, it should be the server rejecting the cert, and
@@ -199,17 +176,28 @@ func TestMTLS(t *testing.T) {
 	RunSpecs(t, "mTLS Test Suite")
 }
 
-func handleError(err error) {
-	if err != nil {
-		fmt.Println(err)
-		log.Fatal("Fatal", err)
+func mtlsPost(url string, postData map[string]string, serverCA, clientCert, clientKey []byte) (string, error) {
+	clientCertificate, err := tls.X509KeyPair(clientCert, clientKey)
+	ExpectWithOffset(1, err).NotTo(HaveOccurred())
+
+	trustedCAs := x509.NewCertPool()
+	ok := trustedCAs.AppendCertsFromPEM([]byte(serverCA))
+	if !ok {
+		return "", errors.New("failed to parse server CA")
 	}
-}
 
-func mtlsPost(url string, postData map[string]string, serverCaFilename, clientCertFilename, clientKeyPath string) (string, error) {
-	client, err := createMtlsClient(serverCaFilename, clientCertFilename, clientKeyPath)
+	tlsConf := &tls.Config{
+		Certificates: []tls.Certificate{clientCertificate},
+		RootCAs:      trustedCAs,
+	}
 
-	jsonValue, _ := json.Marshal(postData)
+	transport := &http.Transport{TLSClientConfig: tlsConf}
+	client := &http.Client{Transport: transport}
+
+	jsonValue, err := json.Marshal(postData)
+	if err != nil {
+		return "", err
+	}
 
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
@@ -223,38 +211,4 @@ func mtlsPost(url string, postData map[string]string, serverCaFilename, clientCe
 	}
 
 	return string(body), nil
-}
-
-func createMtlsClient(serverCaFilename, clientCertFilename, clientKeyFilename string) (*http.Client, error) {
-	serverCaPath := path.Join(config.CredentialRoot, serverCaFilename)
-	clientCertPath := path.Join(os.Getenv("PWD"), "certs", clientCertFilename)
-	clientKeyPath := path.Join(os.Getenv("PWD"), "certs", clientKeyFilename)
-
-	_, err := os.Stat(serverCaPath)
-	handleError(err)
-	_, err = os.Stat(clientCertPath)
-	handleError(err)
-	_, err = os.Stat(clientKeyPath)
-	handleError(err)
-
-	clientCertificate, err := tls.LoadX509KeyPair(clientCertPath, clientKeyPath)
-	handleError(err)
-
-	trustedCAs := x509.NewCertPool()
-	serverCA, err := ioutil.ReadFile(serverCaPath)
-
-	ok := trustedCAs.AppendCertsFromPEM([]byte(serverCA))
-	if !ok {
-		log.Fatal("failed to parse root certificate")
-	}
-
-	tlsConf := &tls.Config{
-		Certificates: []tls.Certificate{clientCertificate},
-		RootCAs:      trustedCAs,
-	}
-
-	transport := &http.Transport{TLSClientConfig: tlsConf}
-	client := &http.Client{Transport: transport}
-
-	return client, err
 }
