@@ -232,3 +232,15 @@ credentials:
       - covfefe
       - covfefe
       - covfefe
+- name: /test/userCred
+  type: user
+  value:
+    password: test-user-password
+    password_hash: P455W0rd-H45H
+    username: sample-username
+- name: /test/sshCred
+  type: ssh
+  value:
+    private_key: some-private-key
+    public_key: some-key
+    public_key_fingerprint: some-key-fingerprint
