@@ -80,8 +80,15 @@ func (ch *CredHub) setCredential(name, credType string, value interface{}, cred 
 	requestBody["type"] = credType
 	requestBody["value"] = value
 
-	resp, err := ch.Request(http.MethodPut, "/api/v1/data", nil, requestBody, true)
+	serverVersion, err := ch.ServerVersion()
+	if err != nil {
+		return err
+	}
+	if serverVersion.Segments()[0] < 2 {
+		requestBody["mode"] = "overwrite"
+	}
 
+	resp, err := ch.Request(http.MethodPut, "/api/v1/data", nil, requestBody, true)
 	if err != nil {
 		return err
 	}
