@@ -80,14 +80,14 @@ var _ = Describe("Permission Test", func() {
 		})
 		Context("Delete permission called on permission that exists", func() {
 			It("returns the deleted permission", func() {
-				RunCommand("set-permission", "-a", "some-actor", "-p", "/some-path", "-o", "read, write")
-				session := RunCommand("delete-permission", "-a", "some-actor", "-p", "/some-path")
+				RunCommand("set-permission", "-a", "any-actor", "-p", "/any-path", "-o", "read, write")
+				session := RunCommand("delete-permission", "-a", "any-actor", "-p", "/any-path")
 				var permission Permission
 				_ = json.Unmarshal(session.Out.Contents(), &permission)
 				Expect(permission).Should(Equal(
 					Permission{
-						Actor: "some-actor",
-						Path: "/some-path",
+						Actor: "any-actor",
+						Path: "/any-path",
 						Operations: []string{"read", "write"},
 					}))
 				Eventually(session).Should(Exit(0))
