@@ -2,6 +2,8 @@ package integration_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"time"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
@@ -17,16 +19,25 @@ type Permission struct {
 }
 
 var _ = Describe("Permission Test", func() {
+	var actor string
+	var path string
+
+	BeforeEach(func() {
+		timestamp := fmt.Sprintf("%d", time.Now().UnixNano())
+		actor = "actor-" + timestamp
+		path = "/path-" + timestamp
+	})
+
 	Context("Set Permission", func() {
 		Context("Set Permission is called on permission that does not exist", func() {
 			It("creates a new permission", func() {
-				session := RunCommand("set-permission", "-a", "some-actor", "-p", "/some-path", "-o", "read, write")
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				var permission Permission
 				_ = json.Unmarshal(session.Out.Contents(), &permission)
 				Expect(permission).Should(Equal(
 					Permission{
-						Actor: "some-actor",
-						Path: "/some-path",
+						Actor: actor,
+						Path: path,
 						Operations: []string{"read", "write"},
 					}))
 				Eventually(session).Should(Exit(0))
@@ -34,14 +45,14 @@ var _ = Describe("Permission Test", func() {
 		})
 		Context("Set Permission is called on permission that exists", func() {
 			It("updates existing permission", func() {
-				RunCommand("set-permission", "-a", "some-actor", "-p", "/some-path", "-o", "read, write")
-				session := RunCommand("set-permission", "-a", "some-actor", "-p", "/some-path", "-o", "read, write, delete")
+				RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write, delete")
 				var permission Permission
 				_ = json.Unmarshal(session.Out.Contents(), &permission)
 				Expect(permission).Should(Equal(
 					Permission{
-						Actor: "some-actor",
-						Path: "/some-path",
+						Actor: actor,
+						Path: path,
 						Operations: []string{"read", "write", "delete"},
 					}))
 				Eventually(session).Should(Exit(0))
@@ -51,20 +62,20 @@ var _ = Describe("Permission Test", func() {
 	Context("Get Permission", func() {
 		Context("Get permission called on permission that does not exist", func() {
 			It("throws an error", func() {
-				session := RunCommand("get-permission", "-a", "test-actor", "-p", "/test-path")
+				session := RunCommand("get-permission", "-a", actor, "-p", path)
 				Eventually(session).Should(Exit(1))
 			})
 		})
 		Context("Get permission called on permission that exists", func() {
 			It("returns the permission", func() {
-				RunCommand("set-permission", "-a", "some-actor", "-p", "/some-path", "-o", "read, write")
-				session := RunCommand("get-permission", "-a", "some-actor", "-p", "/some-path")
+				RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("get-permission", "-a", actor, "-p", path)
 				var permission Permission
 				_ = json.Unmarshal(session.Out.Contents(), &permission)
 				Expect(permission).Should(Equal(
 					Permission{
-						Actor: "some-actor",
-						Path: "/some-path",
+						Actor: actor,
+						Path: path,
 						Operations: []string{"read", "write"},
 					}))
 				Eventually(session).Should(Exit(0))
@@ -74,20 +85,20 @@ var _ = Describe("Permission Test", func() {
 	Context("Delete Permission", func() {
 		Context("Delete permission called on permission that does not exist", func() {
 			It("throws an error", func() {
-				session := RunCommand("delete-permission", "-a", "test-actor", "-p", "/test-path")
+				session := RunCommand("delete-permission", "-a", actor, "-p", path)
 				Eventually(session).Should(Exit(1))
 			})
 		})
 		Context("Delete permission called on permission that exists", func() {
 			It("returns the deleted permission", func() {
-				RunCommand("set-permission", "-a", "any-actor", "-p", "/any-path", "-o", "read, write")
-				session := RunCommand("delete-permission", "-a", "any-actor", "-p", "/any-path")
+				RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("delete-permission", "-a", actor, "-p", path)
 				var permission Permission
 				_ = json.Unmarshal(session.Out.Contents(), &permission)
 				Expect(permission).Should(Equal(
 					Permission{
-						Actor: "any-actor",
-						Path: "/any-path",
+						Actor: actor,
+						Path: path,
 						Operations: []string{"read", "write"},
 					}))
 				Eventually(session).Should(Exit(0))

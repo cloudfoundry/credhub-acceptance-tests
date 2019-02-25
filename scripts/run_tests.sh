@@ -25,5 +25,5 @@ cat <<EOF > test_config.json
 EOF
 
 pushd "$BASEDIR" >/dev/null
-  ginkgo -r -p -skipPackage bbr_integration_test -randomizeAllSpecs -randomizeSuites
+  ginkgo -r -p -skipPackage bbr_integration_test -randomizeAllSpecs -randomizeSuites "$@"
 popd >/dev/null
