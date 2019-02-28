@@ -29,39 +29,67 @@ var _ = Describe("Permission Test", func() {
 
 	Context("Set Permission", func() {
 		Context("Set Permission is called on permission that does not exist", func() {
+			Context("when output json flag is used", func() {
+				It("creates a new permission", func() {
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write", "-j")
+					Eventually(session).Should(Exit(0))
+
+					var permission Permission
+					err := json.Unmarshal(session.Out.Contents(), &permission)
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(permission).Should(Equal(
+						Permission{
+							Actor:      actor,
+							Path:       path,
+							Operations: []string{"read", "write"},
+						}))
+				})
+			})
 			It("creates a new permission", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				Eventually(session).Should(Exit(0))
 
-				var permission Permission
-				err := json.Unmarshal(session.Out.Contents(), &permission)
-				Expect(err).NotTo(HaveOccurred())
-
-				Expect(permission).Should(Equal(
-					Permission{
-						Actor:      actor,
-						Path:       path,
-						Operations: []string{"read", "write"},
-					}))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
+- read
+- write`))
 			})
 		})
 		Context("Set Permission is called on permission that exists", func() {
+			Context("when output json flag is used", func() {
+				It("updates existing permission", func() {
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+					Eventually(session).Should(Exit(0))
+					session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write, delete", "-j")
+					Eventually(session).Should(Exit(0))
+
+					var permission Permission
+					err := json.Unmarshal(session.Out.Contents(), &permission)
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(permission).Should(Equal(
+						Permission{
+							Actor:      actor,
+							Path:       path,
+							Operations: []string{"read", "write", "delete"},
+						}))
+				})
+			})
 			It("updates existing permission", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write, delete")
 				Eventually(session).Should(Exit(0))
 
-				var permission Permission
-				err := json.Unmarshal(session.Out.Contents(), &permission)
-				Expect(err).NotTo(HaveOccurred())
-
-				Expect(permission).Should(Equal(
-					Permission{
-						Actor:      actor,
-						Path:       path,
-						Operations: []string{"read", "write", "delete"},
-					}))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
+- read
+- write`))
 			})
 		})
 	})
@@ -73,22 +101,37 @@ var _ = Describe("Permission Test", func() {
 			})
 		})
 		Context("Get permission called on permission that exists", func() {
+			Context("when output json flag is used", func() {
+				It("returns the permission", func() {
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+					Eventually(session).Should(Exit(0))
+					session = RunCommand("get-permission", "-a", actor, "-p", path, "-j")
+					Eventually(session).Should(Exit(0))
+
+					var permission Permission
+					err := json.Unmarshal(session.Out.Contents(), &permission)
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(permission).Should(Equal(
+						Permission{
+							Actor:      actor,
+							Path:       path,
+							Operations: []string{"read", "write"},
+						}))
+				})
+			})
 			It("returns the permission", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("get-permission", "-a", actor, "-p", path)
 				Eventually(session).Should(Exit(0))
 
-				var permission Permission
-				err := json.Unmarshal(session.Out.Contents(), &permission)
-				Expect(err).NotTo(HaveOccurred())
-
-				Expect(permission).Should(Equal(
-					Permission{
-						Actor:      actor,
-						Path:       path,
-						Operations: []string{"read", "write"},
-					}))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
+- read
+- write`))
 			})
 		})
 	})
@@ -106,16 +149,12 @@ var _ = Describe("Permission Test", func() {
 				session = RunCommand("delete-permission", "-a", actor, "-p", path)
 				Eventually(session).Should(Exit(0))
 
-				var permission Permission
-				err := json.Unmarshal(session.Out.Contents(), &permission)
-				Expect(err).NotTo(HaveOccurred())
-
-				Expect(permission).Should(Equal(
-					Permission{
-						Actor:      actor,
-						Path:       path,
-						Operations: []string{"read", "write"},
-					}))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
+				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
+- read
+- write`))
 			})
 		})
 	})
