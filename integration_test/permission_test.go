@@ -3,6 +3,7 @@ package integration_test
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/utilities"
 	"time"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
@@ -33,7 +34,6 @@ var _ = Describe("Permission Test", func() {
 				It("creates a new permission", func() {
 					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write", "-j")
 					Eventually(session).Should(Exit(0))
-
 					var permission Permission
 					err := json.Unmarshal(session.Out.Contents(), &permission)
 					Expect(err).NotTo(HaveOccurred())
@@ -48,6 +48,8 @@ var _ = Describe("Permission Test", func() {
 			})
 			It("creates a new permission", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				err := utilities.GenerateAutoDoc(session)
+				Expect(err).NotTo(HaveOccurred())
 				Eventually(session).Should(Exit(0))
 
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
@@ -124,6 +126,8 @@ var _ = Describe("Permission Test", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("get-permission", "-a", actor, "-p", path)
+				err := utilities.GenerateAutoDoc(session)
+				Expect(err).NotTo(HaveOccurred())
 				Eventually(session).Should(Exit(0))
 
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
@@ -147,6 +151,8 @@ var _ = Describe("Permission Test", func() {
 				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("delete-permission", "-a", actor, "-p", path)
+				err := utilities.GenerateAutoDoc(session)
+				Expect(err).NotTo(HaveOccurred())
 				Eventually(session).Should(Exit(0))
 
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
