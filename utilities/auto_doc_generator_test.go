@@ -26,61 +26,56 @@ var _ = Describe("Auto Doc Generator Test", func() {
 
 		})
 		Context("generates formatted files", func() {
-			session := gexec.Session{
-				Command: &exec.Cmd{
-					Path: "/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
-					Args: []string {
-						"/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
-						"test-function",
-						"-a",
-						"actor-1551712691979175000",
-						"-p",
-						"/path-1551712691979175000",
-						"-o",
-						"read,write",
-					},
-				},
-				Out: gbytes.BufferWithBytes([]byte("test")),
-			}
-			sessionInput := parseSessionInput(session.Command.Args)
-			path := filepath.Join("/tmp/credhub_cli_docs", sessionInput.commandName)
+			var(
+				path string
+				sessionInput SessionInput
+				session gexec.Session
+			)
 
 			BeforeEach(func() {
+				session = gexec.Session{
+					Command: &exec.Cmd{
+						Path: "/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
+						Args: []string {
+							"/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
+							"test-function",
+							"-a",
+							"actor-1551712691979175000",
+							"-p",
+							"/path-1551712691979175000",
+							"-o",
+							"read,write",
+						},
+					},
+					Out: gbytes.BufferWithBytes([]byte("test")),
+				}
+				sessionInput = parseSessionInput(session.Command.Args)
+				path = filepath.Join("/tmp/credhub_cli_docs", sessionInput.commandName)
 				_ = os.RemoveAll(path)
 			})
 
-			AfterSuite(func() {
+			AfterEach(func() {
 				_ = os.RemoveAll(path)
 			})
 
-			It("creates output folder if not exists", func() {
+			It("properly generates input and output files", func() {
 				err := GenerateAutoDoc(&session)
-
 				Expect(err).NotTo(HaveOccurred())
+
 				Expect(path).To(BeADirectory())
-			})
-			It("creates input file with session input data", func() {
-				err := GenerateAutoDoc(&session)
 
 				inputFilePath := filepath.Join(path, "input.adoc")
 				Expect(inputFilePath).To(BeAnExistingFile())
-
-				actualFileData, err := ioutil.ReadFile(inputFilePath)
-				expectedFileData := []byte(fmt.Sprintf("```\n" + sessionInput.fullCommand + "\n" + "```"))
-
-				Expect(actualFileData).To(Equal(expectedFileData))
+				actualInputFileData, err := ioutil.ReadFile(inputFilePath)
+				expectedInputFileData := []byte(fmt.Sprintf("```\n" + sessionInput.fullCommand + "\n" + "```"))
+				Expect(actualInputFileData).To(Equal(expectedInputFileData))
 				Expect(err).NotTo(HaveOccurred())
-			})
-			It("creates output file with session output data", func() {
-				err := GenerateAutoDoc(&session)
 
 				outputFilePath := filepath.Join(path, "output.adoc")
 				Expect(outputFilePath).To(BeAnExistingFile())
-
-				actualFileData, err := ioutil.ReadFile(outputFilePath)
-				expectedFileData := []byte(fmt.Sprintf("```\n" + string(session.Out.Contents()) + "\n" + "```"))
-
-				Expect(actualFileData).To(Equal(expectedFileData))
+				actualOutputFileData, err := ioutil.ReadFile(outputFilePath)
+				expectedOutputFileData := []byte(fmt.Sprintf("```\n" + string(session.Out.Contents()) + "\n" + "```"))
+				Expect(actualOutputFileData).To(Equal(expectedOutputFileData))
 				Expect(err).NotTo(HaveOccurred())
 
 			})
