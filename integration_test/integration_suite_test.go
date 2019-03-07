@@ -53,9 +53,13 @@ var _ = AfterEach(func() {
 })
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("code.cloudfoundry.org/credhub-cli")
-	Expect(err).NotTo(HaveOccurred())
-
+	path := "/credhub-bin/credhub"
+	if _, err := os.Stat("/credhub-bin/credhub"); err != nil {
+		if os.IsNotExist(err) {
+			path, err = Build("code.cloudfoundry.org/credhub-cli")
+			Expect(err).NotTo(HaveOccurred())
+		}
+	}
 	return []byte(path)
 }, func(data []byte) {
 	CommandPath = string(data)
