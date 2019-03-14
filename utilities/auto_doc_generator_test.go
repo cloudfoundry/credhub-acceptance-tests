@@ -67,14 +67,14 @@ var _ = Describe("Auto Doc Generator Test", func() {
 				inputFilePath := filepath.Join(path, "input.adoc")
 				Expect(inputFilePath).To(BeAnExistingFile())
 				actualInputFileData, err := ioutil.ReadFile(inputFilePath)
-				expectedInputFileData := []byte(fmt.Sprintf("```\n" + sessionInput.fullCommand + "\n" + "```"))
+				expectedInputFileData := []byte(fmt.Sprintf("``` shell\n" + sessionInput.fullCommand + "\n" + "```\n"))
 				Expect(actualInputFileData).To(Equal(expectedInputFileData))
 				Expect(err).NotTo(HaveOccurred())
 
 				outputFilePath := filepath.Join(path, "output.adoc")
 				Expect(outputFilePath).To(BeAnExistingFile())
 				actualOutputFileData, err := ioutil.ReadFile(outputFilePath)
-				expectedOutputFileData := []byte(fmt.Sprintf("```\n" + string(session.Out.Contents()) + "\n" + "```"))
+				expectedOutputFileData := []byte(fmt.Sprintf("``` yaml\n" + string(session.Out.Contents()) + "\n" + "```\n"))
 				Expect(actualOutputFileData).To(Equal(expectedOutputFileData))
 				Expect(err).NotTo(HaveOccurred())
 

@@ -3,10 +3,8 @@ package integration_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/utilities"
-	"time"
-
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/utilities"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -23,16 +21,20 @@ var _ = Describe("Permission Test", func() {
 	var path string
 
 	BeforeEach(func() {
-		timestamp := fmt.Sprintf("%d", time.Now().UnixNano())
-		actor = "actor-" + timestamp
-		path = "/path-" + timestamp
+		actor = fmt.Sprintf("some-actor-%d", GinkgoParallelNode())
+		path = fmt.Sprintf("/some-path-%d", GinkgoParallelNode())
+	})
+
+	AfterEach(func() {
+		session := RunCommand("delete-permission", "-a", actor, "-p", path)
+		Eventually(session).Should(Exit())
 	})
 
 	Context("Set Permission", func() {
 		Context("Set Permission is called on permission that does not exist", func() {
 			Context("when output json flag is used", func() {
 				It("creates a new permission", func() {
-					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write", "-j")
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`, "-j")
 					Eventually(session).Should(Exit(0))
 					var permission Permission
 					err := json.Unmarshal(session.Out.Contents(), &permission)
@@ -47,7 +49,8 @@ var _ = Describe("Permission Test", func() {
 				})
 			})
 			It("creates a new permission", func() {
-				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				// Operations in backticks so the autodoc generation keeps the quotes around the list
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 				err := utilities.GenerateAutoDoc(session)
 				Expect(err).NotTo(HaveOccurred())
 				Eventually(session).Should(Exit(0))
@@ -63,9 +66,9 @@ var _ = Describe("Permission Test", func() {
 		Context("Set Permission is called on permission that exists", func() {
 			Context("when output json flag is used", func() {
 				It("updates existing permission", func() {
-					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 					Eventually(session).Should(Exit(0))
-					session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write, delete", "-j")
+					session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write, delete"`, "-j")
 					Eventually(session).Should(Exit(0))
 
 					var permission Permission
@@ -81,9 +84,9 @@ var _ = Describe("Permission Test", func() {
 				})
 			})
 			It("updates existing permission", func() {
-				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 				Eventually(session).Should(Exit(0))
-				session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write, delete")
+				session = RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write, delete"`)
 				Eventually(session).Should(Exit(0))
 
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("uuid: "))
@@ -105,7 +108,7 @@ var _ = Describe("Permission Test", func() {
 		Context("Get permission called on permission that exists", func() {
 			Context("when output json flag is used", func() {
 				It("returns the permission", func() {
-					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+					session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 					Eventually(session).Should(Exit(0))
 					session = RunCommand("get-permission", "-a", actor, "-p", path, "-j")
 					Eventually(session).Should(Exit(0))
@@ -123,7 +126,7 @@ var _ = Describe("Permission Test", func() {
 				})
 			})
 			It("returns the permission", func() {
-				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("get-permission", "-a", actor, "-p", path)
 				err := utilities.GenerateAutoDoc(session)
@@ -148,7 +151,7 @@ var _ = Describe("Permission Test", func() {
 		})
 		Context("Delete permission called on permission that exists", func() {
 			It("returns the deleted permission", func() {
-				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", "read, write")
+				session := RunCommand("set-permission", "-a", actor, "-p", path, "-o", `"read, write"`)
 				Eventually(session).Should(Exit(0))
 				session = RunCommand("delete-permission", "-a", actor, "-p", path)
 				err := utilities.GenerateAutoDoc(session)
