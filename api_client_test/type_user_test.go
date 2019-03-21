@@ -4,9 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
 )
 
 var _ = Describe("User Credential Type", func() {

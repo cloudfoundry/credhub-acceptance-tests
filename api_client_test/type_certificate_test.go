@@ -4,10 +4,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"code.cloudfoundry.org/credhub-cli/credhub"
+	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Certificate Credential Type", func() {

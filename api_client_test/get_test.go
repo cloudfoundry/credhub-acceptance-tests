@@ -4,8 +4,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub"
+	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 )
 
 var _ = Describe("Getting Credentials", func() {

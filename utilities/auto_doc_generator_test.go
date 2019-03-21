@@ -26,17 +26,17 @@ var _ = Describe("Auto Doc Generator Test", func() {
 
 		})
 		Context("generates formatted files", func() {
-			var(
-				path string
+			var (
+				path         string
 				sessionInput SessionInput
-				session gexec.Session
+				session      gexec.Session
 			)
 
 			BeforeEach(func() {
 				session = gexec.Session{
 					Command: &exec.Cmd{
 						Path: "/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
-						Args: []string {
+						Args: []string{
 							"/var/folders/c4/nd0g0tkn10zcf19r5tsjzlwh0000gn/T/gexec_artifacts663775029/g605623568/credhub-cli",
 							"test-function",
 							"-a",

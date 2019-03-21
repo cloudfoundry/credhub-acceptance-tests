@@ -96,3 +96,14 @@ func CleanEnv() {
 	os.Unsetenv("CREDHUB_CA_CERT")
 	os.Unsetenv("CREDHUB_PROXY")
 }
+
+type CertificateValue struct {
+	Ca          string `yaml:"ca,omitempty"`
+	Certificate string `yaml:"certificate,omitempty"`
+	PrivateKey  string `yaml:"private_key,omitempty"`
+}
+
+type Certificate struct {
+	Value CertificateValue `yaml:"value"`
+	Name  string           `yaml:"name"`
+}

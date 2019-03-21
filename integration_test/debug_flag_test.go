@@ -14,7 +14,6 @@ var _ = Describe("Sets debug flag", func() {
 		os.Setenv("CREDHUB_DEBUG", "true")
 	})
 
-
 	It("should print debug info", func() {
 
 		By("generating a credential", func() {

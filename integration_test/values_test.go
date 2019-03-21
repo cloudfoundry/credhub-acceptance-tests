@@ -1,14 +1,14 @@
 package integration_test
 
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"regexp"
 )
 
-var _ =	It("should set, get, and delete a new value secret", func() {
+var _ = It("should set, get, and delete a new value secret", func() {
 	credentialName := GenerateUniqueCredentialName()
 
 	By("trying to access a secret that doesn't exist", func() {

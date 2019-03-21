@@ -1,10 +1,10 @@
 package integration_test
 
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"strings"
 )
 
@@ -45,7 +45,6 @@ var _ = Describe("SSH key test", func() {
 			Eventually(session).Should(Exit(0))
 		})
 	})
-
 
 	It("should regenerate an SSH key", func() {
 		sshSecretName := GenerateUniqueCredentialName()

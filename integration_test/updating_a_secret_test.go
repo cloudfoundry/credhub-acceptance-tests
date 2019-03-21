@@ -1,10 +1,11 @@
 package integration_test
 
 import (
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
+	"gopkg.in/yaml.v2"
 )
 
 var _ = Describe("updating a secret", func() {
@@ -19,7 +20,8 @@ var _ = Describe("updating a secret", func() {
 
 				stdOut := string(session.Out.Contents())
 				Expect(stdOut).To(ContainSubstring(`type: value`))
-				Expect(stdOut).To(ContainSubstring("value: old value"))			})
+				Expect(stdOut).To(ContainSubstring("value: old value"))
+			})
 
 			By("setting the value secret again", func() {
 				RunCommand("set", "-n", credentialName, "-t", "value", "-v", "new value")
@@ -54,13 +56,20 @@ var _ = Describe("updating a secret", func() {
 			})
 
 			By("overwriting the certificate with `set`", func() {
+				expectedCertValue := CertificateValue{
+					Certificate: VALID_CERTIFICATE,
+				}
+
 				RunCommand("set", "-n", credentialname, "-t", "certificate", "--certificate", VALID_CERTIFICATE)
 				session := RunCommand("get", "-n", credentialname)
 				stdOut := string(session.Out.Contents())
 				Eventually(session).Should(Exit(0))
-				Expect(stdOut).To(ContainSubstring(`type: certificate`))
-				Expect(stdOut).To(ContainSubstring(`certificate: `))
-				Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
+
+				actualCert := Certificate{}
+				err := yaml.Unmarshal([]byte(stdOut), &actualCert)
+				Expect(err).To(BeNil())
+				Expect(actualCert.Name).To(Equal("/" + credentialname))
+				Expect(actualCert.Value).To(Equal(expectedCertValue))
 			})
 		})
 	})

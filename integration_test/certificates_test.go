@@ -20,6 +20,7 @@ import (
 )
 
 var _ = Describe("Certificates Test", func() {
+
 	Describe("finding a certificate", func() {
 		It("should be able to filter by expiry date", func() {
 			expired := GenerateUniqueCredentialName()
@@ -49,67 +50,109 @@ var _ = Describe("Certificates Test", func() {
 	})
 
 	Describe("setting a certificate", func() {
-		It("should be able to set a certificate", func() {
-			name := GenerateUniqueCredentialName()
-			RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--root="+VALID_CERTIFICATE_CA)
-			session := RunCommand("get", "-n", name)
-			stdOut := string(session.Out.Contents())
+		Context("when private key format is PKCS1", func() {
+			It("should be able to set a certificate", func() {
+				name := GenerateUniqueCredentialName()
+				RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--root="+VALID_CERTIFICATE_CA)
+				session := RunCommand("get", "-n", name)
+				stdOut := string(session.Out.Contents())
 
-			Eventually(session).Should(Exit(0))
+				Eventually(session).Should(Exit(0))
 
-			Expect(stdOut).To(ContainSubstring(`name: /` + name))
-			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`ca: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_CA_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`certificate: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: `))
-			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
+				expectedCertValue := CertificateValue{
+					Ca:          VALID_CERTIFICATE_CA,
+					Certificate: VALID_CERTIFICATE,
+					PrivateKey:  VALID_CERTIFICATE_PRIVATE_KEY,
+				}
+
+				Eventually(session).Should(Exit(0))
+
+				actualCert := Certificate{}
+				err := yaml.Unmarshal([]byte(stdOut), &actualCert)
+				Expect(err).To(BeNil())
+				Expect(actualCert.Name).To(Equal("/" + name))
+				Expect(actualCert.Value).To(Equal(expectedCertValue))
+
+			})
+
+			It("should require a certificate type", func() {
+				session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate")
+				Eventually(session).Should(Exit(1))
+				Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate attribute must be set. Please validate your input and retry your request."))
+			})
+
+			It("should allow you to set a certificate with a named CA", func() {
+				caName := GenerateUniqueCredentialName()
+				certName := GenerateUniqueCredentialName()
+				RunCommand("set", "-n", caName, "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
+				session := RunCommand("get", "-n", caName)
+				Eventually(session).Should(Exit(0))
+				stdOut := string(session.Out.Contents())
+
+				caCert := Certificate{}
+				err := yaml.Unmarshal([]byte(stdOut), &caCert)
+				Expect(err).To(BeNil())
+
+				RunCommand("set", "-n", certName, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
+				session = RunCommand("get", "-n", certName)
+				Eventually(session).Should(Exit(0))
+				stdOut = string(session.Out.Contents())
+				cert := Certificate{}
+				err = yaml.Unmarshal([]byte(stdOut), &cert)
+				Expect(err).To(BeNil())
+				Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
+				Expect(cert.Name).To(Equal("/" + certName))
+				Expect(cert.Value.PrivateKey).To(Equal(VALID_CERTIFICATE_PRIVATE_KEY))
+				Expect(cert.Value.Certificate).To(Equal(VALID_CERTIFICATE))
+
+			})
 		})
 
-		It("should require a certificate type", func() {
-			session := RunCommand("set", "-n", GenerateUniqueCredentialName(), "-t", "certificate")
-			Eventually(session).Should(Exit(1))
-			Expect(session.Err.Contents()).To(MatchRegexp(".*At least one certificate attribute must be set. Please validate your input and retry your request."))
+		Context("when private key format is PKCS8", func() {
+			Context("and is RSA formatted", func() {
+				It("should store certificate in database", func() {
+					name := GenerateUniqueCredentialName()
+					RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+OTHER_VALID_CERTIFICATE, "--private="+OTHER_VALID_PRIVATE_KEY_PKCS8)
+					session := RunCommand("get", "-n", name)
+					stdOut := string(session.Out.Contents())
+
+					expectedCertValue := CertificateValue{
+						Certificate: OTHER_VALID_CERTIFICATE,
+						PrivateKey:  OTHER_VALID_PRIVATE_KEY_PKCS8,
+					}
+
+					Eventually(session).Should(Exit(0))
+
+					actualCert := Certificate{}
+					err := yaml.Unmarshal([]byte(stdOut), &actualCert)
+					Expect(err).To(BeNil())
+					Expect(actualCert.Name).To(Equal("/" + name))
+					Expect(actualCert.Value).To(Equal(expectedCertValue))
+				})
+			})
+
+			Context("and is not RSA formatted", func() {
+				It("should return an error", func() {
+					name := GenerateUniqueCredentialName()
+					session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+OTHER_VALID_CERTIFICATE, "--private="+EC_PRIVATE_KEY)
+					stdErr := strings.TrimSpace(string(session.Err.Contents()))
+
+					Eventually(session).Should(Exit(1))
+					Expect(stdErr).To(Equal("Private key is malformed. Key file does not contain an RSA private key"))
+				})
+			})
+			Context("and is encrypted", func() {
+				It("should return an error", func() {
+					name := GenerateUniqueCredentialName()
+					session := RunCommand("set", "-n", name, "-t", "certificate", "--certificate="+OTHER_VALID_CERTIFICATE, "--private="+OTHER_PRIVATE_KEY_PKCS8_ENCRYPTED)
+					stdErr := strings.TrimSpace(string(session.Err.Contents()))
+
+					Eventually(session).Should(Exit(1))
+					Expect(stdErr).To(Equal("Private key is malformed. Key file is not in PKCS#1 or unencrypted PKCS#8 format"))
+				})
+			})
 		})
 
-		It("should allow you to set a certificate with a named CA", func() {
-			caName := GenerateUniqueCredentialName()
-			certName := GenerateUniqueCredentialName()
-			RunCommand("set", "-n", caName, "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
-			session := RunCommand("get", "-n", caName)
-			Eventually(session).Should(Exit(0))
-			stdOut := string(session.Out.Contents())
-
-			type certificateValue struct {
-				Ca          string `yaml:"ca,omitempty"`
-				Certificate string `yaml:"certificate,omitempty"`
-			}
-
-			type certificate struct {
-				Value certificateValue `yaml:"value"`
-			}
-
-			caCert := certificate{}
-			err := yaml.Unmarshal([]byte(stdOut), &caCert)
-			Expect(err).To(BeNil())
-
-			RunCommand("set", "-n", certName, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--ca-name", caName)
-			session = RunCommand("get", "-n", certName)
-			Eventually(session).Should(Exit(0))
-			stdOut = string(session.Out.Contents())
-			cert := certificate{}
-			err = yaml.Unmarshal([]byte(stdOut), &cert)
-			Expect(err).To(BeNil())
-			Expect(cert.Value.Ca).To(Equal(caCert.Value.Certificate))
-
-			Expect(stdOut).To(ContainSubstring(`name: /` + certName))
-			Expect(stdOut).To(ContainSubstring(`type: certificate`))
-			Expect(stdOut).To(ContainSubstring(`certificate: `))
-			Expect(stdOut).To(ContainSubstring(VALID_CERTIFICATE_OUTPUT))
-			Expect(stdOut).To(ContainSubstring(`private_key: `))
-			Expect(stdOut).To(ContainSubstring(VALID_PRIVATE_KEY_OUTPUT))
-		})
 	})
 
 	Describe("CAs and Certificates", func() {

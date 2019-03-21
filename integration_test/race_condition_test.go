@@ -1,13 +1,13 @@
 package integration_test
 
 import (
-	"time"
 	"strings"
+	"time"
 
+	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 )
 
 var _ = Describe("Race condition tests", func() {
@@ -101,7 +101,7 @@ var _ = Describe("Race condition tests", func() {
 			Eventually(session2).Should(Exit())
 			out1 := string(session1.Out.Contents()) + string(session1.Err.Contents())
 			out2 := string(session2.Out.Contents()) + string(session2.Err.Contents())
-			
+
 			errors_out := strings.Contains(out1, type_error) || strings.Contains(out2, type_error)
 			Expect(errors_out).To(BeTrue())
 		})

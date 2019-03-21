@@ -23,8 +23,8 @@ func GenerateAutoDoc(session *gexec.Session) error {
 	sessionOutput := string(session.Out.Contents())
 	sessionInput := parseSessionInput(session.Command.Args)
 	cliCommand := CliCommand{
-		sessionInput:sessionInput,
-		sessionOutput:sessionOutput,
+		sessionInput:  sessionInput,
+		sessionOutput: sessionOutput,
 	}
 	err := writeFiles(cliCommand)
 	return err
@@ -35,7 +35,7 @@ func parseSessionInput(args []string) SessionInput {
 	commandName := args[1]
 	fullCommand := strings.Join(args, " ")
 
-	return SessionInput{fullCommand,commandName}
+	return SessionInput{fullCommand, commandName}
 }
 
 func writeFiles(command CliCommand) error {
@@ -67,7 +67,7 @@ func generateInputFile(input SessionInput, path string) error {
 
 }
 
-func generateOutputFile(output string, path string)  error {
+func generateOutputFile(output string, path string) error {
 	formattedOutput := fmt.Sprintf("```\n" + output + "\n" + "```")
 	err := ioutil.WriteFile(path, []byte(formattedOutput), os.ModePerm)
 	return err
