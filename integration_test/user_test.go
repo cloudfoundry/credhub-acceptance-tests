@@ -8,9 +8,13 @@ import (
 )
 
 var _ = Describe("Creating a User", func() {
-	Describe("User Generation", func() {
-		name := GenerateUniqueCredentialName()
+	var name string
 
+	BeforeEach(func() {
+		name = GenerateUniqueCredentialName()
+	})
+
+	Describe("User Generation", func() {
 		Describe("With default parameters", func() {
 			It("should generate a user", func() {
 				RunCommand("generate", "-n", name, "-t", "user")
@@ -75,8 +79,6 @@ var _ = Describe("Creating a User", func() {
 	})
 
 	Describe("Setting a User value", func() {
-		name := GenerateUniqueCredentialName()
-
 		Describe("including all parameters", func() {
 			It("should set the user value", func() {
 				username := "test"

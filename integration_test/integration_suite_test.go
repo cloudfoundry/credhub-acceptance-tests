@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"runtime"
 	"testing"
@@ -59,6 +60,8 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	return []byte(path)
 }, func(data []byte) {
 	CommandPath = string(data)
+
+	rand.Seed(GinkgoRandomSeed() + int64(GinkgoParallelNode()))
 })
 
 var _ = SynchronizedAfterSuite(func() {}, func() {

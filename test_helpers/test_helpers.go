@@ -3,11 +3,10 @@ package test_helpers
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path"
-	"strconv"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -18,8 +17,15 @@ var (
 	CommandPath string
 )
 
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
 func GenerateUniqueCredentialName() string {
-	return strconv.FormatInt(time.Now().UnixNano(), 10)
+	length := 20
+	name := make([]byte, length)
+	for i := range name {
+		name[i] = chars[rand.Intn(len(chars))]
+	}
+	return string(name)
 }
 
 func RunCommand(args ...string) *Session {
