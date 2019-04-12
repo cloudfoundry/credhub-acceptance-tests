@@ -25,6 +25,7 @@ type getCertificatesResponse struct {
     Id       string `json:"id"`
     Name     string `json:"name"`
     Versions []certificateVersion `json:"versions"`
+    SignedBy string `json:"signed_by"`
   } `json:"certificates"`
 }
 
@@ -35,26 +36,15 @@ type certificateVersion struct {
 }
 
 var _ = Describe("Certificates Test", func() {
-
   Describe("getting a certificate", func() {
     It("should get a certificate with versions", func() {
-      certName := GenerateUniqueCredentialName()
-      RunCommand("generate", "-n", certName, "-t", "certificate", "-d", "15", "-c", certName, "--is-ca", "--self-sign")
+      certName := "/" + GenerateUniqueCredentialName()
+      RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--is-ca", "--self-sign")
 
       session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
       Eventually(session).Should(Exit(0))
 
-      var parsedJson struct {
-        Certificates []struct {
-          Id       string `json:"id"`
-          Name     string `json:"name"`
-          Versions []struct {
-            Id           string `json:"id"`
-            ExpiryDate   string `json:"expiry_date"`
-            Transitional bool   `json:"transitional"`
-          } `json:"versions"`
-        } `json:"certificates"`
-      }
+      var parsedJson getCertificatesResponse
 
       err := json.Unmarshal(session.Out.Contents(), &parsedJson)
       Expect(err).ToNot(HaveOccurred())
@@ -65,16 +55,90 @@ var _ = Describe("Certificates Test", func() {
       Expect(parsedJson.Certificates[0].Versions[0].ExpiryDate).ToNot(BeEmpty())
       Expect(parsedJson.Certificates[0].Versions[0].Transitional).To(BeFalse())
     })
+
+    Context("when certificate is self-signed", func() {
+      It("should get a certificate with signed-by itself", func() {
+        certName := "/" + GenerateUniqueCredentialName()
+        RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--is-ca", "--self-sign")
+
+        session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
+        Eventually(session).Should(Exit(0))
+
+        var parsedJson getCertificatesResponse
+
+        err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+        Expect(err).ToNot(HaveOccurred())
+
+        Expect(parsedJson.Certificates).To(HaveLen(1))
+        Expect(parsedJson.Certificates[0].SignedBy).To(Equal(certName))
+      })
+    })
+
+    Context("when certificate is signed by a ca", func() {
+      It("should get a certificate with signed-by the ca", func() {
+        caName := "/" + GenerateUniqueCredentialName()
+        certName := "/" + GenerateUniqueCredentialName()
+        RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+        RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
+
+        session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
+        Eventually(session).Should(Exit(0))
+
+        var parsedJson getCertificatesResponse
+
+        err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+        Expect(err).ToNot(HaveOccurred())
+
+        Expect(parsedJson.Certificates).To(HaveLen(1))
+        Expect(parsedJson.Certificates[0].SignedBy).To(Equal(caName))
+      })
+    })
+
+    Context("when self-signed certificate is set", func() {
+      It("should get a certificate with signed-by itself", func() {
+        certName := "/" + GenerateUniqueCredentialName()
+        RunCommand("set", "-n", certName, "-t", "certificate", "-c", VALID_CERTIFICATE_CA)
+
+        session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
+        Eventually(session).Should(Exit(0))
+
+        var parsedJson getCertificatesResponse
+
+        err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+        Expect(err).ToNot(HaveOccurred())
+
+        Expect(parsedJson.Certificates).To(HaveLen(1))
+        Expect(parsedJson.Certificates[0].SignedBy).To(Equal(certName))
+      })
+    })
+
+    Context("when non-self-signed certificate is set", func() {
+      It("should get a certificate with empty signed-by", func() {
+        certName := "/" + GenerateUniqueCredentialName()
+        RunCommand("set", "-n", certName, "-t", "certificate", "-c", VALID_CERTIFICATE)
+
+        session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
+        Eventually(session).Should(Exit(0))
+
+        var parsedJson getCertificatesResponse
+
+        err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+        Expect(err).ToNot(HaveOccurred())
+
+        Expect(parsedJson.Certificates).To(HaveLen(1))
+        Expect(parsedJson.Certificates[0].SignedBy).To(BeEmpty())
+      })
+    })
   })
 
   Describe("getting all certificates", func() {
     It("should get all certificates with versions", func() {
       cert1Name := "/" + GenerateUniqueCredentialName()
       cert2Name := "/" + GenerateUniqueCredentialName()
-      RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-d", "15", "-c", cert1Name, "--is-ca", "--self-sign")
-      RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-d", "15", "-c", cert1Name, "--is-ca", "--self-sign")
-      RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-d", "15", "-c", cert2Name, "--is-ca", "--self-sign")
-      RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-d", "15", "-c", cert2Name, "--is-ca", "--self-sign")
+      RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
+      RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
+      RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
+      RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
 
       session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates")
       Eventually(session).Should(Exit(0))
