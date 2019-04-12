@@ -22,10 +22,11 @@ import (
 
 type getCertificatesResponse struct {
   Certificates []struct {
-    Id       string `json:"id"`
-    Name     string `json:"name"`
+    Id       string               `json:"id"`
+    Name     string               `json:"name"`
     Versions []certificateVersion `json:"versions"`
-    SignedBy string `json:"signed_by"`
+    SignedBy string               `json:"signed_by"`
+    Signs    []string             `json:"signs"`
   } `json:"certificates"`
 }
 
@@ -109,6 +110,32 @@ var _ = Describe("Certificates Test", func() {
 
         Expect(parsedJson.Certificates).To(HaveLen(1))
         Expect(parsedJson.Certificates[0].SignedBy).To(Equal(certName))
+      })
+
+      Context("when a certificate signs other certificates", func() {
+        It("should return the name of the certificates that it directly signed", func() {
+          caName := "/" + GenerateUniqueCredentialName()
+          intermediateName1 := "/" + GenerateUniqueCredentialName()
+          intermediateName2 := "/" + GenerateUniqueCredentialName()
+          leafName1 := "/" + GenerateUniqueCredentialName()
+          leafName2 := "/" + GenerateUniqueCredentialName()
+          RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+          RunCommand("generate", "-n", intermediateName1, "-t", "certificate", "-c", intermediateName1, "--ca", caName)
+          RunCommand("generate", "-n", intermediateName2, "-t", "certificate", "-c", intermediateName2, "--ca", caName)
+          RunCommand("generate", "-n", leafName1, "-t", "certificate", "-c", leafName1, "--ca", intermediateName1)
+          RunCommand("generate", "-n", leafName2, "-t", "certificate", "-c", leafName2, "--ca", intermediateName2)
+
+          session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+caName)
+          Eventually(session).Should(Exit(0))
+
+          var parsedJson getCertificatesResponse
+
+          err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+          Expect(err).ToNot(HaveOccurred())
+
+          Expect(parsedJson.Certificates).To(HaveLen(1))
+          Expect(parsedJson.Certificates[0].Signs).To(ConsistOf(intermediateName1, intermediateName2))
+        })
       })
     })
 
