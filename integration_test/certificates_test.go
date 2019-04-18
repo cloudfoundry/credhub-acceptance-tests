@@ -6,18 +6,15 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
-	"os/exec"
-	"strings"
-	"time"
-
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os/exec"
+	"strings"
 )
 
 type getCertificatesResponse struct {
@@ -192,24 +189,18 @@ var _ = Describe("Certificates Test", func() {
 	})
 
 	Describe("finding a certificate by ExpiryDate", func() {
-		var latestCertVersion string
+		var certificateName string
 
 		BeforeEach(func() {
-			expired := GenerateUniqueCredentialName()
-			cert, _, err := GenerateSelfSigned(CertOptions{
-				CommonName: "expired-cert",
-				NotBefore:  time.Now().Add(time.Hour * 24 * -10),
-				NotAfter:   time.Now().Add(time.Hour * 24 * -5),
-			})
-			Expect(err).NotTo(HaveOccurred())
+			certificateName = GenerateUniqueCredentialName()
+			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "15", "-c", certificateName, "--is-ca", "--self-sign")
 
-			RunCommand("set", "-n", expired, "-t", "certificate", "--certificate="+string(cert))
+			certificateName = GenerateUniqueCredentialName()
+			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "32", "-c", certificateName, "--is-ca", "--self-sign")
+		})
 
-			previousCertVersion := GenerateUniqueCredentialName()
-			RunCommand("generate", "-n", previousCertVersion, "-t", "certificate", "-d", "15", "-c", previousCertVersion, "--is-ca", "--self-sign")
-
-			latestCertVersion = GenerateUniqueCredentialName()
-			RunCommand("generate", "-n", latestCertVersion, "-t", "certificate", "-d", "32", "-c", latestCertVersion, "--is-ca", "--self-sign")
+		AfterEach(func() {
+			RunCommand("delete", "-n", certificateName)
 		})
 
 		Context("when the latest version of the certificate is not set to expire", func() {
@@ -228,9 +219,10 @@ var _ = Describe("Certificates Test", func() {
 				Eventually(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
-				Expect(stdOut).To(ContainSubstring(`"name": "/` + latestCertVersion + `"`))
+				Expect(stdOut).To(ContainSubstring(`"name": "/` + certificateName + `"`))
 			})
 		})
+
 	})
 
 	Describe("setting a certificate", func() {
