@@ -194,8 +194,6 @@ var _ = Describe("Certificates Test", func() {
 		BeforeEach(func() {
 			certificateName = GenerateUniqueCredentialName()
 			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "15", "-c", certificateName, "--is-ca", "--self-sign")
-
-			certificateName = GenerateUniqueCredentialName()
 			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "32", "-c", certificateName, "--is-ca", "--self-sign")
 		})
 
