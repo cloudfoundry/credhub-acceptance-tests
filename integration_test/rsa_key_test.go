@@ -1,11 +1,12 @@
 package integration_test
 
 import (
+	"strings"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"strings"
 )
 
 var _ = Describe("RSA key test", func() {
@@ -28,9 +29,10 @@ var _ = Describe("RSA key test", func() {
 		rsaSecretName := GenerateUniqueCredentialName()
 
 		By("generating the key", func() {
-			RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
-			session := RunCommand("get", "-n", rsaSecretName)
+			session := RunCommand("generate", "-n", rsaSecretName, "-t", "rsa")
+			Eventually(session).Should(Exit(0))
 
+			session = RunCommand("get", "-n", rsaSecretName)
 			Eventually(session).Should(Exit(0))
 			stdOut := string(session.Out.Contents())
 

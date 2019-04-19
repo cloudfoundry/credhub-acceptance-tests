@@ -6,15 +6,17 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
+	"io/ioutil"
+	"os/exec"
+	"regexp"
+	"strings"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os/exec"
-	"strings"
 )
 
 type getCertificatesResponse struct {
@@ -31,6 +33,22 @@ type certificateVersion struct {
 	Id           string `json:"id"`
 	ExpiryDate   string `json:"expiry_date"`
 	Transitional bool   `json:"transitional"`
+}
+
+type getCertificateVersionsResponse []struct {
+	Id               string                  `json:"id"`
+	Name             string                  `json:"name"`
+	ExpiryDate       string                  `json:"expiry_date"`
+	Transitional     bool                    `json:"transitional"`
+	Type             string                  `json:"type"`
+	VersionCreatedAt string                  `json:"version_created_at"`
+	Value            certificateVersionValue `json:"value"`
+}
+
+type certificateVersionValue struct {
+	Ca          string `json:"ca"`
+	Certificate string `json:"certificate"`
+	PrivateKey  string `json:"private_key"`
 }
 
 var _ = Describe("Certificates Test", func() {
@@ -406,6 +424,62 @@ var _ = Describe("Certificates Test", func() {
 			})
 		})
 
+		It("should return multiple CAs if the concatenate CA flag is set", func() {
+			caName := "/" + GenerateUniqueCredentialName()
+			certName := "/" + GenerateUniqueCredentialName()
+
+			session := RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+			Expect(session).To(Exit(0))
+
+			session = RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
+			Expect(session).To(Exit(0))
+
+			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", caName))
+			Expect(session).To(Exit(0))
+
+			var response getCertificatesResponse
+			err := json.Unmarshal(session.Out.Contents(), &response)
+			Expect(err).NotTo(HaveOccurred())
+
+			session = RunCommand("curl",
+				"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", response.Certificates[0].Id),
+				"-X", "POST",
+				"-d", `{"set_as_transitional": "true"}`,
+			)
+			Expect(session).To(Exit(0))
+
+			session = RunCommand("get", "-n", certName, "-k", "ca")
+			Expect(session).To(Exit(0))
+			stdOut := string(session.Out.Contents())
+
+			re := regexp.MustCompile("BEGIN CERTIFICATE")
+			certificates := re.FindAllString(stdOut, -1)
+			if cfg.ConcatenateCas {
+				Expect(certificates).To(HaveLen(2))
+			} else {
+				Expect(certificates).To(HaveLen(1))
+			}
+
+			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName))
+			Expect(session).To(Exit(0))
+			err = json.Unmarshal(session.Out.Contents(), &response)
+			Expect(err).NotTo(HaveOccurred())
+
+			var versionResponse getCertificateVersionsResponse
+			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", response.Certificates[0].Id))
+			Expect(session).To(Exit(0))
+			err = json.Unmarshal(session.Out.Contents(), &versionResponse)
+			Expect(err).NotTo(HaveOccurred())
+
+			ca := versionResponse[0].Value.Ca
+			certificates = re.FindAllString(ca, -1)
+			if cfg.ConcatenateCas {
+				Expect(certificates).To(HaveLen(2))
+			} else {
+				Expect(certificates).To(HaveLen(1))
+			}
+		})
+
 		It("should generate a ca when using the --is-ca flag", func() {
 			certificateId := GenerateUniqueCredentialName()
 			certificateAuthorityId := GenerateUniqueCredentialName()
@@ -554,7 +628,7 @@ var _ = Describe("Certificates Test", func() {
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
-			Expect(stdErr).To(MatchRegexp(`The provided extended key usage 'code_sinning' is not supported. Valid values include client_auth, server_auth, code_signing, email_protection and timestamping.`))
+			Expect(stdErr).To(MatchRegexp(`The provided extended key usage 'code_sinning' is not supported. Valid values include 'client_auth', 'server_auth', 'code_signing', 'email_protection' and 'timestamping'.`))
 		})
 
 		It("should error gracefully when supplying an invalid key usage name", func() {
@@ -565,7 +639,7 @@ var _ = Describe("Certificates Test", func() {
 			stdErr := string(session.Err.Contents())
 
 			Eventually(session).Should(Exit(1))
-			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' is not supported. Valid values include digital_signature, non_repudiation, key_encipherment, data_encipherment, key_agreement, key_cert_sign, crl_sign, encipher_only and decipher_only.`))
+			Expect(stdErr).To(MatchRegexp(`The provided key usage 'digital_sinnature' is not supported. Valid values include 'digital_signature', 'non_repudiation', 'key_encipherment', 'data_encipherment', 'key_agreement', 'key_cert_sign', 'crl_sign', 'encipher_only' and 'decipher_only'.`))
 		})
 	})
 })
