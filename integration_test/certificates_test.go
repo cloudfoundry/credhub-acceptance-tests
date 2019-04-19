@@ -192,7 +192,7 @@ var _ = Describe("Certificates Test", func() {
 		var certificateName string
 
 		BeforeEach(func() {
-			certificateName = GenerateUniqueCredentialName()
+			certificateName = "/" + GenerateUniqueCredentialName()
 			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "15", "-c", certificateName, "--is-ca", "--self-sign")
 			RunCommand("generate", "-n", certificateName, "-t", "certificate", "-d", "32", "-c", certificateName, "--is-ca", "--self-sign")
 		})
@@ -201,26 +201,54 @@ var _ = Describe("Certificates Test", func() {
 			RunCommand("delete", "-n", certificateName)
 		})
 
-		Context("when the latest version of the certificate is not set to expire", func() {
-			It("should return no certificates", func() {
-				session := RunCommand("curl", "-X", "GET", "-p", "api/v1/data?path=/&expires-within-days=30")
-				Eventually(session).Should(Exit(0))
+		Context("using name-like", func() {
+			Context("when the latest version of the certificate is not set to expire", func() {
+				It("should return no certificates", func() {
+					curlCommand := fmt.Sprintf("api/v1/data?name-like=%s&expires-within-days=30", certificateName)
+					session := RunCommand("curl", "-X", "GET", "-p", curlCommand)
+					Eventually(session).Should(Exit(0))
 
-				stdOut := string(session.Out.Contents())
-				Expect(stdOut).To(ContainSubstring(`"credentials": []`))
+					stdOut := string(session.Out.Contents())
+					Expect(stdOut).To(ContainSubstring(`"credentials": []`))
+				})
+			})
+
+			Context("when the latest version of the certificate is set to expire", func() {
+				It("should return only the latest version of the certificate", func() {
+					curlCommand := fmt.Sprintf("api/v1/data?name-like=%s&expires-within-days=50", certificateName)
+					session := RunCommand("curl", "-X", "GET", "-p", curlCommand)
+					Eventually(session).Should(Exit(0))
+
+					stdOut := string(session.Out.Contents())
+					Expect(stdOut).To(ContainSubstring(`"name": "` + certificateName + `"`))
+				})
 			})
 		})
 
-		Context("when the latest version of the certificate is set to expire", func() {
-			It("should return only the latest version of the certificate", func() {
-				session := RunCommand("curl", "-X", "GET", "-p", "api/v1/data?path=/&expires-within-days=50")
-				Eventually(session).Should(Exit(0))
+		Context("using path", func() {
+			Context("when the latest version of the certificate is not set to expire", func() {
+				It("should return no certificates", func() {
+					curlCommand := "api/v1/data?path=/&expires-within-days=30"
+					session := RunCommand("curl", "-X", "GET", "-p", curlCommand)
+					Eventually(session).Should(Exit(0))
 
-				stdOut := string(session.Out.Contents())
-				Expect(stdOut).To(ContainSubstring(`"name": "/` + certificateName + `"`))
+					stdOut := string(session.Out.Contents())
+					Expect(stdOut).To(ContainSubstring(`"credentials":`))
+					Expect(stdOut).NotTo(ContainSubstring(`"name": "` + certificateName + `"`))
+				})
+			})
+
+			Context("when the latest version of the certificate is set to expire", func() {
+				It("should return only the latest version of the certificate", func() {
+					curlCommand := "api/v1/data?path=/&expires-within-days=50"
+					session := RunCommand("curl", "-X", "GET", "-p", curlCommand)
+					Eventually(session).Should(Exit(0))
+
+					stdOut := string(session.Out.Contents())
+					Expect(stdOut).To(ContainSubstring(`"name": "` + certificateName + `"`))
+				})
 			})
 		})
-
 	})
 
 	Describe("setting a certificate", func() {
