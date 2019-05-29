@@ -170,6 +170,24 @@ var _ = Describe("Certificates Test", func() {
 				Expect(parsedJson.Certificates).To(HaveLen(1))
 				Expect(parsedJson.Certificates[0].SignedBy).To(BeEmpty())
 			})
+
+			Context("when intermediate ca is set with a ca not in credhub", func() {
+				It("should get a certificate with empty signed-by", func() {
+					certName := "/" + GenerateUniqueCredentialName()
+					RunCommand("set", "-n", certName, "-t", "certificate", "-c", VALID_INTERMEDIATE_CA, "-r", VALID_INTERMEDIATE_CA_ROOT_CA)
+
+					session := RunCommand("curl", "-X", "GET", "-p", "api/v1/certificates?name="+certName)
+					Eventually(session).Should(Exit(0))
+
+					var parsedJson getCertificatesResponse
+
+					err := json.Unmarshal(session.Out.Contents(), &parsedJson)
+					Expect(err).ToNot(HaveOccurred())
+
+					Expect(parsedJson.Certificates).To(HaveLen(1))
+					Expect(parsedJson.Certificates[0].SignedBy).To(BeEmpty())
+				})
+			})
 		})
 	})
 
