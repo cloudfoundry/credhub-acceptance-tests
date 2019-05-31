@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("Certificates", func() {
-	It("returns a NOT IMPLEMENTED error", func(){
+	It("returns a NOT IMPLEMENTED error", func() {
 		session := RunCommand("curl", "-p", "/api/v1/certificates")
 		Expect(session).Should(Exit(0))
 
@@ -17,4 +17,3 @@ var _ = Describe("Certificates", func() {
 		Expect(stdOut).To(ContainSubstring("This resource has not been implemented for this backend."))
 	})
 })
-

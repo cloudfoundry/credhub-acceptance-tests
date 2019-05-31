@@ -6,13 +6,12 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-
 )
 
 var _ = Describe("Regenerate", func() {
 	Context("bulk regenerate", func() {
-		It("returns a NOT IMPLEMENTED error", func(){
-			session := RunCommand("curl","-XPOST", "-p", "/api/v1/bulk-regenerate", "-d", `{"signed_by":"some-ca"}`)
+		It("returns a NOT IMPLEMENTED error", func() {
+			session := RunCommand("curl", "-XPOST", "-p", "/api/v1/bulk-regenerate", "-d", `{"signed_by":"some-ca"}`)
 			Expect(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
@@ -20,8 +19,8 @@ var _ = Describe("Regenerate", func() {
 		})
 	})
 	Context("regenerate", func() {
-		It("returns a NOT IMPLEMENTED error", func(){
-			session := RunCommand("curl","-XPOST", "-p", "/api/v1/regenerate", "-d", `{"name":"some-cert"}`)
+		It("returns a NOT IMPLEMENTED error", func() {
+			session := RunCommand("curl", "-XPOST", "-p", "/api/v1/regenerate", "-d", `{"name":"some-cert"}`)
 			Expect(session).Should(Exit(0))
 
 			stdOut := string(session.Out.Contents())
