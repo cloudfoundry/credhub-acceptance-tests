@@ -21,58 +21,24 @@ var _ = Describe("Import test", func() {
 	})
 
 	It("should import credentials from a file", func() {
-		beforeSet()
+		session = RunCommand("import", "-f", "../test_helpers/bulk_import_set.yml")
+		Eventually(session).Should(Exit(0))
+		
+		credentialNamesSet = []string{
+			"/director/deployment/blobstore-agent1",
+			"/director/deployment/blobstore-director1",
+			"/director/deployment/bosh-ca1",
+			"/director/deployment/bosh-cert1",
+			"/director/deployment/ssh-cred1",
+			"/director/deployment/rsa-cred1",
+			"/director/deployment/user1",
+			"/director/deployment/json1",
+		}
 
-		stdOut := string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-agent1`))
-		Expect(stdOut).To(ContainSubstring(`type: password`))
-		Expect(stdOut).To(ContainSubstring(`value: gx4ll8193j5rw0wljgqo`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-director1`))
-		Expect(stdOut).To(ContainSubstring(`type: value`))
-		Expect(stdOut).To(ContainSubstring(`value: y14ck84ef51dnchgk4kp`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/bosh-ca1`))
-		Expect(stdOut).To(ContainSubstring(`type: certificate`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/bosh-cert1`))
-		Expect(stdOut).To(ContainSubstring(`type: certificate`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/ssh-cred1`))
-		Expect(stdOut).To(ContainSubstring(`type: ssh`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`ssh-rsa`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/rsa-cred1`))
-		Expect(stdOut).To(ContainSubstring(`type: rsa`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
-		Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/user1`))
-		Expect(stdOut).To(ContainSubstring(`type: user`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf`))
-		Expect(stdOut).To(ContainSubstring(`username: dan-user1`))
-		Expect(stdOut).To(ContainSubstring(`password_hash:`))
-
-		Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json1`))
-		Expect(stdOut).To(ContainSubstring(`type: json`))
-		Expect(stdOut).To(ContainSubstring(`value:`))
-		Expect(stdOut).To(ContainSubstring(`trump:`))
-		Expect(stdOut).To(ContainSubstring(`tweet:`))
-		Expect(stdOut).To(ContainSubstring(`- covfefe`))
-		Expect(stdOut).To(ContainSubstring(`- covfefe`))
-		Expect(stdOut).To(ContainSubstring(`- covfefe`))
-
-		afterSet()
+		for _, credentialName := range credentialNamesSet {
+			session = RunCommand("delete", "-n", credentialName)
+			Eventually(session).Should(Exit(0))
+		}
 	})
 
 	It("should save the credentials on CredHub", func() {
@@ -154,28 +120,6 @@ var _ = Describe("Import test", func() {
 	})
 
 })
-
-func beforeSet() {
-	session = RunCommand("import", "-f", "../test_helpers/bulk_import_set.yml")
-	Eventually(session).Should(Exit(0))
-	credentialNamesSet = []string{
-		"/director/deployment/blobstore-agent1",
-		"/director/deployment/blobstore-director1",
-		"/director/deployment/bosh-ca1",
-		"/director/deployment/bosh-cert1",
-		"/director/deployment/ssh-cred1",
-		"/director/deployment/rsa-cred1",
-		"/director/deployment/user1",
-		"/director/deployment/json1",
-	}
-}
-
-func afterSet() {
-	for _, credentialName := range credentialNamesSet {
-		session = RunCommand("delete", "-n", credentialName)
-		Eventually(session).Should(Exit(0))
-	}
-}
 
 func beforeGet() {
 	session = RunCommand("import", "-f", "../test_helpers/bulk_import_get.yml")
