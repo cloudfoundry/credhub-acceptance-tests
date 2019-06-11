@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fd06677d19c744d535e9f841051f25469e7435b1ac5828bc84e4f1461fc4fde2"
+  digest = "1:dd16888e9667dba8159b473da9b7d5b3d948a07da83da139042d149456ad61d5"
   name = "code.cloudfoundry.org/credhub-cli"
   packages = [
     "credhub",
@@ -17,7 +17,7 @@
     "errors",
   ]
   pruneopts = "UT"
-  revision = "149fe65b6dcd53efcd365717060ece7eb774a233"
+  revision = "7745dc15a3cee7cd618aac7bec06ebb43c6f3995"
 
 [[projects]]
   branch = "master"
