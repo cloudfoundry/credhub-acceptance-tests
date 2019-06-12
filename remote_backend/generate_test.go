@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-var _ = FDescribe("Generate", func() {
+var _ = Describe("Generate", func() {
 	Describe("generate", func() {
 		Describe("password type", func() {
 			It("generates password type", func() {
