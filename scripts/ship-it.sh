@@ -22,6 +22,7 @@ function push_code() {
 }
 
 function display_ascii_success_message() {
+    local -r green_color_code='\033[1;32m'
     echo -e "${green_color_code}\\n$(cat scripts/success_ascii_art.txt)"
 }
 
