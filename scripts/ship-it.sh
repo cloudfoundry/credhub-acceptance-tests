@@ -22,7 +22,7 @@ function push_code() {
 }
 
 function display_ascii_success_message() {
-    echo "Success!"
+    echo -e "${green_color_code}\\n$(cat scripts/success_ascii_art.txt)"
 }
 
 function main() {
