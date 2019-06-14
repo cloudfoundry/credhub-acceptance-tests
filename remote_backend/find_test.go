@@ -42,4 +42,36 @@ var _ = Describe("Find", func() {
 		})
 
 	})
+	Describe("starting with path", func() {
+		BeforeEach(func(){
+			session := RunCommand("set", "-t", "value", "-n", "/some/credential", "-v", "value")
+			Expect(session).Should(Exit(0))
+
+			session = RunCommand("set", "-t", "value", "-n", "/some/other-credential", "-v", "value")
+			Expect(session).Should(Exit(0))
+
+			session = RunCommand("set", "-t", "value", "-n", "/another/credential", "-v", "value")
+			Expect(session).Should(Exit(0))
+
+		})
+		Context("when credentials exist starting with path", func() {
+			It("shows all credentials starting with path", func() {
+				session :=RunCommand("find", "-p", "/some")
+				Expect(session).Should(Exit(0))
+
+				stdOut := string(session.Out.Contents())
+				Expect(stdOut).To(ContainSubstring("- name: /some/credential"))
+				Expect(stdOut).To(ContainSubstring("- name: /some/other-credential"))
+				Expect(stdOut).ToNot(ContainSubstring("- name: /another/credential"))
+			})
+		})
+		Context("when no credentials exist starting with path", func() {
+			It("returns error message", func() {
+				session := RunCommand("find", "-p", "/abc")
+				Expect(session).Should(Exit(1))
+				stdOut := string(session.Err.Contents())
+				Expect(stdOut).To(ContainSubstring("The request could not be completed because the credential does not exist or you do not have sufficient authorization"))
+			})
+		})
+	})
 })
