@@ -12,7 +12,7 @@ var _ = Describe("Set", func() {
 	Describe("set", func() {
 		Describe("json type", func() {
 			It("sets json type", func() {
-				name := "/some-json"
+				name := GenerateUniqueCredentialName()
 				json := `{"some-key": "some-json"}`
 				asYaml := "some-key: some-json"
 
@@ -29,7 +29,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("value type", func() {
 			It("sets value type", func() {
-				name := "/some-value"
+				name := GenerateUniqueCredentialName()
 				value := "some-random-value"
 
 				session := RunCommand("set", "-t", "value", "-n", name, "-v", value)
@@ -45,7 +45,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("password type", func() {
 			It("sets password type", func() {
-				name := "/some-password"
+				name := GenerateUniqueCredentialName()
 				password := "some-super-secret-password"
 
 				session := RunCommand("set", "-t", "password", "-n", name, "-w", password)
@@ -61,7 +61,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("certificate type", func() {
 			It("sets certificate type", func() {
-				name := "/some-cert"
+				name := GenerateUniqueCredentialName()
 				cert := VALID_CERTIFICATE
 				privateKey := VALID_CERTIFICATE_PRIVATE_KEY
 				ca := VALID_CERTIFICATE_CA
@@ -95,7 +95,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("user type", func() {
 			It("sets user type", func() {
-				name := "/some-user"
+				name := GenerateUniqueCredentialName()
 				username := "some-username"
 				password := "some-random-password"
 
@@ -113,7 +113,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("rsa type", func() {
 			It("sets rsa type", func() {
-				name := "/some-rsa"
+				name := GenerateUniqueCredentialName()
 				publicKey := ALTERNATE_CA_PUBLIC_KEY
 				privateKey := ALTERNATE_CA_PRIVATE_KEY
 
@@ -140,7 +140,7 @@ var _ = Describe("Set", func() {
 		})
 		Describe("ssh type", func() {
 			It("sets ssh type", func() {
-				name := "/some-ssh"
+				name := GenerateUniqueCredentialName()
 				publicKey := ALTERNATE_CA_PUBLIC_KEY
 				privateKey := ALTERNATE_CA_PRIVATE_KEY
 

@@ -10,7 +10,7 @@ import (
 var _ = Describe("Delete", func() {
 	Describe("get by name", func() {
 		It("deletes a cred by name", func() {
-			name := "/some-value"
+			name := GenerateUniqueCredentialName()
 			value := "some-random-value"
 
 			session := RunCommand("set", "-t", "value", "-n", name, "-v", value)

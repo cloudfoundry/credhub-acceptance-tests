@@ -1,6 +1,7 @@
 package remote_backend_test
 
 import (
+	"math/rand"
 	"testing"
 
 	"io/ioutil"
@@ -44,6 +45,8 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	return []byte("credhub")
 }, func(cli_path []byte) {
 	CommandPath = string(cli_path)
+
+	rand.Seed(GinkgoRandomSeed() + int64(GinkgoParallelNode()))
 })
 
 var _ = SynchronizedAfterSuite(func() {}, func() {
