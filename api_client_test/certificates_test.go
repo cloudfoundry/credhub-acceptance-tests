@@ -39,10 +39,10 @@ var _ = Describe("Certificates", func() {
 			metadataArray, _ := response["certificates"]
 			expected := metadataArray[0]
 
-			metadata, err := credhubClient.GetAllCertificatesMetadata()
+			actual, err := credhubClient.GetAllCertificatesMetadata()
 			Expect(err).ToNot(HaveOccurred())
 
-			Expect(metadata).To(ContainElement(expected))
+			Expect(actual).To(ContainElement(expected))
 
 		})
 	})
