@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
+	"strings"
 )
 
 var _ = Describe("Find", func() {
@@ -37,7 +38,7 @@ var _ = Describe("Find", func() {
 				session := RunCommand("find", "-n", "abc")
 				Expect(session).Should(Exit(1))
 				stdOut := string(session.Err.Contents())
-				Expect(stdOut).To(ContainSubstring("The request could not be completed because the credential does not exist or you do not have sufficient authorization"))
+				Expect(stdOut).To(ContainSubstring("No credentials exist which match the provided parameters."))
 			})
 		})
 
@@ -68,9 +69,9 @@ var _ = Describe("Find", func() {
 		Context("when no credentials exist starting with path", func() {
 			It("returns error message", func() {
 				session := RunCommand("find", "-p", "/abc")
-				Expect(session).Should(Exit(1))
-				stdOut := string(session.Err.Contents())
-				Expect(stdOut).To(ContainSubstring("The request could not be completed because the credential does not exist or you do not have sufficient authorization"))
+				Expect(session).Should(Exit(0))
+				stdOut := strings.TrimSpace(string(session.Out.Contents()))
+				Expect(stdOut).To(ContainSubstring("credentials: []"))
 			})
 		})
 	})

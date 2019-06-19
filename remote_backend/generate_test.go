@@ -114,7 +114,7 @@ var _ = Describe("Generate", func() {
 				generationParameters := `{"name": "/some-password", "type": "password", "mode": "no-overwrite"}`
 				session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 				Expect(session).Should(Exit(0))
-				Expect(string(session.Out.Contents())).ToNot(ContainSubstring(oldStdOut))
+				Expect(string(session.Out.Contents())).To(ContainSubstring(oldStdOut))
 			})
 		})
 
