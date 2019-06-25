@@ -119,6 +119,30 @@ var _ = Describe("Import test", func() {
 		afterGet()
 	})
 
+	Describe("when there is a cert chain and ca_name is given for a cert and the ca is later in the file", func() {
+		It("should import the ca before the cert it signed", func() {
+			beforeCertChainGet()
+
+			session = RunCommand("curl", "-p", "api/v1/certificates?name=/leaf_cert")
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`"signed_by": "/intermediate_ca"`))
+
+			session = RunCommand("curl", "-p", "api/v1/certificates?name=/intermediate_ca")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`"signed_by": "/root_ca"`))
+			Expect(stdOut).To(ContainSubstring("leaf_cert"))
+
+			session = RunCommand("curl", "-p", "api/v1/certificates?name=/root_ca")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+				Expect(stdOut).To(ContainSubstring("intermediate_ca"))
+
+			afterGet()
+		})
+	})
+
 })
 
 func beforeGet() {
@@ -133,6 +157,16 @@ func beforeGet() {
 		"/director/deployment/rsa-cred2",
 		"/director/deployment/user2",
 		"/director/deployment/json2",
+	}
+}
+
+func beforeCertChainGet() {
+	session = RunCommand("import", "-f", "../test_helpers/bulk_import_with_ca_name.yml")
+	Eventually(session).Should(Exit(0))
+	credentialNamesGet = []string{
+		"root_ca",
+		"intermediate_ca",
+		"leaf_cert",
 	}
 }
 
