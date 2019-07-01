@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"fmt"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -17,7 +18,7 @@ var _ = Describe("Generate", func() {
 		Context("when mode is set to overwrite", func() {
 			Context("password type", func() {
 				It("generates password type", func() {
-					name := "/some-password"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "password", "-n", name, "-l", "10")
 					Expect(session).Should(Exit(0))
@@ -33,7 +34,7 @@ var _ = Describe("Generate", func() {
 			})
 			Context("certificate type", func() {
 				It("generates certificate type", func() {
-					name := "/some-cert"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "certificate", "-n", name, "-k", "4096", "-c", "test-cert", "--self-sign")
 					Expect(session).Should(Exit(0))
@@ -51,7 +52,7 @@ var _ = Describe("Generate", func() {
 			})
 			Context("rsa type", func() {
 				It("generates rsa type", func() {
-					name := "/some-rsa"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "rsa", "-n", name, "-k", "4096")
 					Expect(session).Should(Exit(0))
@@ -67,7 +68,7 @@ var _ = Describe("Generate", func() {
 			})
 			Context("ssh type", func() {
 				It("generates ssh type", func() {
-					name := "/some-ssh"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "ssh", "-n", name, "-k", "4096")
 					Expect(session).Should(Exit(0))
@@ -83,7 +84,7 @@ var _ = Describe("Generate", func() {
 			})
 			Context("user type", func() {
 				It("generates user type", func() {
-					name := "/some-user"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "user", "-n", name, "-l", "47", "-U")
 					Expect(session).Should(Exit(0))
@@ -102,7 +103,7 @@ var _ = Describe("Generate", func() {
 		})
 		Context("when mode is set to no overwrite", func() {
 			It("does not regenerate credential", func() {
-				name := "/some-password"
+				name := GenerateUniqueCredentialName()
 
 				session := RunCommand("generate", "-t", "password", "-n", name, "-l", "10")
 				Expect(session).Should(Exit(0))
@@ -111,7 +112,7 @@ var _ = Describe("Generate", func() {
 				oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
 
 
-				generationParameters := `{"name": "/some-password", "type": "password", "mode": "no-overwrite"}`
+				generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "no-overwrite"}`, name)
 				session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 				Expect(session).Should(Exit(0))
 				Expect(string(session.Out.Contents())).To(ContainSubstring(oldStdOut))
@@ -121,7 +122,7 @@ var _ = Describe("Generate", func() {
 		Context("when mode is set to converge", func() {
 			Context("and generation parameters are the same", func() {
 				It("does not regenerate credential", func() {
-					name := "/some-password"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "password", "-n", name, "-l", "10")
 					Expect(session).Should(Exit(0))
@@ -129,7 +130,7 @@ var _ = Describe("Generate", func() {
 					session = RunCommand("get", "-n", name, "-q")
 					oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
 
-					generationParameters := `{"name": "/some-password", "type": "password", "mode": "converge", "parameters":{"length":10}}`
+					generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "converge", "parameters":{"length":10}}`, name)
 					session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 					Expect(session).Should(Exit(0))
 					Expect(string(session.Out.Contents())).To(ContainSubstring(oldStdOut))
@@ -137,7 +138,7 @@ var _ = Describe("Generate", func() {
 			})
 			Context("and generation parameters are not the same", func() {
 				It("regenerates the credential", func() {
-					name := "/some-password"
+					name := GenerateUniqueCredentialName()
 
 					session := RunCommand("generate", "-t", "password", "-n", name, "-l", "10")
 					Expect(session).Should(Exit(0))
@@ -146,7 +147,7 @@ var _ = Describe("Generate", func() {
 					oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
 
 
-					generationParameters := `{"name": "/some-password", "type": "password", "mode": "converge"}`
+					generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "converge"}`, name)
 					session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 					Expect(session).Should(Exit(0))
 					Expect(string(session.Out.Contents())).ToNot(ContainSubstring(oldStdOut))
