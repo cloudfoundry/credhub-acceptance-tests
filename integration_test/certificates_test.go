@@ -33,6 +33,7 @@ type certificateVersion struct {
 	Id           string `json:"id"`
 	ExpiryDate   string `json:"expiry_date"`
 	Transitional bool   `json:"transitional"`
+	Generated    bool   `json:"generated"`
 }
 
 type getCertificateVersionsResponse []struct {
@@ -197,6 +198,7 @@ var _ = Describe("Certificates Test", func() {
 			cert2Name := "/" + GenerateUniqueCredentialName()
 			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
 			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
+			RunCommand("set", "-n", cert1Name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--root="+VALID_CERTIFICATE_CA)
 			RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
 			RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
 
@@ -210,13 +212,15 @@ var _ = Describe("Certificates Test", func() {
 			cert1Versions := findCert(cert1Name, parsedJson)
 			Expect(cert1Versions).NotTo(BeNil())
 
-			cert2Versions := findCert(cert1Name, parsedJson)
+			cert2Versions := findCert(cert2Name, parsedJson)
 			Expect(cert2Versions).NotTo(BeNil())
 
-			Expect(cert1Versions).To(HaveLen(2))
+			Expect(cert1Versions).To(HaveLen(3))
 			Expect(cert1Versions[0].Id).ToNot(BeEmpty())
 			Expect(cert1Versions[0].ExpiryDate).ToNot(BeEmpty())
 			Expect(cert1Versions[0].Transitional).To(BeFalse())
+			Expect(cert1Versions[0].Generated).To(BeTrue())
+			Expect(cert1Versions[2].Generated).To(BeFalse())
 			Expect(cert2Versions).To(HaveLen(2))
 			Expect(cert2Versions[0].Id).ToNot(BeEmpty())
 			Expect(cert2Versions[0].ExpiryDate).ToNot(BeEmpty())
