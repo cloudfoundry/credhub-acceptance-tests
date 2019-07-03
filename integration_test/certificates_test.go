@@ -446,60 +446,386 @@ var _ = Describe("Certificates Test", func() {
 			})
 		})
 
-		It("should return multiple CAs if the concatenate CA flag is set", func() {
-			caName := "/" + GenerateUniqueCredentialName()
-			certName := "/" + GenerateUniqueCredentialName()
+		Context("concatenated cas", func() {
+			It("should return multiple CAs if the concatenate CA flag is set", func() {
+				caName := "/" + GenerateUniqueCredentialName()
+				certName := "/" + GenerateUniqueCredentialName()
 
-			session := RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
-			Expect(session).To(Exit(0))
+				session := RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+				Expect(session).To(Exit(0))
 
-			session = RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
-			Expect(session).To(Exit(0))
+				session = RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
+				Expect(session).To(Exit(0))
 
-			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", caName))
-			Expect(session).To(Exit(0))
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", caName))
+				Expect(session).To(Exit(0))
 
-			var response getCertificatesResponse
-			err := json.Unmarshal(session.Out.Contents(), &response)
-			Expect(err).NotTo(HaveOccurred())
+				var response getCertificatesResponse
+				err := json.Unmarshal(session.Out.Contents(), &response)
+				Expect(err).NotTo(HaveOccurred())
 
-			session = RunCommand("curl",
-				"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", response.Certificates[0].Id),
-				"-X", "POST",
-				"-d", `{"set_as_transitional": "true"}`,
-			)
-			Expect(session).To(Exit(0))
+				session = RunCommand("curl",
+					"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", response.Certificates[0].Id),
+					"-X", "POST",
+					"-d", `{"set_as_transitional": "true"}`,
+				)
+				Expect(session).To(Exit(0))
 
-			session = RunCommand("get", "-n", certName, "-k", "ca")
-			Expect(session).To(Exit(0))
-			stdOut := string(session.Out.Contents())
+				session = RunCommand("get", "-n", certName, "-k", "ca")
+				Expect(session).To(Exit(0))
+				stdOut := string(session.Out.Contents())
 
-			re := regexp.MustCompile("BEGIN CERTIFICATE")
-			certificates := re.FindAllString(stdOut, -1)
-			if cfg.ConcatenateCas {
-				Expect(certificates).To(HaveLen(2))
-			} else {
-				Expect(certificates).To(HaveLen(1))
-			}
+				re := regexp.MustCompile("BEGIN CERTIFICATE")
+				certificates := re.FindAllString(stdOut, -1)
+				if cfg.ConcatenateCas {
+					Expect(certificates).To(HaveLen(2))
+				} else {
+					Expect(certificates).To(HaveLen(1))
+				}
 
-			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName))
-			Expect(session).To(Exit(0))
-			err = json.Unmarshal(session.Out.Contents(), &response)
-			Expect(err).NotTo(HaveOccurred())
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName))
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &response)
+				Expect(err).NotTo(HaveOccurred())
 
-			var versionResponse getCertificateVersionsResponse
-			session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", response.Certificates[0].Id))
-			Expect(session).To(Exit(0))
-			err = json.Unmarshal(session.Out.Contents(), &versionResponse)
-			Expect(err).NotTo(HaveOccurred())
+				var versionResponse getCertificateVersionsResponse
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", response.Certificates[0].Id))
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &versionResponse)
+				Expect(err).NotTo(HaveOccurred())
 
-			ca := versionResponse[0].Value.Ca
-			certificates = re.FindAllString(ca, -1)
-			if cfg.ConcatenateCas {
-				Expect(certificates).To(HaveLen(2))
-			} else {
-				Expect(certificates).To(HaveLen(1))
-			}
+				ca := versionResponse[0].Value.Ca
+				certificates = re.FindAllString(ca, -1)
+				if cfg.ConcatenateCas {
+					Expect(certificates).To(HaveLen(2))
+				} else {
+					Expect(certificates).To(HaveLen(1))
+				}
+			})
+			It("should create a new child version", func() {
+				caName := "/" + GenerateUniqueCredentialName()
+				certName := "/" + GenerateUniqueCredentialName()
+
+				session := RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+				Expect(session).To(Exit(0))
+
+				session = RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
+				Expect(session).To(Exit(0))
+
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", caName))
+				Expect(session).To(Exit(0))
+
+				var response getCertificatesResponse
+				err := json.Unmarshal(session.Out.Contents(), &response)
+				Expect(err).NotTo(HaveOccurred())
+
+				caId := response.Certificates[0].Id
+
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName))
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &response)
+				Expect(err).NotTo(HaveOccurred())
+
+				certId := response.Certificates[0].Id
+
+				var versionResponse getCertificateVersionsResponse
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &versionResponse)
+				Expect(err).NotTo(HaveOccurred())
+
+				numVersions := len(versionResponse)
+
+				session = RunCommand("curl",
+					"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", caId),
+					"-X", "POST",
+					"-d", `{"set_as_transitional": "true"}`,
+				)
+				Expect(session).To(Exit(0))
+
+				session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &versionResponse)
+				Expect(err).NotTo(HaveOccurred())
+
+				if cfg.ConcatenateCas {
+					Expect(len(versionResponse)).To(Equal(numVersions + 1))
+				} else {
+					Expect(len(versionResponse)).To(Equal(numVersions))
+				}
+			})
+
+			Context("certificate rotation", func() {
+				var (
+					caName            string
+					certName          string
+					caResponse        getCertificatesResponse
+					certResponse      getCertificatesResponse
+					certId            string
+					caId              string
+					caVersionResponse getCertificateVersionsResponse
+					oldCaVersionId    string
+					oldCaVersion      string
+					newCaVersionId    string
+					newCaVersion      string
+				)
+
+				BeforeEach(func() {
+					caName = "/" + GenerateUniqueCredentialName()
+					certName = "/" + GenerateUniqueCredentialName()
+
+					session := RunCommand("generate", "-n", caName, "-t", "certificate", "-c", caName, "--is-ca", "--self-sign")
+					Expect(session).To(Exit(0))
+
+					session = RunCommand("generate", "-n", certName, "-t", "certificate", "-c", certName, "--ca", caName)
+					Expect(session).To(Exit(0))
+
+					session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", caName))
+					Expect(session).To(Exit(0))
+
+					err := json.Unmarshal(session.Out.Contents(), &caResponse)
+					Expect(err).NotTo(HaveOccurred())
+
+					caId = caResponse.Certificates[0].Id
+
+					session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName))
+					Expect(session).To(Exit(0))
+					err = json.Unmarshal(session.Out.Contents(), &certResponse)
+					Expect(err).NotTo(HaveOccurred())
+
+					certId = certResponse.Certificates[0].Id
+
+					session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", caId))
+					Expect(session).To(Exit(0))
+					err = json.Unmarshal(session.Out.Contents(), &caVersionResponse)
+					Expect(err).NotTo(HaveOccurred())
+
+					oldCaVersionId = caVersionResponse[0].Id
+					oldCaVersion = caVersionResponse[0].Value.Ca
+
+					session = RunCommand("curl",
+						"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", caId),
+						"-X", "POST",
+						"-d", `{"set_as_transitional": "false"}`,
+					)
+					Expect(session).To(Exit(0))
+
+					session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", caId))
+					Expect(session).To(Exit(0))
+					err = json.Unmarshal(session.Out.Contents(), &caVersionResponse)
+					Expect(err).NotTo(HaveOccurred())
+
+					if caVersionResponse[0].Value.Ca != oldCaVersion {
+						newCaVersion = caVersionResponse[0].Value.Ca
+						newCaVersionId = caVersionResponse[0].Id
+					} else {
+						newCaVersion = caVersionResponse[1].Value.Ca
+						newCaVersionId = caVersionResponse[1].Id
+					}
+
+				})
+
+				Context("regenerating ca without setting as transitional", func() {
+					It("should not create a new version of the child cert", func() {
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/regenerate", caId),
+							"-X", "POST",
+							"-d", `{"set_as_transitional": "false"}`,
+						)
+						Expect(session).To(Exit(0))
+
+						var certVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &certVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						var numCertVersions = len(certVersionResponse)
+						Expect(numCertVersions).To(Equal(1))
+					})
+				})
+				Context("setting non-signing ca as transitional", func() {
+					It("should create new child cert version and concatenate transitional version after signing version", func() {
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", fmt.Sprintf(`{"version": "%s"}`, newCaVersionId),
+						)
+						Expect(session).To(Exit(0))
+
+						var certVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &certVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						cas := certVersionResponse[0].Value.Ca
+
+						caArray := strings.SplitAfter(cas, "-----END CERTIFICATE-----\n")
+						caArray = removeEmptyValues(caArray)
+
+						if cfg.ConcatenateCas {
+							Expect(len(certVersionResponse)).To(Equal(2))
+							Expect(len(caArray)).To(Equal(2))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+							Expect(caArray[1]).To(Equal(newCaVersion))
+						} else {
+							Expect(len(certVersionResponse)).To(Equal(1))
+							Expect(len(caArray)).To(Equal(1))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+						}
+					})
+				})
+				Context("setting signing ca as transitional", func() {
+					It("should create new child cert version and concatenate transitional signing version before non-signing version", func() {
+						var transitionalVersionResponse getCertificateVersionsResponse
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", fmt.Sprintf(`{"version": "%s"}`, oldCaVersionId),
+						)
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &transitionalVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						var certificateVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+						Expect(session).To(Exit(0))
+						err = json.Unmarshal(session.Out.Contents(), &certificateVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						cas := certificateVersionResponse[0].Value.Ca
+
+						caArray := strings.SplitAfter(cas, "-----END CERTIFICATE-----\n")
+						caArray = removeEmptyValues(caArray)
+
+						if cfg.ConcatenateCas {
+							Expect(len(certificateVersionResponse)).To(Equal(2))
+							Expect(len(caArray)).To(Equal(2))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+							Expect(caArray[1]).To(Equal(newCaVersion))
+						} else {
+							Expect(len(certificateVersionResponse)).To(Equal(1))
+							Expect(len(caArray)).To(Equal(1))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+						}
+					})
+				})
+				Context("bulk regenerating when signing ca is transitional", func() {
+					It("creates a new child version with flipped cas in the ca field", func() {
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", fmt.Sprintf(`{"version": "%s"}`, oldCaVersionId),
+						)
+						Expect(session).To(Exit(0))
+
+						session = RunCommand("bulk-regenerate", "--signed-by", caName)
+						Expect(session).To(Exit(0))
+
+						var certVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &certVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						cas := certVersionResponse[0].Value.Ca
+
+						caArray := strings.SplitAfter(cas, "-----END CERTIFICATE-----\n")
+						caArray = removeEmptyValues(caArray)
+
+						if cfg.ConcatenateCas {
+							Expect(len(certVersionResponse)).To(Equal(3))
+							Expect(len(caArray)).To(Equal(2))
+							Expect(caArray[0]).To(Equal(newCaVersion))
+							Expect(caArray[1]).To(Equal(oldCaVersion))
+						} else {
+							Expect(len(certVersionResponse)).To(Equal(2))
+							Expect(len(caArray)).To(Equal(1))
+							Expect(caArray[0]).To(Equal(newCaVersion))
+						}
+					})
+				})
+				Context("removing transitional flag", func() {
+					It("creates new child version with only signing ca in ca field", func() {
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", fmt.Sprintf(`{"version": "%s"}`, oldCaVersionId),
+						)
+						Expect(session).To(Exit(0))
+
+						session = RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", `{"version": null}`,
+						)
+						Expect(session).To(Exit(0))
+
+						var certVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId))
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &certVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						cas := certVersionResponse[0].Value.Ca
+
+						caArray := strings.SplitAfter(cas, "-----END CERTIFICATE-----\n")
+						caArray = removeEmptyValues(caArray)
+
+						Expect(len(caArray)).To(Equal(1))
+						Expect(caArray[0]).To(Equal(oldCaVersion))
+
+						if cfg.ConcatenateCas {
+							Expect(len(certVersionResponse)).To(Equal(3))
+						} else {
+							Expect(len(certVersionResponse)).To(Equal(1))
+						}
+					})
+				})
+				Context("generating leaf certificate when ca has transitional version", func() {
+					It("should set the transitional version as the trusted Ca", func() {
+						certName2 := "/" + GenerateUniqueCredentialName()
+
+						session := RunCommand("curl",
+							"-p", fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", caId),
+							"-X", "PUT",
+							"-d", fmt.Sprintf(`{"version": "%s"}`, newCaVersionId),
+						)
+						Expect(session).To(Exit(0))
+						session = RunCommand("generate", "-n", certName2, "-t", "certificate", "--common-name", certName2, "--ca", caName)
+						Eventually(session).Should(Exit(0))
+
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates?name=%s", certName2))
+						Expect(session).To(Exit(0))
+						err := json.Unmarshal(session.Out.Contents(), &certResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						certId2 := certResponse.Certificates[0].Id
+
+						var certVersionResponse getCertificateVersionsResponse
+						session = RunCommand("curl", "-p", fmt.Sprintf("/api/v1/certificates/%s/versions", certId2))
+						Expect(session).To(Exit(0))
+						err = json.Unmarshal(session.Out.Contents(), &certVersionResponse)
+						Expect(err).NotTo(HaveOccurred())
+
+						cas := certVersionResponse[0].Value.Ca
+
+						caArray := strings.SplitAfter(cas, "-----END CERTIFICATE-----\n")
+						caArray = removeEmptyValues(caArray)
+						Expect(len(certVersionResponse)).To(Equal(1))
+
+						if cfg.ConcatenateCas {
+							Expect(len(caArray)).To(Equal(2))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+							Expect(caArray[1]).To(Equal(newCaVersion))
+						} else {
+							Expect(len(caArray)).To(Equal(1))
+							Expect(caArray[0]).To(Equal(oldCaVersion))
+						}
+					})
+				})
+			})
 		})
 
 		It("should generate a ca when using the --is-ca flag", func() {
@@ -709,4 +1035,13 @@ func CertFromPem(input string, ca bool) *x509.Certificate {
 		panic("failed to parse certificate: " + err.Error())
 	}
 	return parsed_cert
+}
+
+func removeEmptyValues(array []string) []string {
+	for i, v := range array {
+		if &v == nil || v == "" {
+			array = append(array[:i], array[i+1:]...)
+		}
+	}
+	return array
 }

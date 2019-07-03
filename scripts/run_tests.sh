@@ -11,7 +11,7 @@ CREDENTIAL_ROOT=${CREDENTIAL_ROOT:-~/workspace/credhub-release/src/credhub/appli
 UAA_CA=${UAA_CA:-~/workspace/credhub-deployments/ca/uaa_ca.pem}
 CLIENT_NAME=${CLIENT_NAME:-credhub_client}
 CLIENT_SECRET=${CLIENT_SECRET:-secret}
-CONCATENATE_CAS=${CONCATENATE_CAS:-false}
+CONCATENATE_CAS=${CONCATENATE_CAS:-true}
 
 cat <<EOF > test_config.json
 {
