@@ -196,9 +196,9 @@ var _ = Describe("Certificates Test", func() {
 		It("should get all certificates with versions", func() {
 			cert1Name := "/" + GenerateUniqueCredentialName()
 			cert2Name := "/" + GenerateUniqueCredentialName()
-			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
-			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
 			RunCommand("set", "-n", cert1Name, "-t", "certificate", "--certificate="+VALID_CERTIFICATE, "--private="+VALID_CERTIFICATE_PRIVATE_KEY, "--root="+VALID_CERTIFICATE_CA)
+			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
+			RunCommand("generate", "-n", cert1Name, "-t", "certificate", "-c", cert1Name, "--is-ca", "--self-sign")
 			RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
 			RunCommand("generate", "-n", cert2Name, "-t", "certificate", "-c", cert2Name, "--is-ca", "--self-sign")
 
