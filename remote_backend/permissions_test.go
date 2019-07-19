@@ -51,14 +51,12 @@ var _ = Describe("Permissions", func() {
 	})
 
 	Context("put permissions v2", func() {
-		It("updates (overwrite) and returns the permission", func() {
-			var originalActor = "some-actor"
-			var originalPath = GenerateUniqueCredentialName()
-			var uuid = seedPermission(originalActor, originalPath)
-			var newActor = "new-actor"
-			var newPath = GenerateUniqueCredentialName()
+		It("updates (overwrite) the operations and returns the permission", func() {
+			var actor = "some-actor"
+			var path = GenerateUniqueCredentialName()
+			var uuid = seedPermission(actor, path)
 
-			var data = fmt.Sprintf(`{"path": "%s", "actor": "%s", "operations": ["read", "write"]}`, newPath, newActor)
+			var data = fmt.Sprintf(`{"path": "%s", "actor": "%s", "operations": ["read", "write"]}`, path, actor)
 			session := RunCommand("curl", "-p", "/api/v2/permissions/" + uuid, "-X", "PUT", "-d", data)
 			Expect(session).Should(Exit(0))
 
@@ -69,8 +67,8 @@ var _ = Describe("Permissions", func() {
 			Expect(permission).Should(Equal(
 				Permission{
 					Uuid:		uuid,
-					Actor:      newActor,
-					Path:       "/" + newPath,
+					Actor:      actor,
+					Path:       "/" + path,
 					Operations: []string{"read", "write"},
 				}))
 		})
