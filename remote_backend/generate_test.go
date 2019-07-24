@@ -111,7 +111,6 @@ var _ = Describe("Generate", func() {
 				session = RunCommand("get", "-n", name, "-q")
 				oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
 
-
 				generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "no-overwrite"}`, name)
 				session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 				Expect(session).Should(Exit(0))
@@ -145,7 +144,6 @@ var _ = Describe("Generate", func() {
 
 					session = RunCommand("get", "-n", name, "-q")
 					oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
-
 
 					generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "converge"}`, name)
 					session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)

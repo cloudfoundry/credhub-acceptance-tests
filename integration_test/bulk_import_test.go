@@ -137,7 +137,7 @@ var _ = Describe("Import test", func() {
 			session = RunCommand("curl", "-p", "api/v1/certificates?name=/root_ca")
 			Eventually(session).Should(Exit(0))
 			stdOut = string(session.Out.Contents())
-				Expect(stdOut).To(ContainSubstring("intermediate_ca"))
+			Expect(stdOut).To(ContainSubstring("intermediate_ca"))
 
 			afterGet()
 		})

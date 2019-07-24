@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("Find", func() {
 	Describe("containing name", func() {
-		BeforeEach(func(){
+		BeforeEach(func() {
 			session := RunCommand("set", "-t", "value", "-n", "/some-credential", "-v", "value")
 			Expect(session).Should(Exit(0))
 
@@ -44,7 +44,7 @@ var _ = Describe("Find", func() {
 
 	})
 	Describe("starting with path", func() {
-		BeforeEach(func(){
+		BeforeEach(func() {
 			session := RunCommand("set", "-t", "value", "-n", "/some/credential", "-v", "value")
 			Expect(session).Should(Exit(0))
 
@@ -57,7 +57,7 @@ var _ = Describe("Find", func() {
 		})
 		Context("when credentials exist starting with path", func() {
 			It("shows all credentials starting with path", func() {
-				session :=RunCommand("find", "-p", "/some")
+				session := RunCommand("find", "-p", "/some")
 				Expect(session).Should(Exit(0))
 
 				stdOut := string(session.Out.Contents())
