@@ -132,6 +132,29 @@ var _ = Describe("Permissions", func() {
 				}))
 		})
 	})
+
+	Context( "delete permissions v2", func () {
+		It("deletes permissions by UUID", func() {
+			var actor = "some-actor"
+			var path = GenerateUniqueCredentialName()
+			var uuid = seedPermission(actor, path)
+
+			session := RunCommand("curl", "-p", "/api/v2/permissions/"+uuid, "-X", "DELETE")
+			Expect(session).Should(Exit(0))
+
+			var permission Permission
+			err := json.Unmarshal(session.Out.Contents(), &permission)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(permission).Should(Equal(
+				Permission{
+					Uuid:       uuid,
+					Actor:      actor,
+					Path:       "/" + path,
+					Operations: []string{"read", "write", "read_acl"},
+				}))
+		})
+	})
 })
 
 func seedPermission(actor, path string) string {
