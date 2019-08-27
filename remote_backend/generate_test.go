@@ -49,52 +49,6 @@ var _ = Describe("Generate", func() {
 					Expect(cert.Subject.CommonName).To(Equal("test-cert"))
 					Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(4096))
 				})
-				It("generates leaf certificate signed by a CA", func() {
-					name := GenerateUniqueCredentialName()
-					caName := GenerateUniqueCredentialName()
-
-					session := RunCommand("generate", "-t", "certificate", "-n", caName, "-k", "4096", "-c", "test-ca", "--is-ca")
-					Expect(session).Should(Exit(0))
-
-					session = RunCommand("generate", "-t", "certificate", "-n", name, "-k", "4096", "-c", "test-cert", "--ca", caName)
-					Expect(session).Should(Exit(0))
-
-					stdOut := string(session.Out.Contents())
-					Expect(stdOut).To(ContainSubstring(name))
-					Expect(stdOut).To(ContainSubstring("value: <redacted>"))
-
-					session = RunCommand("get", "-n", name)
-					stdOut = string(session.Out.Contents())
-					cert := CertFromPem(stdOut, false)
-					Expect(cert.Subject.CommonName).To(Equal("test-cert"))
-					Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(4096))
-					Expect(cert.Issuer.CommonName).To(Equal("test-ca"))
-				})
-				It("generates intermediate certificate signed by a CA", func() {
-					name := GenerateUniqueCredentialName()
-					rootCaName := GenerateUniqueCredentialName()
-					intermediateCaName := GenerateUniqueCredentialName()
-
-					session := RunCommand("generate", "-t", "certificate", "-n", rootCaName, "-k", "4096", "-c", "test-root-ca", "--is-ca")
-					Expect(session).Should(Exit(0))
-
-					session = RunCommand("generate", "-t", "certificate", "-n", intermediateCaName, "-k", "4096", "-c", "test-intermediate-ca", "--is-ca", "--ca", rootCaName)
-					Expect(session).Should(Exit(0))
-
-					session = RunCommand("generate", "-t", "certificate", "-n", name, "-k", "4096", "-c", "test-cert", "--ca", intermediateCaName)
-					Expect(session).Should(Exit(0))
-
-					stdOut := string(session.Out.Contents())
-					Expect(stdOut).To(ContainSubstring(name))
-					Expect(stdOut).To(ContainSubstring("value: <redacted>"))
-
-					session = RunCommand("get", "-n", name)
-					stdOut = string(session.Out.Contents())
-					cert := CertFromPem(stdOut, false)
-					Expect(cert.Subject.CommonName).To(Equal("test-cert"))
-					Expect(cert.PublicKey.(*rsa.PublicKey).N.BitLen()).To(Equal(4096))
-					Expect(cert.Issuer.CommonName).To(Equal("test-intermediate-ca"))
-				})
 			})
 			Context("rsa type", func() {
 				It("generates rsa type", func() {
@@ -157,6 +111,7 @@ var _ = Describe("Generate", func() {
 				session = RunCommand("get", "-n", name, "-q")
 				oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
 
+
 				generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "no-overwrite"}`, name)
 				session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
 				Expect(session).Should(Exit(0))
@@ -190,6 +145,7 @@ var _ = Describe("Generate", func() {
 
 					session = RunCommand("get", "-n", name, "-q")
 					oldStdOut := strings.TrimSpace(string(session.Out.Contents()))
+
 
 					generationParameters := fmt.Sprintf(`{"name": "%s", "type": "password", "mode": "converge"}`, name)
 					session = RunCommand("curl", "-p", "api/v1/data", "-X", "POST", "-d", generationParameters)
