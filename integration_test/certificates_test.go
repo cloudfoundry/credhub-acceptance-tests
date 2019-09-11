@@ -501,6 +501,18 @@ var _ = Describe("Certificates Test", func() {
 				} else {
 					Expect(certificates).To(HaveLen(1))
 				}
+
+				var certificate Certificate
+				session = RunCommand("get", "--id", response.Certificates[0].Versions[0].Id, "-j")
+				Expect(session).To(Exit(0))
+				err = json.Unmarshal(session.Out.Contents(), &certificate)
+				Expect(err).NotTo(HaveOccurred())
+
+				if cfg.ConcatenateCas {
+					Expect(strings.Count(certificate.Value.Ca, "-----BEGIN CERTIFICATE-----")).To(Equal(2))
+				} else {
+					Expect(strings.Count(certificate.Value.Ca, "-----BEGIN CERTIFICATE-----")).To(Equal(1))
+				}
 			})
 			It("should create a new child version", func() {
 				caName := "/" + GenerateUniqueCredentialName()
