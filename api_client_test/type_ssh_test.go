@@ -3,6 +3,7 @@ package acceptance_test
 import (
 	"crypto/x509"
 	"encoding/pem"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -14,7 +15,7 @@ import (
 
 var _ = Describe("SSH Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-ssh")
+		name := testCredentialPath(time.Now().UnixNano(), "some-ssh")
 		generateParameters := generate.SSH{KeyLength: 2048}
 
 		By("generate ssh keys with path " + name)

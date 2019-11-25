@@ -1,15 +1,17 @@
 package acceptance_test
 
 import (
+	"encoding/json"
+	"time"
+
+	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"encoding/json"
 )
 
 var _ = Describe("JSON Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-json")
+		name := testCredentialPath(time.Now().UnixNano(), "some-json")
 
 		cred := make(map[string]interface{})
 		cred["key"] = "value"
