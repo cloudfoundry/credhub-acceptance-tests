@@ -3,6 +3,7 @@ package acceptance_test
 import (
 	"crypto/x509"
 	"encoding/pem"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -14,7 +15,7 @@ import (
 
 var _ = Describe("RSA Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-rsa")
+		name := testCredentialPath(time.Now().UnixNano(), "some-rsa")
 		generateParameters := generate.RSA{KeyLength: 2048}
 
 		By("generate rsa keys with path " + name)

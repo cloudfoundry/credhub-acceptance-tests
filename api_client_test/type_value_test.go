@@ -3,13 +3,14 @@ package acceptance_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 )
 
 var _ = Describe("Value Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-value")
+		name := testCredentialPath(time.Now().UnixNano(), "some-value")
 		cred := values.Value("some string value")
 		cred2 := values.Value("another string value")
 

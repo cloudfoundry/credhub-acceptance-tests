@@ -6,11 +6,12 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/permissions"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 )
 
 var _ = Describe("Getting Credentials", func() {
 	It("Adds permission", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 		_, err := credhubClient.GeneratePassword(name, generate.Password{}, credhub.Overwrite)
 		Expect(err).NotTo(HaveOccurred())
@@ -44,7 +45,7 @@ var _ = Describe("Getting Credentials", func() {
 
 	Context("when permission does not exist", func() {
 		It("sets new permission", func() {
-			name := testCredentialPath("some-password")
+			name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 			_, err := credhubClient.GeneratePassword(name, generate.Password{}, credhub.Overwrite)
 			Expect(err).NotTo(HaveOccurred())

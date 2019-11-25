@@ -1,6 +1,8 @@
 package acceptance_test
 
 import (
+	"strings"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -15,9 +17,12 @@ import (
 
 var _ = Describe("Find", func() {
 	currentTime := time.Now().UnixNano()
+	randomString := time.Now().UnixNano()
 
-	passwordName1 := testCredentialPath(fmt.Sprint("find-test/first-password-", currentTime))
-	passwordName2 := testCredentialPath(fmt.Sprint("find-test/second-password-", currentTime))
+	passwordName1 := testCredentialPath(randomString, fmt.Sprint("find-test/first-password-", currentTime))
+	passwordName2 := testCredentialPath(randomString, fmt.Sprint("find-test/second-password-", currentTime))
+
+	passwordPrefix := strings.SplitAfter(passwordName1, "find-test")[0]
 
 	var expectedPassword1 credentials.Password
 	var expectedPassword2 credentials.Password
@@ -42,7 +47,7 @@ var _ = Describe("Find", func() {
 	})
 
 	Specify("finding the credentials by path", func() {
-		results, err := credhubClient.FindByPath(testCredentialPrefix() + "find-test")
+		results, err := credhubClient.FindByPath(passwordPrefix)
 
 		Expect(err).ToNot(HaveOccurred())
 

@@ -3,6 +3,7 @@ package acceptance_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
@@ -11,7 +12,7 @@ import (
 
 var _ = Describe("Password Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 		generateParameters := generate.Password{Length: 10}
 
 		By("generate a password with path " + name)

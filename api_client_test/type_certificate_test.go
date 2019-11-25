@@ -7,11 +7,12 @@ import (
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 )
 
 var _ = Describe("Certificate Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-certificate")
+		name := testCredentialPath(time.Now().UnixNano(), "some-certificate")
 
 		generateCert := generate.Certificate{
 			CommonName: "example.com",

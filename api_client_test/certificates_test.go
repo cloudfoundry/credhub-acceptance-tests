@@ -11,12 +11,13 @@ import (
 	. "github.com/onsi/gomega"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 var _ = Describe("Certificates", func() {
 	Describe("getting certificate metadata", func() {
 		It("gets certificate metadata", func() {
-			name := testCredentialPath("some-certificate")
+			name := testCredentialPath(time.Now().UnixNano(), "some-certificate")
 
 			generateCert := generate.Certificate{
 				CommonName: "example.com",
@@ -48,7 +49,7 @@ var _ = Describe("Certificates", func() {
 
 		})
 		It("properly returns self_signed and is_ca", func() {
-			name := testCredentialPath("some-intermediate-ca")
+			name := testCredentialPath(time.Now().UnixNano(), "some-intermediate-ca")
 
 			setCertificate := values.Certificate{
 				Certificate: test_helpers.INTERMEDIATE_CA,
