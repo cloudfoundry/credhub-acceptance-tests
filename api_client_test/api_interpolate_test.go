@@ -2,6 +2,7 @@ package acceptance_test
 
 import (
 	"encoding/json"
+	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	. "github.com/onsi/ginkgo"
@@ -10,7 +11,7 @@ import (
 
 var _ = Describe("InterpolateString", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("thing-to-interpolate")
+		name := testCredentialPath(time.Now().UnixNano(), "thing-to-interpolate")
 		cred := make(map[string]interface{})
 		cred["firstKey"] = "this is a value for the first key"
 

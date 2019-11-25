@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 )
 
 var _ = Describe("JSON Credential Type", func() {
 	Specify("lifecycle", func() {
-		name := testCredentialPath("some-json")
+		name := testCredentialPath(time.Now().UnixNano(), "some-json")
 
 		cred := make(map[string]interface{})
 		cred["key"] = "value"

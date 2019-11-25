@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"path"
 	"testing"
-	"time"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
@@ -16,8 +15,7 @@ import (
 )
 
 var (
-	currentTestNumber = time.Now().UnixNano()
-	credhubClient     *credhub.CredHub
+	credhubClient *credhub.CredHub
 )
 
 var _ = BeforeEach(func() {
@@ -47,10 +45,6 @@ func TestCredhub(t *testing.T) {
 	RunSpecs(t, "Api Client Suite")
 }
 
-func testCredentialPath(credentialName string) string {
-	return fmt.Sprintf("/acceptance/%v/%v", currentTestNumber, credentialName)
-}
-
-func testCredentialPrefix() string {
-	return fmt.Sprintf("/acceptance/%v/", currentTestNumber)
+func testCredentialPath(randomizer int64, credentialName string) string {
+	return fmt.Sprintf("/acceptance/%v/%v", randomizer, credentialName)
 }

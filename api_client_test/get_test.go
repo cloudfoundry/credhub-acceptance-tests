@@ -3,6 +3,7 @@ package acceptance_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
@@ -10,7 +11,7 @@ import (
 
 var _ = Describe("Getting Credentials", func() {
 	Specify("GetLatestVersion", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 		generatePassword := generate.Password{}
 
@@ -38,7 +39,7 @@ var _ = Describe("Getting Credentials", func() {
 	})
 
 	Specify("GetNVersions", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 		generatePassword := generate.Password{}
 
@@ -68,7 +69,7 @@ var _ = Describe("Getting Credentials", func() {
 	})
 
 	Specify("GetAllVersions", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 		generatePassword := generate.Password{}
 
@@ -100,7 +101,7 @@ var _ = Describe("Getting Credentials", func() {
 	})
 
 	Specify("GetById", func() {
-		name := testCredentialPath("some-password")
+		name := testCredentialPath(time.Now().UnixNano(), "some-password")
 
 		generatePassword := generate.Password{}
 
