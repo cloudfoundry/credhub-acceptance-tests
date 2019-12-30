@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20190618140741-30a69e418a7d
+# code.cloudfoundry.org/credhub-cli v0.0.0-20191230184144-6e537b521d9d
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
 code.cloudfoundry.org/credhub-cli/credhub/auth/uaa
