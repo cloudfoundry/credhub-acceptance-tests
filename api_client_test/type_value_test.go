@@ -1,9 +1,10 @@
 package acceptance_test
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"time"
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 )

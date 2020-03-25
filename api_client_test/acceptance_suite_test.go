@@ -6,6 +6,8 @@ import (
 	"path"
 	"testing"
 
+	"github.com/hashicorp/go-version"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -47,4 +49,13 @@ func TestCredhub(t *testing.T) {
 
 func testCredentialPath(randomizer int64, credentialName string) string {
 	return fmt.Sprintf("/acceptance/%v/%v", randomizer, credentialName)
+}
+
+func getServerVersion() (*version.Version, error) {
+	v, err := credhubClient.ServerVersion()
+	if err != nil {
+		return nil, err
+	}
+
+	return v, nil
 }

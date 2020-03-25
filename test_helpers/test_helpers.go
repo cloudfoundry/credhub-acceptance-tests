@@ -2,15 +2,14 @@ package test_helpers
 
 import (
   "encoding/json"
+  . "github.com/onsi/ginkgo"
+  . "github.com/onsi/gomega"
+  . "github.com/onsi/gomega/gexec"
   "io/ioutil"
   "math/rand"
   "os"
   "os/exec"
   "path"
-
-  . "github.com/onsi/ginkgo"
-  . "github.com/onsi/gomega"
-  . "github.com/onsi/gomega/gexec"
 )
 
 var (

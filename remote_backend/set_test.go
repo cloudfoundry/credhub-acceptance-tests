@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var _ = Describe("Set", func() {
+var _ = FDescribe("Set", func() {
 	Describe("set", func() {
 		Describe("json type", func() {
 			It("sets json type", func() {

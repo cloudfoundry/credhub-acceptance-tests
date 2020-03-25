@@ -3,8 +3,8 @@ package certs
 import (
 	"crypto/x509"
 	"fmt"
-
 	"github.com/onsi/gomega/types"
+	"strings"
 )
 
 func BeValidSelfSignedCert() types.GomegaMatcher {
@@ -80,6 +80,7 @@ func FailCertValidationWithMessage(expectedMessage interface{}) types.GomegaMatc
 type failCertValidationWithMessageMatcher struct {
 	expectedMessage interface{}
 	validationError error
+	wrongType       bool
 }
 
 func (matcher *failCertValidationWithMessageMatcher) Match(actual interface{}) (bool, error) {
@@ -89,10 +90,18 @@ func (matcher *failCertValidationWithMessageMatcher) Match(actual interface{}) (
 	}
 
 	_, matcher.validationError = cert.Verify(x509.VerifyOptions{})
-	return matcher.validationError != nil && matcher.validationError.Error() == matcher.expectedMessage, nil
+	message, ok := matcher.expectedMessage.(string)
+	if !ok {
+		matcher.wrongType = true
+		return false, nil
+	}
+	return matcher.validationError != nil && strings.Contains(matcher.validationError.Error(), message), nil
 }
 
 func (matcher *failCertValidationWithMessageMatcher) FailureMessage(actual interface{}) string {
+	if matcher.wrongType {
+		return "Must pass a string for the expected error message"
+	}
 	if matcher.validationError == nil {
 		return "Expected certificate validation to fail, but it succeeded"
 	}
