@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
-	"path/filepath"
 	"regexp"
 	"runtime"
 	"testing"
@@ -58,9 +57,8 @@ var _ = AfterEach(func() {
 })
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	//path, err := Build("code.cloudfoundry.org/credhub-cli")
-	//Expect(err).NotTo(HaveOccurred())
-	path := filepath.Join(string(filepath.Separator), "Users", "pivotal", "workspace", "credhub-cli", "build", "credhub")
+	path, err := Build("code.cloudfoundry.org/credhub-cli")
+	Expect(err).NotTo(HaveOccurred())
 
 	return []byte(path)
 }, func(data []byte) {
