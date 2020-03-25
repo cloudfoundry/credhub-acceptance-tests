@@ -1,11 +1,12 @@
 package acceptance_test
 
 import (
-	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	"encoding/json"
+	"time"
+
+	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"time"
 )
 
 var _ = Describe("JSON Credential Type", func() {

@@ -10,7 +10,7 @@ import (
 )
 
 type Permission struct {
-	Uuid	   string	`json: uuid`
+	Uuid       string   `json: uuid`
 	Actor      string   `json: actor`
 	Path       string   `json: path`
 	Operations []string `json: operations`
@@ -42,7 +42,7 @@ var _ = Describe("Permissions", func() {
 
 			Expect(permission).Should(Equal(
 				Permission{
-					Uuid:		permission.Uuid,
+					Uuid:       permission.Uuid,
 					Actor:      actor,
 					Path:       path,
 					Operations: []string{"read", "write"},
@@ -57,7 +57,7 @@ var _ = Describe("Permissions", func() {
 			var uuid = seedPermission(actor, path)
 
 			var data = fmt.Sprintf(`{"path": "%s", "actor": "%s", "operations": ["read", "write"]}`, path, actor)
-			session := RunCommand("curl", "-p", "/api/v2/permissions/" + uuid, "-X", "PUT", "-d", data)
+			session := RunCommand("curl", "-p", "/api/v2/permissions/"+uuid, "-X", "PUT", "-d", data)
 			Expect(session).Should(Exit(0))
 
 			var permission Permission
@@ -66,7 +66,7 @@ var _ = Describe("Permissions", func() {
 
 			Expect(permission).Should(Equal(
 				Permission{
-					Uuid:		uuid,
+					Uuid:       uuid,
 					Actor:      actor,
 					Path:       "/" + path,
 					Operations: []string{"read", "write"},
@@ -80,7 +80,7 @@ var _ = Describe("Permissions", func() {
 			var path = GenerateUniqueCredentialName()
 			var uuid = seedPermission(actor, path)
 
-			session := RunCommand("curl", "-p", "/api/v2/permissions/" + uuid, "-X", "PATCH", "-d", `{"operations": ["write_acl"]}`)
+			session := RunCommand("curl", "-p", "/api/v2/permissions/"+uuid, "-X", "PATCH", "-d", `{"operations": ["write_acl"]}`)
 			Expect(session).Should(Exit(0))
 			Expect(string(session.Out.Contents())).To(ContainSubstring(`"uuid": `))
 
@@ -90,7 +90,7 @@ var _ = Describe("Permissions", func() {
 
 			Expect(permission).Should(Equal(
 				Permission{
-					Uuid:		uuid,
+					Uuid:       uuid,
 					Actor:      actor,
 					Path:       "/" + path,
 					Operations: []string{"write_acl"},

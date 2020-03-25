@@ -1,17 +1,18 @@
 package acceptance_test
 
 import (
+	"encoding/json"
+	"net/http"
+	"net/url"
+	"time"
+
 	"code.cloudfoundry.org/credhub-cli/credhub"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
-	"encoding/json"
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"net/http"
-	"net/url"
-	"time"
 )
 
 var _ = Describe("Certificates", func() {

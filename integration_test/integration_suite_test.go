@@ -1,9 +1,13 @@
 package integration_test
 
 import (
+	"errors"
+	"github.com/hashicorp/go-version"
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"path/filepath"
+	"regexp"
 	"runtime"
 	"testing"
 
@@ -54,8 +58,9 @@ var _ = AfterEach(func() {
 })
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("code.cloudfoundry.org/credhub-cli")
-	Expect(err).NotTo(HaveOccurred())
+	//path, err := Build("code.cloudfoundry.org/credhub-cli")
+	//Expect(err).NotTo(HaveOccurred())
+	path := filepath.Join(string(filepath.Separator), "Users", "pivotal", "workspace", "credhub-cli", "build", "credhub")
 
 	return []byte(path)
 }, func(data []byte) {
@@ -67,3 +72,22 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 var _ = SynchronizedAfterSuite(func() {}, func() {
 	CleanupBuildArtifacts()
 })
+
+func getServerVersion() (*version.Version, error) {
+	session := RunCommand("--version")
+	if session.ExitCode() != 0 {
+		return nil, errors.New(string(session.Err.Contents()))
+	}
+
+	r := regexp.MustCompile(`Server Version: (\d+\.\d+\.\d+)`)
+	matches := r.FindSubmatch(session.Out.Contents())
+	if len(matches) < 2 {
+		return nil, errors.New("failed to find semver version for credhub server")
+	}
+	v, err := version.NewVersion(string(matches[1]))
+	if err != nil {
+		return nil, err
+	}
+
+	return v, nil
+}
