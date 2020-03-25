@@ -1,6 +1,7 @@
 package integration_test
 
 import (
+	"encoding/json"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"github.com/hashicorp/go-version"
 	. "github.com/onsi/ginkgo"
@@ -37,6 +38,57 @@ metadata:
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: value`))
 		Expect(stdOut).NotTo(ContainSubstring("metadata:"))
+	})
+
+	By("getting a secret with metadata", func() {
+		session := RunCommand("get", "-n", credentialName1)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring(`value: FAKE-CREDENTIAL-VALUE`))
+		Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: metadata
+`))
+	})
+
+	By("getting a secret with metadata with --output-json flag", func() {
+		session := RunCommand("get", "-n", credentialName1, "--output-json")
+		Eventually(session).Should(Exit(0))
+
+		var output map[string]interface{}
+		err = json.Unmarshal(session.Out.Contents(), &output)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName1))
+		Expect(output).To(HaveKeyWithValue("type", "value"))
+		Expect(output).To(HaveKeyWithValue("value", "FAKE-CREDENTIAL-VALUE"))
+		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "metadata"}))
+	})
+
+	By("getting a secret without metadata", func() {
+		session := RunCommand("get", "-n", credentialName2)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring(`value: FAKE-CREDENTIAL-VALUE`))
+		Expect(stdOut).ToNot(ContainSubstring(`metadata:`))
+	})
+
+	By("getting a secret without metadata with --output-json flag", func() {
+		session := RunCommand("get", "-n", credentialName2, "--output-json")
+		Eventually(session).Should(Exit(0))
+
+		var output map[string]interface{}
+		err = json.Unmarshal(session.Out.Contents(), &output)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
+		Expect(output).To(HaveKeyWithValue("type", "value"))
+		Expect(output).To(HaveKeyWithValue("value", "FAKE-CREDENTIAL-VALUE"))
+		Expect(output).To(HaveKeyWithValue("metadata", BeNil()))
 	})
 
 	By("deleting the secrets", func() {
