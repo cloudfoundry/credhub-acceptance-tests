@@ -9,6 +9,94 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
+var _ = It("should generate a new secret with and without metadata", func() {
+	supported, err := serverSupportsMetadata()
+	Expect(err).NotTo(HaveOccurred())
+	if !supported {
+		Skip("Server does not support metadata")
+	}
+
+	credentialName1 := GenerateUniqueCredentialName() + "-with-metadata"
+	credentialName2 := GenerateUniqueCredentialName() + "-without-metadata"
+
+	By("generating a new secret with metadata", func() {
+		session := RunCommand("generate", "-n", credentialName1, "-t", "password", "--metadata", `{"some":"metadata"}`)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: password`))
+		Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: metadata
+`))
+	})
+
+	By("setting a new secret without metadata", func() {
+		session := RunCommand("generate", "-n", credentialName2, "-t", "password")
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: password`))
+		Expect(stdOut).NotTo(ContainSubstring("metadata:"))
+	})
+
+	By("getting a secret with metadata", func() {
+		session := RunCommand("get", "-n", credentialName1)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: password`))
+		Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: metadata
+`))
+	})
+
+	By("getting a secret with metadata with --output-json flag", func() {
+		session := RunCommand("get", "-n", credentialName1, "--output-json")
+		Eventually(session).Should(Exit(0))
+
+		var output map[string]interface{}
+		err = json.Unmarshal(session.Out.Contents(), &output)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName1))
+		Expect(output).To(HaveKeyWithValue("type", "password"))
+		Expect(output["value"]).ToNot(BeEmpty())
+		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "metadata"}))
+	})
+
+	By("getting a secret without metadata", func() {
+		session := RunCommand("get", "-n", credentialName2)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`type: password`))
+		Expect(stdOut).ToNot(ContainSubstring(`metadata:`))
+	})
+
+	By("getting a secret without metadata with --output-json flag", func() {
+		session := RunCommand("get", "-n", credentialName2, "--output-json")
+		Eventually(session).Should(Exit(0))
+
+		var output map[string]interface{}
+		err = json.Unmarshal(session.Out.Contents(), &output)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
+		Expect(output).To(HaveKeyWithValue("type", "password"))
+		Expect(output["value"]).ToNot(BeEmpty())
+		Expect(output).To(HaveKeyWithValue("metadata", BeNil()))
+	})
+
+	By("deleting the secrets", func() {
+		session := RunCommand("delete", "-n", credentialName1)
+		Eventually(session).Should(Exit(0))
+		session = RunCommand("delete", "-n", credentialName2)
+		Eventually(session).Should(Exit(0))
+	})
+})
+
 var _ = It("should set a new secret with and without metadata", func() {
 	supported, err := serverSupportsMetadata()
 	Expect(err).NotTo(HaveOccurred())
