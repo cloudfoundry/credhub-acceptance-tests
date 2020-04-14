@@ -19,12 +19,25 @@ type Permission struct {
 var _ = Describe("Permissions", func() {
 
 	Context("get permissions v2", func() {
-		It("returns a NOT IMPLEMENTED error", func() {
-			session := RunCommand("curl", "-p", "/api/v2/permissions?path=some-path&actor=some-actor")
+		It("returns the permission", func() {
+			actor := "some-actor"
+			path := "some-path"
+			seedPermission(actor, path)
+
+			session := RunCommand("curl", "-p", fmt.Sprintf("/api/v2/permissions?path=%s&actor=%s", path, actor))
 			Expect(session).Should(Exit(0))
 
-			stdOut := string(session.Out.Contents())
-			Expect(stdOut).To(ContainSubstring("This resource has not been implemented for this backend."))
+			var permission Permission
+			err := json.Unmarshal(session.Out.Contents(), &permission)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(permission).Should(Equal(
+				Permission{
+					Uuid:       permission.Uuid,
+					Actor:      actor,
+					Path:       path,
+					Operations: []string{"read", "write", "read_acl"},
+				}))
 		})
 	})
 
