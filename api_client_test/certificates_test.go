@@ -109,7 +109,7 @@ var _ = Describe("Certificates", func() {
 			requestBody := map[string]interface{}{
 				"version": "latest",
 			}
-			pathString := fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", cert.Id )
+			pathString := fmt.Sprintf("/api/v1/certificates/%s/update_transitional_version", cert.Id)
 			_, err = credhubClient.Request(http.MethodPut, pathString, nil, requestBody, true)
 			Expect(err).ToNot(HaveOccurred())
 
@@ -131,7 +131,6 @@ var _ = Describe("Certificates", func() {
 
 			Expect(actual.Versions[0].Transitional).To(BeTrue())
 			Expect(actual.Versions[1].Transitional).To(BeFalse())
-
 
 		})
 	})

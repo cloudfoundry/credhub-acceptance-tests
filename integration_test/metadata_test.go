@@ -60,7 +60,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName1))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName1))
 		Expect(output).To(HaveKeyWithValue("type", "password"))
 		Expect(output["value"]).ToNot(BeEmpty())
 		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "metadata"}))
@@ -83,7 +83,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName2))
 		Expect(output).To(HaveKeyWithValue("type", "password"))
 		Expect(output["value"]).ToNot(BeEmpty())
 		Expect(output).To(HaveKeyWithValue("metadata", BeNil()))
@@ -149,7 +149,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName1))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName1))
 		Expect(output).To(HaveKeyWithValue("type", "value"))
 		Expect(output).To(HaveKeyWithValue("value", "FAKE-CREDENTIAL-VALUE"))
 		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "metadata"}))
@@ -173,7 +173,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName2))
 		Expect(output).To(HaveKeyWithValue("type", "value"))
 		Expect(output).To(HaveKeyWithValue("value", "FAKE-CREDENTIAL-VALUE"))
 		Expect(output).To(HaveKeyWithValue("metadata", BeNil()))

@@ -1,4 +1,4 @@
-package integration
+package integration_test
 
 import (
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
@@ -143,6 +143,142 @@ var _ = Describe("Import test", func() {
 		})
 	})
 
+	Describe("when the credentials have metadata", func() {
+		BeforeEach(func() {
+			supported, err := serverSupportsMetadata()
+			Expect(err).NotTo(HaveOccurred())
+			if !supported {
+				Skip("Server does not support metadata")
+			}
+		})
+
+		It("should import credentials from a file", func() {
+			session = RunCommand("import", "-f", "../test_helpers/bulk_import_set_with_metadata.yml")
+			Eventually(session).Should(Exit(0))
+
+			session = RunCommand("get", "-n", "/director/deployment/blobstore-agent1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut := string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-agent1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: password`))
+			Expect(stdOut).To(ContainSubstring(`value: gx4ll8193j5rw0wljgqo`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: metadata`))
+
+			session = RunCommand("get", "-n", "/director/deployment/blobstore-director1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/blobstore-director1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: value`))
+			Expect(stdOut).To(ContainSubstring(`value: y14ck84ef51dnchgk4kp`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some:
+  - different
+  - metadata`))
+
+			session = RunCommand("get", "-n", "/director/deployment/bosh-ca1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/bosh-ca1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: certificate`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some:
+    object:
+      with: data`))
+
+			session = RunCommand("get", "-n", "/director/deployment/bosh-cert1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/bosh-cert1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: certificate`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN CERTIFICATE-----`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some:
+    object:
+    - with
+    - an
+    - array`))
+
+			session = RunCommand("get", "-n", "/director/deployment/ssh-cred1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/ssh-cred1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: ssh`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`ssh-rsa`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  top:
+    one: foo
+    two: bar`))
+
+			session = RunCommand("get", "-n", "/director/deployment/rsa-cred1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/rsa-cred1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: rsa`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN PUBLIC KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: thing`))
+
+			session = RunCommand("get", "-n", "/director/deployment/user1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/user1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: user`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`password: lGcaYF31nJNCii53OkNhtjo9tXJ3kf`))
+			Expect(stdOut).To(ContainSubstring(`username: dan-user1`))
+			Expect(stdOut).To(ContainSubstring(`password_hash:`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: thing`))
+
+			session = RunCommand("get", "-n", "/director/deployment/json1-with-metadata")
+			Eventually(session).Should(Exit(0))
+			stdOut = string(session.Out.Contents())
+			Expect(stdOut).To(ContainSubstring(`name: /director/deployment/json1-with-metadata`))
+			Expect(stdOut).To(ContainSubstring(`type: json`))
+			Expect(stdOut).To(ContainSubstring(`value:`))
+			Expect(stdOut).To(ContainSubstring(`trump:`))
+			Expect(stdOut).To(ContainSubstring(`tweet:`))
+			Expect(stdOut).To(ContainSubstring(`- covfefe`))
+			Expect(stdOut).To(ContainSubstring(`- covfefe`))
+			Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: thing`))
+
+			credentialNamesSet = []string{
+				"/director/deployment/blobstore-agent1-with-metadata",
+				"/director/deployment/blobstore-director1-with-metadata",
+				"/director/deployment/bosh-ca1-with-metadata",
+				"/director/deployment/bosh-cert1-with-metadata",
+				"/director/deployment/ssh-cred1-with-metadata",
+				"/director/deployment/rsa-cred1-with-metadata",
+				"/director/deployment/user1-with-metadata",
+				"/director/deployment/json1-with-metadata",
+			}
+
+			for _, credentialName := range credentialNamesSet {
+				session = RunCommand("delete", "-n", credentialName)
+				Eventually(session).Should(Exit(0))
+
+			}
+		})
+	})
 })
 
 func beforeGet() {
