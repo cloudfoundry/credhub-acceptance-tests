@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20200324214405-ac05c865fc73
+# code.cloudfoundry.org/credhub-cli v0.0.0-20200410234148-25e8a8564144
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
 code.cloudfoundry.org/credhub-cli/credhub/auth/uaa
@@ -56,7 +56,7 @@ github.com/onsi/gomega/matchers/support/goraph/util
 github.com/onsi/gomega/types
 # github.com/satori/go.uuid v1.2.0
 github.com/satori/go.uuid
-# golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59
+# golang.org/x/crypto v0.0.0-20200406173513-056763e48d71
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
@@ -73,7 +73,7 @@ golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
+# golang.org/x/sys v0.0.0-20200413165638-669c56c373c4
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
