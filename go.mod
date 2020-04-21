@@ -3,14 +3,14 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.13
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20200410234148-25e8a8564144
+	code.cloudfoundry.org/credhub-cli v0.0.0-20200414234853-13b358379ad9
 	github.com/bmatcuk/doublestar v1.2.4 // indirect
-	github.com/cloudfoundry/bosh-utils v0.0.0-20200411100146-5c26b9eaff73 // indirect
+	github.com/cloudfoundry/bosh-utils v0.0.0-20200418100158-672b7b9a163a // indirect
 	github.com/hashicorp/go-version v1.2.0
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
 	github.com/satori/go.uuid v1.2.0
-	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
-	golang.org/x/sys v0.0.0-20200413165638-669c56c373c4 // indirect
+	golang.org/x/crypto v0.0.0-20200420201142-3c4aac89819a // indirect
+	golang.org/x/sys v0.0.0-20200420163511-1957bb5e6d1f // indirect
 	gopkg.in/yaml.v2 v2.2.8
 )
