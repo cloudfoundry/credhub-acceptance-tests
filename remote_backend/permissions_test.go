@@ -102,7 +102,7 @@ var _ = Describe("Permissions", func() {
 				Permission{
 					Uuid:       uuid,
 					Actor:      actor,
-					Path:       "/" + path,
+					Path:       path,
 					Operations: []string{"write_acl"},
 				}))
 		})
