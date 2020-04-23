@@ -17,11 +17,14 @@ type Permission struct {
 }
 
 var _ = Describe("Permissions", func() {
+	var path, actor string
+	BeforeEach(func() {
+		actor = "some-actor"
+		path = "/" + GenerateUniqueCredentialName()
+	})
 
 	Context("get permissions v2", func() {
 		It("returns the permission", func() {
-			actor := "some-actor"
-			path := "some-path"
 			seedPermission(actor, path)
 
 			session := RunCommand("curl", "-p", fmt.Sprintf("/api/v2/permissions?path=%s&actor=%s", path, actor))
@@ -35,7 +38,7 @@ var _ = Describe("Permissions", func() {
 				Permission{
 					Uuid:       permission.Uuid,
 					Actor:      actor,
-					Path:       "/" + path,
+					Path:       path,
 					Operations: []string{"read", "write", "read_acl"},
 				}))
 		})
@@ -43,8 +46,6 @@ var _ = Describe("Permissions", func() {
 
 	Context("post permissions v2", func() {
 		It("creates and returns the permission", func() {
-			var actor = "some-actor"
-			var path = "/some-path"
 			var data = fmt.Sprintf(`{"path": "%s", "actor": "%s", "operations": ["read", "write"]}`, path, actor)
 			session := RunCommand("curl", "-p", "/api/v2/permissions", "-X", "POST", "-d", data)
 			Expect(session).Should(Exit(0))
@@ -65,8 +66,6 @@ var _ = Describe("Permissions", func() {
 
 	Context("put permissions v2", func() {
 		It("updates (overwrite) the operations and returns the permission", func() {
-			var actor = "some-actor"
-			var path = GenerateUniqueCredentialName()
 			var uuid = seedPermission(actor, path)
 
 			var data = fmt.Sprintf(`{"path": "%s", "actor": "%s", "operations": ["read", "write"]}`, path, actor)
@@ -81,7 +80,7 @@ var _ = Describe("Permissions", func() {
 				Permission{
 					Uuid:       uuid,
 					Actor:      actor,
-					Path:       "/" + path,
+					Path:       path,
 					Operations: []string{"read", "write"},
 				}))
 		})
@@ -89,8 +88,6 @@ var _ = Describe("Permissions", func() {
 
 	Context("patch permissions v2", func() {
 		It("updates the operations and returns the permission", func() {
-			var actor = "some-actor"
-			var path = GenerateUniqueCredentialName()
 			var uuid = seedPermission(actor, path)
 
 			session := RunCommand("curl", "-p", "/api/v2/permissions/"+uuid, "-X", "PATCH", "-d", `{"operations": ["write_acl"]}`)
