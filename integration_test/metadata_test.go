@@ -157,7 +157,10 @@ metadata:
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: password`))
-		Expect(stdOut).NotTo(ContainSubstring("metadata:"))
+		Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: other-metadata
+`))
 	})
 
 	By("getting a regenerated secret without metadata", func() {
@@ -166,7 +169,10 @@ metadata:
 
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring(`type: password`))
-		Expect(stdOut).ToNot(ContainSubstring(`metadata:`))
+		Expect(stdOut).To(ContainSubstring(`
+metadata:
+  some: other-metadata
+`))
 	})
 
 	By("getting a regenerated secret without metadata with --output-json flag", func() {
@@ -180,7 +186,7 @@ metadata:
 		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
 		Expect(output).To(HaveKeyWithValue("type", "password"))
 		Expect(output["value"]).ToNot(BeEmpty())
-		Expect(output).To(HaveKeyWithValue("metadata", BeNil()))
+		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "other-metadata"}))
 	})
 
 	By("deleting the secrets", func() {
