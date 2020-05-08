@@ -3,6 +3,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20200410234148-25e8a8564144 h1:YsOkIji6
 code.cloudfoundry.org/credhub-cli v0.0.0-20200410234148-25e8a8564144/go.mod h1:hQKbB3hUY0lv5NHVbaKW3+JPa/j8yoMWIAnKXi8KMJc=
 code.cloudfoundry.org/credhub-cli v0.0.0-20200414234853-13b358379ad9 h1:TomkQdvmNS0mkhyGqCW0veKXKmf8B5U2AZOlTtCBbOA=
 code.cloudfoundry.org/credhub-cli v0.0.0-20200414234853-13b358379ad9/go.mod h1:hQKbB3hUY0lv5NHVbaKW3+JPa/j8yoMWIAnKXi8KMJc=
+code.cloudfoundry.org/credhub-cli v0.0.0-20200507225243-a4efefe38b55 h1:K26XxZd+4r/l2mhiEzHjq+L+v6mWBtszEoTwBOD59WY=
+code.cloudfoundry.org/credhub-cli v0.0.0-20200507225243-a4efefe38b55/go.mod h1:hQKbB3hUY0lv5NHVbaKW3+JPa/j8yoMWIAnKXi8KMJc=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/bmatcuk/doublestar v1.2.2 h1:oC24CykoSAB8zd7XgruHo33E0cHJf/WhQA/7BeXj+x0=
 github.com/bmatcuk/doublestar v1.2.2/go.mod h1:wiQtGV+rzVYxB7WIlirSN++5HPtPlXEo9MEoZQC/PmE=

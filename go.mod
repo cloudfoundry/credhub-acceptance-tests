@@ -3,7 +3,7 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.13
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20200414234853-13b358379ad9
+	code.cloudfoundry.org/credhub-cli v0.0.0-20200507225243-a4efefe38b55
 	github.com/bmatcuk/doublestar v1.2.4 // indirect
 	github.com/cloudfoundry/bosh-utils v0.0.0-20200418100158-672b7b9a163a // indirect
 	github.com/hashicorp/go-version v1.2.0
