@@ -6,7 +6,7 @@ require (
 	code.cloudfoundry.org/credhub-cli v0.0.0-20200324214405-ac05c865fc73
 	github.com/cloudfoundry/bosh-utils v0.0.0-20200324215632-954ff07a1b7b // indirect
 	github.com/hashicorp/go-version v1.2.0
-	github.com/onsi/ginkgo v1.12.0
+	github.com/onsi/ginkgo v1.12.1
 	github.com/onsi/gomega v1.10.0
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
