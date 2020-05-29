@@ -2,9 +2,13 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20200319180401-5f498e39769e h1:O4vplxgH
 code.cloudfoundry.org/credhub-cli v0.0.0-20200319180401-5f498e39769e/go.mod h1:zIMcgq1w0Pg/CBGkuKX2wSWirFVyjo2Ey23mbgJRCqI=
 code.cloudfoundry.org/credhub-cli v0.0.0-20200324214405-ac05c865fc73 h1:FC1xM6CJAaOrL2D/UjsKHhDKTVWyhw1rRAoEjsg6CXw=
 code.cloudfoundry.org/credhub-cli v0.0.0-20200324214405-ac05c865fc73/go.mod h1:hQKbB3hUY0lv5NHVbaKW3+JPa/j8yoMWIAnKXi8KMJc=
+code.cloudfoundry.org/credhub-cli v0.0.0-20200529191821-d04e9e5a86fa h1:jXQk6i0VLx/BZP59bBpuFzvzyVLFz/v9yauFzSSGBuY=
+code.cloudfoundry.org/credhub-cli v0.0.0-20200529191821-d04e9e5a86fa/go.mod h1:WcOPv9GuQKvP/onN1Pp+KfuErEFj7I1GYrtcx55e8c4=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/bmatcuk/doublestar v1.2.2 h1:oC24CykoSAB8zd7XgruHo33E0cHJf/WhQA/7BeXj+x0=
 github.com/bmatcuk/doublestar v1.2.2/go.mod h1:wiQtGV+rzVYxB7WIlirSN++5HPtPlXEo9MEoZQC/PmE=
+github.com/bmatcuk/doublestar v1.3.0 h1:1jLE2y0VpSrOn/QR9G4f2RmrCtkM3AuATcWradjHUvM=
+github.com/bmatcuk/doublestar v1.3.0/go.mod h1:wiQtGV+rzVYxB7WIlirSN++5HPtPlXEo9MEoZQC/PmE=
 github.com/charlievieth/fs v0.0.0-20170613215519-7dc373669fa1 h1:vTlpHKxJqykyKdW9bkrDJNWeKNuSIAJ0TP/K4lRsz/Q=
 github.com/charlievieth/fs v0.0.0-20170613215519-7dc373669fa1/go.mod h1:sAoA1zHCH4FJPE2gne5iBiiVG66U7Nyp6JqlOo+FEyg=
 github.com/cloudfoundry/bosh-cli v6.2.1+incompatible h1:pkQSRxwpiVhyDmq+zA4fUW6BK65gKoS+aLNTpuxoxnw=
@@ -13,6 +17,8 @@ github.com/cloudfoundry/bosh-utils v0.0.0-20200229100151-19776694af99 h1:4dWnQPe
 github.com/cloudfoundry/bosh-utils v0.0.0-20200229100151-19776694af99/go.mod h1:JCrKwetZGjxbfq1U139TZuXDBfdGLtjOEAfxMWKV/QM=
 github.com/cloudfoundry/bosh-utils v0.0.0-20200324215632-954ff07a1b7b h1:/1A7oO46qEyCKNzqAfK+rZH7gHXBK20VlYTmY6kuJm4=
 github.com/cloudfoundry/bosh-utils v0.0.0-20200324215632-954ff07a1b7b/go.mod h1:JCrKwetZGjxbfq1U139TZuXDBfdGLtjOEAfxMWKV/QM=
+github.com/cloudfoundry/bosh-utils v0.0.0-20200523100214-5ed3e9b4c9de h1:Yxm369MKphVL9dpWb9wdcKVgecj4E5y9+nX0KlDYxi4=
+github.com/cloudfoundry/bosh-utils v0.0.0-20200523100214-5ed3e9b4c9de/go.mod h1:JCrKwetZGjxbfq1U139TZuXDBfdGLtjOEAfxMWKV/QM=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.0 h1:ZRXcJxUqOyKmah+ytXh52K7m7S7SyuBacDUnd2g0ihU=
@@ -89,6 +95,8 @@ golang.org/x/crypto v0.0.0-20200317142112-1b76d66859c6 h1:TjszyFsQsyZNHwdVdZ5m7b
 golang.org/x/crypto v0.0.0-20200317142112-1b76d66859c6/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59 h1:3zb4D3T4G8jdExgVU/95+vQXfpEPiMdCaZgmGVxjNHM=
 golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
+golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37 h1:cg5LA/zNPRzIXIWSCxQW10Rvpy94aQh3LT/ShoCpkHw=
+golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd h1:nTDtHvHSdCn1m6ITfMRqtOd/9+7a3s8RBNOZ3eYZzJA=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
