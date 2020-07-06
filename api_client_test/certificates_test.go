@@ -1,7 +1,9 @@
 package acceptance_test
 
 import (
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"net/http"
 	"net/url"
 	"time"
@@ -132,6 +134,98 @@ var _ = Describe("Certificates", func() {
 			Expect(actual.Versions[0].Transitional).To(BeTrue())
 			Expect(actual.Versions[1].Transitional).To(BeFalse())
 
+		})
+	})
+
+	Describe("regenerate allow_transitional_parent_to_sign is present", func() {
+		When("transitional version is latest", func() {
+			It("can sign certificates with a transitional version", func() {
+				//setup ca generation
+				caName := testCredentialPath(time.Now().UnixNano(), "some-ca")
+				caGenerationParams := generate.Certificate{
+					CommonName: "some-ca",
+					SelfSign:   true,
+					IsCA:       true,
+				}
+
+				//generate a ca
+				_, err := credhubClient.GenerateCertificate(caName, caGenerationParams, credhub.Overwrite)
+				Expect(err).ToNot(HaveOccurred())
+
+				//setup leaf generation
+				certName := testCredentialPath(time.Now().UnixNano(), "some-cert")
+				certGenerationParams := generate.Certificate{
+					CommonName: "some-cert",
+					Ca:   caName,
+				}
+
+				//generate a leaf
+				_, err = credhubClient.GenerateCertificate(certName, certGenerationParams, credhub.Overwrite)
+				Expect(err).ToNot(HaveOccurred())
+
+				//get certificate ids
+				data, err := credhubClient.Request(http.MethodGet, "/api/v1/certificates/", nil, nil, true)
+				Expect(err).ToNot(HaveOccurred())
+
+				dec := json.NewDecoder(data.Body)
+				response := make(map[string][]credentials.CertificateMetadata)
+
+				err = dec.Decode(&response)
+				Expect(err).ToNot(HaveOccurred())
+
+				ids := map[string]string{}
+				metadataArray, _ := response["certificates"]
+				for _, item := range metadataArray {
+					ids[item.Name] = item.Id
+				}
+
+				//regenerate ca, setting as transitional
+				requestBody := map[string]interface{}{
+					"set_as_transitional": true,
+				}
+				pathString := fmt.Sprintf("/api/v1/certificates/%s/regenerate", ids[caName])
+				r, err := credhubClient.Request(http.MethodPost, pathString, nil, requestBody, true)
+				Expect(err).ToNot(HaveOccurred())
+
+				var regeneratedCa credentials.Certificate
+				dec = json.NewDecoder(r.Body)
+
+				err = dec.Decode(&regeneratedCa)
+				Expect(err).ToNot(HaveOccurred())
+
+
+				regeneratedCaPem := fmt.Sprintf("%v", regeneratedCa.Value.Certificate)
+
+				//regenerate leaf, using allow_transitional_parent_to_sign
+				requestBody = map[string]interface{}{
+					"allow_transitional_parent_to_sign": true,
+				}
+				pathString = fmt.Sprintf("/api/v1/certificates/%s/regenerate", ids[certName])
+				r, err = credhubClient.Request(http.MethodPost, pathString, nil, requestBody, true)
+				Expect(err).ToNot(HaveOccurred())
+
+				var regeneratedCert credentials.Certificate
+				dec = json.NewDecoder(r.Body)
+
+				err = dec.Decode(&regeneratedCert)
+				Expect(err).ToNot(HaveOccurred())
+				regeneratedCertPem := fmt.Sprintf("%v", regeneratedCert.Value.Certificate)
+
+
+				//check if transitional ca version signs cert
+				decodedCa, _ := pem.Decode([]byte(regeneratedCaPem))
+				parsedCa, err := x509.ParseCertificate(decodedCa.Bytes)
+				Expect(err).ToNot(HaveOccurred())
+				pool := x509.NewCertPool()
+				pool.AddCert(parsedCa)
+
+				decodedCert, _ := pem.Decode([]byte(regeneratedCertPem))
+				parsedCert, err := x509.ParseCertificate(decodedCert.Bytes)
+				Expect(err).ToNot(HaveOccurred())
+				_, err = parsedCert.Verify(x509.VerifyOptions{Roots: pool})
+				Expect(err).ToNot(HaveOccurred())
+
+			})
 		})
 	})
 })
