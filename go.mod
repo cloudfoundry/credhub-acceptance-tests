@@ -10,7 +10,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sclevine/agouti v3.0.0+incompatible // indirect
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
-	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
+	golang.org/x/sys v0.0.0-20200724161237-0e2f3a69832c // indirect
 	golang.org/x/text v0.3.3 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )
