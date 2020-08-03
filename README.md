@@ -40,6 +40,10 @@ Runs local CredHub testing via:
 ./scripts/run_tests.sh
 ```
 
+To run with a locally built credhub-cli you can replace the build step in 
+[the before suite](https://github.com/cloudfoundry-incubator/credhub-acceptance-tests/blob/main/integration_test/integration_suite_test.go#L59)
+with the path to your CLI.
+
 ### Run Application Smoke Tests
 
 Target your desired environment:
