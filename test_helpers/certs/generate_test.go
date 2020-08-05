@@ -13,6 +13,9 @@ import (
 )
 
 var _ = Describe("Generate", func() {
+
+	const THRESHOLD = 2 * time.Minute
+
 	Describe("GenerateSelfSigned", func() {
 		It("generates a valid self-signed certificate", func() {
 			certBytes, keyBytes, err := GenerateSelfSigned(CertOptions{})
@@ -66,8 +69,8 @@ var _ = Describe("Generate", func() {
 
 				cert := parseCert(certBytes, keyBytes)
 				Expect(cert).To(BeValidSelfSignedCert())
-				Expect(cert.NotBefore).To(BeTemporally("~", now, time.Minute))
-				Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysFromNow, time.Minute))
+				Expect(cert.NotBefore).To(BeTemporally("~", now, THRESHOLD))
+				Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysFromNow, THRESHOLD))
 			})
 
 			Context("given only NotBefore", func() {
@@ -81,8 +84,8 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(BeValidSelfSignedCert())
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysLater, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysLater, THRESHOLD))
 				})
 			})
 
@@ -97,8 +100,8 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(BeValidSelfSignedCert())
-					Expect(cert.NotBefore).To(BeTemporally("~", now, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", now, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
@@ -113,8 +116,8 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(BeValidSelfSignedCert())
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
@@ -128,7 +131,7 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 				})
 			})
 
@@ -143,8 +146,8 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
@@ -213,8 +216,8 @@ var _ = Describe("Generate", func() {
 				Expect(err).NotTo(HaveOccurred())
 
 				cert := parseCert(certBytes, keyBytes)
-				Expect(cert.NotBefore).To(BeTemporally("~", now, time.Minute))
-				Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysFromNow, time.Minute))
+				Expect(cert.NotBefore).To(BeTemporally("~", now, THRESHOLD))
+				Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysFromNow, THRESHOLD))
 			})
 
 			Context("given only NotBefore", func() {
@@ -227,8 +230,8 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysLater, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", thirtyDaysLater, THRESHOLD))
 				})
 			})
 
@@ -242,8 +245,8 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert.NotBefore).To(BeTemporally("~", now, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", now, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
@@ -257,8 +260,8 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
@@ -272,7 +275,7 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 				})
 			})
 
@@ -287,8 +290,8 @@ var _ = Describe("Generate", func() {
 
 					cert := parseCert(certBytes, keyBytes)
 					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
-					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, time.Minute))
-					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, time.Minute))
+					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
+					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
 			})
 
