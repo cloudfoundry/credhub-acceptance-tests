@@ -1,13 +1,14 @@
 package integration_test
 
 import (
+	"io/ioutil"
+	"os"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os"
 )
 
 var _ = Describe("Import/Export test", func() {
@@ -103,15 +104,15 @@ var _ = Describe("Import/Export test", func() {
 	})
 })
 
-	func getTrimmedCertificateForComparison(name string) map[string]interface{}{
-		session = RunCommand("get", "--name", name)
-		Expect(session).To(Exit(0))
+func getTrimmedCertificateForComparison(name string) map[string]interface{} {
+	session = RunCommand("get", "--name", name)
+	Expect(session).To(Exit(0))
 
-		certificate := make(map[string]interface{})
-		err := yaml.Unmarshal(session.Out.Contents(), certificate)
-		Expect(err).NotTo(HaveOccurred())
-		delete(certificate, "version_created_at")
-		delete(certificate, "id")
+	certificate := make(map[string]interface{})
+	err := yaml.Unmarshal(session.Out.Contents(), certificate)
+	Expect(err).NotTo(HaveOccurred())
+	delete(certificate, "version_created_at")
+	delete(certificate, "id")
 
-		return certificate
-	}
+	return certificate
+}
