@@ -12,11 +12,15 @@ See additional repos for more info:
 
 ### Get prerequisites
 
-Ensure that you have a local version of the CredHub CLI checked out in your $GOPATH
+Ensure that you have a local version of the CredHub CLI and ginkgo checked out in your $GOPATH
 
+Install the CredHub CLI
 ```sh
 go get code.cloudfoundry.org/credhub-cli
 ```
+
+To install ginkgo see [ginkgo installation](https://github.com/onsi/ginkgo#global-installation)
+
 
 ### Run Tests locally
 
