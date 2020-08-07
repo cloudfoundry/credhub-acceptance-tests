@@ -102,6 +102,61 @@ var _ = Describe("Import/Export test", func() {
 			Expect(getTrimmedCertificateForComparison(intermediateSignedLeafCredPath)).To(Equal(intermediateSignedLeaf))
 		})
 	})
+
+	When("Importing an export a self signed cert without a ca", func() {
+		const (
+			credentialRootPath = "/tobi"
+			selfSignedCertPath = credentialRootPath + "/bruce-self-cert"
+		)
+
+		var (
+			session    *Session
+			exportFile *os.File
+		)
+
+		BeforeEach(func() {
+			var err error
+			exportFile, err = ioutil.TempFile("", "export-data")
+			Expect(err).NotTo(HaveOccurred())
+
+			session = RunCommand("generate",
+				"--name", selfSignedCertPath,
+				"--type", "certificate",
+				"--self-sign",
+				"--common-name", "bruce-ca",
+			)
+			Expect(session).To(Exit(0))
+		})
+
+		AfterEach(func() {
+			session = RunCommand("delete",
+				"--path", credentialRootPath,
+			)
+			Expect(session).To(Exit(0))
+		})
+
+		It("should restore the exported credentials", func() {
+			selfSignedCert := getTrimmedCertificateForComparison(selfSignedCertPath)
+
+			session = RunCommand("export",
+				"--path", credentialRootPath,
+				"--file", exportFile.Name(),
+			)
+			Expect(session).To(Exit(0))
+
+			session = RunCommand("delete",
+				"--path", credentialRootPath,
+			)
+			Expect(session).To(Exit(0))
+
+			session = RunCommand("import",
+				"-f", exportFile.Name(),
+			)
+			Expect(session).To(Exit(0))
+
+			Expect(getTrimmedCertificateForComparison(selfSignedCertPath)).To(Equal(selfSignedCert))
+		})
+	})
 })
 
 func getTrimmedCertificateForComparison(name string) map[string]interface{} {
