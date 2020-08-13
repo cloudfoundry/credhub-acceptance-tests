@@ -20,22 +20,22 @@ var _ = Describe("Delete Test", func() {
 	})
 
 	It("should delete credentials by path", func() {
-		RunCommand("generate", "-n", "/a", "-t", "password")
-		RunCommand("generate", "-n", "/a/cred1", "-t", "password")
-		RunCommand("generate", "-n", "/a/b/cred2", "-t", "password")
-		RunCommand("generate", "-n", "/a/b/cred3", "-t", "password")
+		RunCommand("generate", "-n", "/a1", "-t", "password")
+		RunCommand("generate", "-n", "/a1/cred1", "-t", "password")
+		RunCommand("generate", "-n", "/a1/b/cred2", "-t", "password")
+		RunCommand("generate", "-n", "/a1/b/cred3", "-t", "password")
 
-		session := RunCommand("delete", "-p", "/a")
+		session := RunCommand("delete", "-p", "/a1")
 		Eventually(session).Should(Exit(0))
 
-		session = RunCommand("find", "-p", "/a")
+		session = RunCommand("find", "-p", "/a1")
 		Eventually(session).Should(Exit(0))
 		stdOut := string(session.Out.Contents())
 		Expect(stdOut).To(ContainSubstring("credentials: []"))
 
-		session = RunCommand("get", "-n", "/a")
+		session = RunCommand("get", "-n", "/a1")
 		Eventually(session).Should(Exit(0))
 		stdOut = string(session.Out.Contents())
-		Expect(stdOut).To(ContainSubstring("/a"))
+		Expect(stdOut).To(ContainSubstring("/a1"))
 	})
 })
