@@ -287,6 +287,56 @@ metadata:
 	})
 })
 
+var _ = It("should export secrets with and without metadata", func() {
+	supported, err := serverSupportsMetadata()
+	Expect(err).NotTo(HaveOccurred())
+	if !supported {
+		Skip("Server does not support metadata")
+	}
+
+	credentialPathWithMetadata := "/" + GenerateUniqueCredentialName()
+	credentialNameWithMetadata := credentialPathWithMetadata + "/" + "secret-with-metadata"
+
+	credentialPathWithoutMetadata := "/" + GenerateUniqueCredentialName()
+	credentialNameWithoutMetadata := credentialPathWithoutMetadata + "/" + "secret-without-metadata"
+
+	By("setting a secret with metadata & a secret without metadata", func() {
+		session := RunCommand("set", "-n", credentialNameWithMetadata, "-t", "value", "-v", credentialValue, "--metadata", `{"some":"metadata"}`)
+		Eventually(session).Should(Exit(0))
+		session = RunCommand("set", "-n", credentialNameWithoutMetadata, "-t", "value", "-v", credentialValue)
+		Eventually(session).Should(Exit(0))
+	})
+
+	By("exporting a secret with metadata", func() {
+		session := RunCommand("export", "-p", credentialPathWithMetadata)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: ` + credentialNameWithMetadata))
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring(`value: FAKE-CREDENTIAL-VALUE`))
+		Expect(stdOut).To(ContainSubstring(`some: metadata`))
+	})
+
+	By("exporting a secret without metadata", func() {
+		session := RunCommand("export", "-p", credentialPathWithoutMetadata)
+		Eventually(session).Should(Exit(0))
+
+		stdOut := string(session.Out.Contents())
+		Expect(stdOut).To(ContainSubstring(`name: ` + credentialNameWithoutMetadata))
+		Expect(stdOut).To(ContainSubstring(`type: value`))
+		Expect(stdOut).To(ContainSubstring(`value: FAKE-CREDENTIAL-VALUE`))
+		Expect(stdOut).ToNot(ContainSubstring(`metadata:`))
+	})
+
+	By("deleting the secrets", func() {
+		session := RunCommand("delete", "-n", credentialNameWithMetadata)
+		Eventually(session).Should(Exit(0))
+		session = RunCommand("delete", "-n", credentialNameWithoutMetadata)
+		Eventually(session).Should(Exit(0))
+	})
+})
+
 func serverSupportsMetadata() (bool, error) {
 	serverVersion, err := getServerVersion()
 	if err != nil {
