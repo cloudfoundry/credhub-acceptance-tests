@@ -380,7 +380,7 @@ var _ = Describe("Certificates Test", func() {
 					stdErr := strings.TrimSpace(string(session.Err.Contents()))
 
 					Eventually(session).Should(Exit(1))
-					Expect(stdErr).To(Equal("Private key is malformed. Key file does not contain an RSA private key"))
+					Expect(stdErr).To(ContainSubstring("Private key is malformed. Key file does not contain an RSA private key"))
 				})
 			})
 			Context("and is encrypted", func() {
