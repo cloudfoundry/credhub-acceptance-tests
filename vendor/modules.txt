@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20200921130304-b45634d3ee6a
+# code.cloudfoundry.org/credhub-cli v0.0.0-20200930175000-72d615ae67bf
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
 code.cloudfoundry.org/credhub-cli/credhub/auth/uaa
@@ -16,7 +16,7 @@ github.com/cloudfoundry/socks5-proxy
 github.com/fsnotify/fsnotify
 # github.com/hashicorp/go-version v1.2.1
 github.com/hashicorp/go-version
-# github.com/nxadm/tail v1.4.4
+# github.com/nxadm/tail v1.4.5
 github.com/nxadm/tail
 github.com/nxadm/tail/ratelimiter
 github.com/nxadm/tail/util
@@ -59,7 +59,7 @@ github.com/onsi/gomega/matchers/support/goraph/util
 github.com/onsi/gomega/types
 # github.com/satori/go.uuid v1.2.0
 github.com/satori/go.uuid
-# golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
+# golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
@@ -69,14 +69,14 @@ golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/net v0.0.0-20200927032502-5d4f70055728
+# golang.org/x/net v0.0.0-20201002202402-0a1ea396d57c
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20200926100807-9d91bd62050c
+# golang.org/x/sys v0.0.0-20201005065044-765f4ea38db3
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
