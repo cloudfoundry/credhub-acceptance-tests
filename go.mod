@@ -3,8 +3,8 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.13
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20210607130052-abbb2d467415
-	github.com/cloudfoundry/socks5-proxy v0.2.10 // indirect
+	code.cloudfoundry.org/credhub-cli v0.0.0-20210614130208-dea841135fa5
+	github.com/cloudfoundry/socks5-proxy v0.2.11 // indirect
 	github.com/hashicorp/go-version v1.3.0
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/onsi/ginkgo v1.16.4
