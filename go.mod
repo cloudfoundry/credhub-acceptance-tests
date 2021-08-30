@@ -4,8 +4,8 @@ go 1.13
 
 require (
 	code.cloudfoundry.org/credhub-cli v0.0.0-20210802130126-03ba1c405d5e
-	github.com/cloudfoundry/socks5-proxy v0.2.17 // indirect
-	github.com/fsnotify/fsnotify v1.5.0 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.18 // indirect
+	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/hashicorp/go-version v1.3.0
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/onsi/ginkgo v1.16.4
