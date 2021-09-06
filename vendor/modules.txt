@@ -10,7 +10,7 @@ code.cloudfoundry.org/credhub-cli/credhub/server
 code.cloudfoundry.org/credhub-cli/errors
 # github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.18
+# github.com/cloudfoundry/socks5-proxy v0.2.19
 github.com/cloudfoundry/socks5-proxy
 # github.com/fsnotify/fsnotify v1.5.1
 github.com/fsnotify/fsnotify
@@ -68,14 +68,14 @@ golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/net v0.0.0-20210825183410-e898025ed96a
+# golang.org/x/net v0.0.0-20210903162142-ad29c8ab022f
 golang.org/x/net/context
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf
+# golang.org/x/sys v0.0.0-20210903071746-97244b99971b
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
