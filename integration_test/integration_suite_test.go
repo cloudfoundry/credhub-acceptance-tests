@@ -2,13 +2,14 @@ package integration_test
 
 import (
 	"errors"
-	"github.com/hashicorp/go-version"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"regexp"
 	"runtime"
 	"testing"
+
+	"github.com/hashicorp/go-version"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo"
@@ -57,7 +58,7 @@ var _ = AfterEach(func() {
 })
 
 var _ = SynchronizedBeforeSuite(func() []byte {
-	path, err := Build("code.cloudfoundry.org/credhub-cli")
+	path, err := Build("code.cloudfoundry.org/credhub-cli", "-mod=mod")
 	Expect(err).NotTo(HaveOccurred())
 
 	return []byte(path)
