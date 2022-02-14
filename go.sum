@@ -4,6 +4,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20220124140520-1d723f9b6f6d h1:spW2DiYS
 code.cloudfoundry.org/credhub-cli v0.0.0-20220124140520-1d723f9b6f6d/go.mod h1:XQEkQ1KHi273G+M5+jpo2+sx83awiOSKl6TpcZ1yO3A=
 code.cloudfoundry.org/credhub-cli v0.0.0-20220201010243-b54d23c700da h1:3lrPSegVLGfIxIhoZLoaMXynvm1BNsflt83wyfmM9E8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20220201010243-b54d23c700da/go.mod h1:0kYdf4zYQJLBOvY7ZQOV3W65gsJhv6Vevr/4Z9f4fPE=
+code.cloudfoundry.org/credhub-cli v0.0.0-20220207140324-8008a6e7081a h1:+xUbx4jvJyUMK9VvSGPX1P4l2aIzmgLKa1LZAJKw54k=
+code.cloudfoundry.org/credhub-cli v0.0.0-20220207140324-8008a6e7081a/go.mod h1:bMfUt02DN3QwzwuOUbIIaclBflQL4gaL7sf9HIQRSCw=
 code.cloudfoundry.org/tlsconfig v0.0.0-20211123175040-23cc9f05b6b3/go.mod h1:CKI5CV+3MlfcohVSuU3FxXubFyC52lYJGMLnZ2ltvks=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
@@ -21,6 +23,7 @@ github.com/cloudfoundry/bosh-cli v6.4.1+incompatible/go.mod h1:rzIB+e1sn7wQL/TJ5
 github.com/cloudfoundry/bosh-utils v0.0.298 h1:pA54X8+EEL0kK3d0/bFPu5nAsyVDaHP1+VkfiqPkpzQ=
 github.com/cloudfoundry/bosh-utils v0.0.298/go.mod h1:4mVIjtnzzkybUc1v8/LyR33o26lZpdGbJahL2RC+i1U=
 github.com/cloudfoundry/bosh-utils v0.0.299 h1:2DYjM1BGqO5ywIoA2qMUJHfoosMVp2HihyfYUK8hM9E=
+github.com/cloudfoundry/bosh-utils v0.0.300 h1:vMTTAJWMcP7dBlNSK8ArnvujxdcFvVs38T7ekcpiWi8=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.39/go.mod h1:IAPDihInS+lSkefG/s5ZAcFolZDj1dsPC2BBrvZ2V98=
@@ -28,6 +31,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.40 h1:zZSZgZm+i9bZ7tQQ9cVJIrDJhaTLdwAQ
 github.com/cloudfoundry/socks5-proxy v0.2.40/go.mod h1:Xi3F/V79R7l3MbcinbJnKKPHF9ty240c2Yrek25BZn4=
 github.com/cloudfoundry/socks5-proxy v0.2.41 h1:m8q2d+GG2QyjFyjPfUYPgmajrGTMMhQGURCBQpdd8m4=
 github.com/cloudfoundry/socks5-proxy v0.2.41/go.mod h1:KwdzI1jtNL/lO5AN4t9yyLzDYbitCm2VC2Pv1NaA8zk=
+github.com/cloudfoundry/socks5-proxy v0.2.42 h1:I0I8f9anB9if7RiryEcCO8Wf7lW4HkJc6vaSt9wUz0w=
+github.com/cloudfoundry/socks5-proxy v0.2.42/go.mod h1:1gC6GGeRLiLTruFJm6gy2EZibxnaS2ORYYqXtuW4vE4=
 github.com/cppforlife/go-patch v0.2.0 h1:Y14MnCQjDlbw7WXT4k+u6DPAA9XnygN4BfrSpI/19RU=
 github.com/cppforlife/go-patch v0.2.0/go.mod h1:67a7aIi94FHDZdoeGSJRRFDp66l9MhaAG1yGxpUoFD8=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
@@ -134,6 +139,8 @@ golang.org/x/crypto v0.0.0-20220128200615-198e4374d7ed h1:YoWVYYAfvQ4ddHv3OKmIvX
 golang.org/x/crypto v0.0.0-20220128200615-198e4374d7ed/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838 h1:71vQrMauZZhcTVK6KdYM+rklehEEwb3E+ZhaE5jrPrE=
 golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
+golang.org/x/crypto v0.0.0-20220213190939-1e6e3497d506 h1:EuGTJDfeg/PGZJp3gq1K+14eSLFTsrj1eg8KQuiUyKg=
+golang.org/x/crypto v0.0.0-20220213190939-1e6e3497d506/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/lint v0.0.0-20181026193005-c67002cb31c3/go.mod h1:UVdnD1Gm6xHRNCYTkRU2/jEulfH38KcIWyp/GAMgvoE=
 golang.org/x/lint v0.0.0-20190227174305-5b3e6a55c961/go.mod h1:wehouNa3lNwaWXcvxsM5YxQ5yQlVC4a0KAMCusXpPoU=
@@ -185,6 +192,8 @@ golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 h1:XDXtA5hveEEV8JB2l7nhMTp3t
 golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a h1:ppl5mZgokTT8uPkmYOyEUmPTr3ypaKkg5eFOGrAmxxE=
 golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220209214540-3681064d5158 h1:rm+CHSpPEEW2IsXUib1ThaHIjuBVZjxNgSKmBLFfD4c=
+golang.org/x/sys v0.0.0-20220209214540-3681064d5158/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 h1:JGgROgKl9N8DuW20oFS5gxc+lE67/N3FcwmBPMe7ArY=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
