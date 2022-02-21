@@ -13,10 +13,10 @@ require (
 
 require (
 	github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.42 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.43 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
-	golang.org/x/crypto v0.0.0-20220213190939-1e6e3497d506 // indirect
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
