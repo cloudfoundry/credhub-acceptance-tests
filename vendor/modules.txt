@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20220912130553-9aede59b2ba5
+# code.cloudfoundry.org/credhub-cli v0.0.0-20220919130746-ae2fbb7b7a2f
 ## explicit; go 1.17
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -12,7 +12,7 @@ code.cloudfoundry.org/credhub-cli/errors
 # github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e
 ## explicit
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.73
+# github.com/cloudfoundry/socks5-proxy v0.2.74
 ## explicit; go 1.19
 github.com/cloudfoundry/socks5-proxy
 # github.com/fsnotify/fsnotify v1.5.4
@@ -74,7 +74,7 @@ github.com/onsi/gomega/types
 # github.com/satori/go.uuid v1.2.0
 ## explicit
 github.com/satori/go.uuid
-# golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
+# golang.org/x/crypto v0.0.0-20220924013350-4ba4fb4dd9e7
 ## explicit; go 1.17
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
@@ -85,7 +85,7 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/net v0.0.0-20220909164309-bea034e7d591
+# golang.org/x/net v0.0.0-20220923203811-8be639271d50
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/html
