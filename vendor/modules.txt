@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20221003130614-805c8ef6da9c
+# code.cloudfoundry.org/credhub-cli v0.0.0-20221010130743-db3a1ca22f01
 ## explicit; go 1.17
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -12,10 +12,10 @@ code.cloudfoundry.org/credhub-cli/errors
 # github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e
 ## explicit
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.76
+# github.com/cloudfoundry/socks5-proxy v0.2.77
 ## explicit; go 1.19
 github.com/cloudfoundry/socks5-proxy
-# github.com/fsnotify/fsnotify v1.5.4
+# github.com/fsnotify/fsnotify v1.6.0
 ## explicit; go 1.16
 github.com/fsnotify/fsnotify
 # github.com/google/go-cmp v0.5.9
@@ -57,7 +57,7 @@ github.com/onsi/ginkgo/reporters/stenographer
 github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable
 github.com/onsi/ginkgo/reporters/stenographer/support/go-isatty
 github.com/onsi/ginkgo/types
-# github.com/onsi/gomega v1.21.1
+# github.com/onsi/gomega v1.22.1
 ## explicit; go 1.18
 github.com/onsi/gomega
 github.com/onsi/gomega/format
@@ -74,7 +74,7 @@ github.com/onsi/gomega/types
 # github.com/satori/go.uuid v1.2.0
 ## explicit
 github.com/satori/go.uuid
-# golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b
+# golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 ## explicit; go 1.17
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
@@ -85,7 +85,7 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/net v0.0.0-20221004154528-8021a29435af
+# golang.org/x/net v0.0.0-20221014081412-f15817d10f9b
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/html
@@ -93,11 +93,13 @@ golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20221006211917-84dc82d7e875
+# golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43
 ## explicit; go 1.17
 golang.org/x/sys/cpu
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.7
+golang.org/x/sys/windows
+# golang.org/x/text v0.3.8
 ## explicit; go 1.17
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
