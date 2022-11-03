@@ -8,7 +8,7 @@ CLIENT_SECRET=${CLIENT_SECRET:-secret}
 cat <<EOF > test_config.json
 {
   "director_host":"${API_IP}",
-  "api_url": "https://${API_IP}:8844",
+  "api_url": "${API_URL}",
   "api_username":"${USERNAME}",
   "api_password":"${PASSWORD}",
   "bosh": {
