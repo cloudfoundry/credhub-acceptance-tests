@@ -1,5 +1,5 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20221017130137-13f890e15976
-## explicit; go 1.17
+# code.cloudfoundry.org/credhub-cli v0.0.0-20221104012641-416cdb0ec951
+## explicit; go 1.18
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
 code.cloudfoundry.org/credhub-cli/credhub/auth/uaa
@@ -57,7 +57,7 @@ github.com/onsi/ginkgo/reporters/stenographer
 github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable
 github.com/onsi/ginkgo/reporters/stenographer/support/go-isatty
 github.com/onsi/ginkgo/types
-# github.com/onsi/gomega v1.22.1
+# github.com/onsi/gomega v1.24.0
 ## explicit; go 1.18
 github.com/onsi/gomega
 github.com/onsi/gomega/format
