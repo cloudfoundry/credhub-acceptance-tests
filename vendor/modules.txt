@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20221104013302-286b40f5b40a
+# code.cloudfoundry.org/credhub-cli v0.0.0-20221114141012-622af7c9eb0a
 ## explicit; go 1.18
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -12,7 +12,7 @@ code.cloudfoundry.org/credhub-cli/errors
 # github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e
 ## explicit
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.79
+# github.com/cloudfoundry/socks5-proxy v0.2.80
 ## explicit; go 1.19
 github.com/cloudfoundry/socks5-proxy
 # github.com/fsnotify/fsnotify v1.6.0
@@ -74,7 +74,7 @@ github.com/onsi/gomega/types
 # github.com/satori/go.uuid v1.2.0
 ## explicit
 github.com/satori/go.uuid
-# golang.org/x/crypto v0.2.0
+# golang.org/x/crypto v0.3.0
 ## explicit; go 1.17
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
