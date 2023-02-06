@@ -3,7 +3,7 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.18
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20230123140215-3dd1d7a6cebe
+	code.cloudfoundry.org/credhub-cli v0.0.0-20230130140824-3a8c07c3be58
 	github.com/hashicorp/go-version v1.6.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.26.0

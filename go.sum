@@ -92,6 +92,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20230116140613-68a3176aea15 h1:PP7BFovz
 code.cloudfoundry.org/credhub-cli v0.0.0-20230116140613-68a3176aea15/go.mod h1:YNi9P9XQYJO8P+555hDPKI7Y+pcg+tiT6lT97dGn85g=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230123140215-3dd1d7a6cebe h1:6qNeOodXUqcsDVDD4z4AA+WvmPun3UL5kgwTf42fmOc=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230123140215-3dd1d7a6cebe/go.mod h1:v1NbWBb5Y2TWkZMiveeLi7XC4ciITNdvs6Sl5zzj0wE=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230130140824-3a8c07c3be58 h1:WCSxX7Hf1wWhgMntCa4SU/yvGd44ekJY/0m1BSNNfYk=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230130140824-3a8c07c3be58/go.mod h1:ENMJevTlJTDxxdGmAhbWlq3rXQy58qNJFqEvLf+KUDc=
 code.cloudfoundry.org/tlsconfig v0.0.0-20211123175040-23cc9f05b6b3/go.mod h1:CKI5CV+3MlfcohVSuU3FxXubFyC52lYJGMLnZ2ltvks=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
@@ -250,6 +252,7 @@ github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7
 github.com/fatih/color v1.13.0 h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=
 github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYFFOfk=
 github.com/fatih/color v1.14.0 h1:AD//feEuOKJSzxN81txMW47CNX1EW6kMVEPt4lePhtE=
+github.com/fatih/color v1.14.1 h1:qfhVLaG5s+nCROl1zJsZRxFeYrHLqWroPOQ8BWiNb4w=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/fsnotify/fsnotify v1.5.1 h1:mZcQUHVQUQWoPXXtuf9yuEXKudkV2sx1E06UadKWpgI=
