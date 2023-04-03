@@ -108,6 +108,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20230313130649-d99a518a92e9 h1:7wsi3ZdE
 code.cloudfoundry.org/credhub-cli v0.0.0-20230313130649-d99a518a92e9/go.mod h1:WHyqAJkjLMs+6MgDa7tneQVOiUdPafKfedzQeM+4V5g=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230320130818-a7d5420b283b h1:spZNQ1I35NIy06pLTieIEfqWgzZ9DoZ1SkouhGwSXa8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230320130818-a7d5420b283b/go.mod h1:kYbE3eZ8uDWs2YVVXs1edhaqeKSPbKh5CCkGw7OEeig=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230327130712-e8abe86744b0 h1:9oF7it0FJxA/2yDvj1fraBQWgTxBTA4ki04qs1hAIsk=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230327130712-e8abe86744b0/go.mod h1:4P9xa7s5umGElFhLIQzwmnU0Xj7TTaLoFFDWfZ+8zS4=
 code.cloudfoundry.org/tlsconfig v0.0.0-20211123175040-23cc9f05b6b3/go.mod h1:CKI5CV+3MlfcohVSuU3FxXubFyC52lYJGMLnZ2ltvks=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
@@ -173,6 +175,7 @@ github.com/cloudfoundry/bosh-utils v0.0.355 h1:twk/Ooyzlab+ga6yS9FajtvftbAZG460C
 github.com/cloudfoundry/bosh-utils v0.0.356 h1:jxT1jqMDgFuBcX68xmaBNqFGzMXFFn/71nfNKYFmIpA=
 github.com/cloudfoundry/bosh-utils v0.0.358 h1:oJYiU9b9a8a/mtLq46NWvP2Ow0XiqB2CF7vBENNSnwA=
 github.com/cloudfoundry/bosh-utils v0.0.359 h1:xjmwK5Cak5vaMMPIu8D79UJtVEieOpIUKY73euP/fzk=
+github.com/cloudfoundry/bosh-utils v0.0.360 h1:Jxx6sGJ89IprlHBZrx5cQdgPeisAca+583EamIjy95U=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.39/go.mod h1:IAPDihInS+lSkefG/s5ZAcFolZDj1dsPC2BBrvZ2V98=
@@ -346,6 +349,7 @@ github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
 github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peKQ=
 github.com/mattn/go-isatty v0.0.17 h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng=
+github.com/mattn/go-isatty v0.0.18 h1:DOKFKCQ7FNG2L1rbrmstDN4QVRdS89Nkh85u68Uwp98=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d/go.mod h1:YUTz3bUH2ZwIWBy3CJBeOBEugqcmXREj14T+iG/4k4U=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
@@ -413,6 +417,8 @@ github.com/onsi/gomega v1.27.4 h1:Z2AnStgsdSayCMDiCU42qIz+HLqEPcgiOCXjAU/w+8E=
 github.com/onsi/gomega v1.27.4/go.mod h1:riYq/GJKh8hhoM01HN6Vmuy93AarCXCBGpvFDK3q3fQ=
 github.com/onsi/gomega v1.27.5 h1:T/X6I0RNFw/kTqgfkZPcQ5KU6vCnWNBGdtrIx2dpGeQ=
 github.com/onsi/gomega v1.27.5/go.mod h1:PIQNjfQwkP3aQAH7lf7j87O/5FiNr+ZR8+ipb+qQlhg=
+github.com/onsi/gomega v1.27.6 h1:ENqfyGeS5AX/rlXDd/ETokDz93u0YufY1Pgxuy/PvWE=
+github.com/onsi/gomega v1.27.6/go.mod h1:PIQNjfQwkP3aQAH7lf7j87O/5FiNr+ZR8+ipb+qQlhg=
 github.com/pivotal-cf/paraphernalia v0.0.0-20180203224945-a64ae2051c20/go.mod h1:Y3IqE20LKprEpLkXb7gXinJf4vvDdQe/BS8E4kL/dgE=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
