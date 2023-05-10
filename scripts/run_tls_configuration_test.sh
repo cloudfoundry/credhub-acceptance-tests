@@ -55,11 +55,14 @@ check_cipher() {
  fi
  echo "Found correct cipher $cipher"
 }
+# credhub as a server
+# are we okay with, starting from now, credhub as a server uses EC secp256r1
+# (as a result of java's default EC ordered list) instead of secp384r1?
 check_ciphers() {
-  check_cipher "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 4096)" "$output"
-  check_cipher "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 4096)" "$output"
-  check_cipher "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp384r1)" "$output"
-  check_cipher "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp384r1)" "$output"
+  check_cipher "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256" "$output"
+  check_cipher "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384" "$output"
+  check_cipher "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" "$output"
+  check_cipher "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" "$output"
 
 }
 main() {
