@@ -291,6 +291,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.88 h1:jKjJpJ3RHFZBJUayYkso5A7eAujxOpX/
 github.com/cloudfoundry/socks5-proxy v0.2.88/go.mod h1:Oxj8kz1QXpKcp6mIh//jyot1duyTGgCEWGzVfFaCAzw=
 github.com/cloudfoundry/socks5-proxy v0.2.90 h1:0EOcMduuDtvgFqd8GkuJRN4/FseKgIxDnQBdEIHBpnU=
 github.com/cloudfoundry/socks5-proxy v0.2.90/go.mod h1:WJhaUELTA2JIXV9qRd2jgfUajaTNQtCaTk4u+MwG++4=
+github.com/cloudfoundry/socks5-proxy v0.2.91 h1:L1fZtL6myAdUH9JykEUtLl+fYRTmjht4Xi9wyQDdAyA=
+github.com/cloudfoundry/socks5-proxy v0.2.91/go.mod h1:7a2K/XhYo7OnTV0kqQpCN94xLitnfskKFqB6i2UkzOc=
 github.com/cppforlife/go-patch v0.2.0 h1:Y14MnCQjDlbw7WXT4k+u6DPAA9XnygN4BfrSpI/19RU=
 github.com/cppforlife/go-patch v0.2.0/go.mod h1:67a7aIi94FHDZdoeGSJRRFDp66l9MhaAG1yGxpUoFD8=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
