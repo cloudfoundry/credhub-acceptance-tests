@@ -3,7 +3,7 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.20
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20230731130338-2495d5a758cb
+	code.cloudfoundry.org/credhub-cli v0.0.0-20230807130450-6d034150fb32
 	github.com/hashicorp/go-version v1.6.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.10
@@ -13,7 +13,7 @@ require (
 
 require (
 	github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.95 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.96 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/kr/text v0.2.0 // indirect
