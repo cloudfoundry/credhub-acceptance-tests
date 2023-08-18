@@ -14,7 +14,7 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	"fmt"
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -156,7 +156,7 @@ var _ = Describe("Certificates", func() {
 				certName := testCredentialPath(time.Now().UnixNano(), "some-cert")
 				certGenerationParams := generate.Certificate{
 					CommonName: "some-cert",
-					Ca:   caName,
+					Ca:         caName,
 				}
 
 				//generate a leaf
@@ -193,7 +193,6 @@ var _ = Describe("Certificates", func() {
 				err = dec.Decode(&regeneratedCa)
 				Expect(err).ToNot(HaveOccurred())
 
-
 				regeneratedCaPem := fmt.Sprintf("%v", regeneratedCa.Value.Certificate)
 
 				//regenerate leaf, using allow_transitional_parent_to_sign
@@ -210,7 +209,6 @@ var _ = Describe("Certificates", func() {
 				err = dec.Decode(&regeneratedCert)
 				Expect(err).ToNot(HaveOccurred())
 				regeneratedCertPem := fmt.Sprintf("%v", regeneratedCert.Value.Certificate)
-
 
 				//check if transitional ca version signs cert
 				decodedCa, _ := pem.Decode([]byte(regeneratedCaPem))

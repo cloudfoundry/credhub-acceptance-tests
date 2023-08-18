@@ -17,40 +17,39 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/auth"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	uuid "github.com/satori/go.uuid"
 )
 
+var (
+	config         Config
+	credhubCA      []byte
+	uaaCA          []byte
+	clientCACert   []byte
+	clientCAKey    []byte
+	credentialName string
+	appGuid        string
+)
+var _ = BeforeSuite(func() {
+	var err error
+	config, err = LoadConfig()
+	Expect(err).NotTo(HaveOccurred())
+
+	credhubCA, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
+	Expect(err).NotTo(HaveOccurred())
+
+	uaaCA, err = ioutil.ReadFile(filepath.Join(config.UAACa))
+	Expect(err).NotTo(HaveOccurred())
+
+	clientCACert, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
+	Expect(err).NotTo(HaveOccurred())
+	clientCAKey, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
+	Expect(err).NotTo(HaveOccurred())
+})
+
 var _ = Describe("mutual TLS authentication", func() {
 	const CredhubClientCommonName = "credhub_test_client"
-
-	var (
-		config         Config
-		credhubCA      []byte
-		uaaCA          []byte
-		clientCACert   []byte
-		clientCAKey    []byte
-		credentialName string
-		appGuid        string
-	)
-
-	BeforeSuite(func() {
-		var err error
-		config, err = LoadConfig()
-		Expect(err).NotTo(HaveOccurred())
-
-		credhubCA, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
-		Expect(err).NotTo(HaveOccurred())
-
-		uaaCA, err = ioutil.ReadFile(filepath.Join(config.UAACa))
-		Expect(err).NotTo(HaveOccurred())
-
-		clientCACert, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
-		Expect(err).NotTo(HaveOccurred())
-		clientCAKey, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
-		Expect(err).NotTo(HaveOccurred())
-	})
 
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("api-integration-test-%d", time.Now().UnixNano())

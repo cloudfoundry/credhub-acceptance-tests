@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	"github.com/hashicorp/go-version"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 )
@@ -145,7 +145,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName1))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName1))
 		Expect(output).To(HaveKeyWithValue("type", "password"))
 		Expect(output["value"]).ToNot(BeEmpty())
 		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "regenerated-metadata"}))
@@ -183,7 +183,7 @@ metadata:
 		err = json.Unmarshal(session.Out.Contents(), &output)
 		Expect(err).NotTo(HaveOccurred())
 
-		Expect(output).To(HaveKeyWithValue("name", "/" + credentialName2))
+		Expect(output).To(HaveKeyWithValue("name", "/"+credentialName2))
 		Expect(output).To(HaveKeyWithValue("type", "password"))
 		Expect(output["value"]).ToNot(BeEmpty())
 		Expect(output).To(HaveKeyWithValue("metadata", map[string]interface{}{"some": "other-metadata"}))

@@ -8,7 +8,7 @@ import (
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

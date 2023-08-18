@@ -5,7 +5,7 @@ import (
 
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/values"
 	"github.com/hashicorp/go-version"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
