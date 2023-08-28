@@ -2,6 +2,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20230807130450-6d034150fb32 h1:zJ1l4n1I
 code.cloudfoundry.org/credhub-cli v0.0.0-20230807130450-6d034150fb32/go.mod h1:spOJeSNlHf4zkE/SZpqPOhiKeCQvfuVjIE6+yh5YqUU=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230817233335-464dea5e57ce h1:eqmdbal8+tnjmF/V18olOPsJJf0CebDuaPqb1MnVUig=
 code.cloudfoundry.org/credhub-cli v0.0.0-20230817233335-464dea5e57ce/go.mod h1:ElhhVszIbwFeTmmvrWxAfrHyk0yc0tNasiBv/abUzT0=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230821130540-fccbfcb143d5 h1:ivXXL9NRTCFX6c7QyHQs+J/6MFDKw9Pi3HJVbEWCy+I=
+code.cloudfoundry.org/credhub-cli v0.0.0-20230821130540-fccbfcb143d5/go.mod h1:gCCP0z7G/oW88IT+1f9Q4SlBvjQ1tUJgBgPhR0dH1AY=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
@@ -35,6 +37,8 @@ github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
 github.com/onsi/ginkgo/v2 v2.11.0 h1:WgqUCUt/lT6yXoQ8Wef0fsNn5cAuMK7+KT9UFRz2tcU=
 github.com/onsi/ginkgo/v2 v2.11.0/go.mod h1:ZhrRA5XmEE3x3rhlzamx/JJvujdZoJ2uvgI7kR0iZvM=
+github.com/onsi/ginkgo/v2 v2.12.0 h1:UIVDowFPwpg6yMUpPjGkYvf06K3RAiJXUhCxEwQVHRI=
+github.com/onsi/ginkgo/v2 v2.12.0/go.mod h1:ZNEzXISYlqpb8S36iN71ifqLi3vVD1rVJGvWRCJOUpQ=
 github.com/onsi/gomega v1.27.10 h1:naR28SdDFlqrG6kScpT8VWpu1xWY5nJRCF3XaYyBjhI=
 github.com/onsi/gomega v1.27.10/go.mod h1:RsS8tutOdbdgzbPtzzATp12yT7kM5I5aElG3evPbQ0M=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
