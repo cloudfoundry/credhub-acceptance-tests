@@ -14,9 +14,9 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/credentials/generate"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
+	"github.com/google/uuid"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	uuid "github.com/satori/go.uuid"
 )
 
 var (
@@ -52,7 +52,7 @@ var _ = Describe("library with mtls authentication", func() {
 
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("api-client-mtls-test-%d", time.Now().UnixNano())
-		appGuid = uuid.NewV4().String()
+		appGuid = uuid.NewString()
 
 		var err error
 		certsDir, err = ioutil.TempDir("", "credhub-acceptance-mtls")

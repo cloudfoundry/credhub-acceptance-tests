@@ -17,9 +17,9 @@ import (
 	"code.cloudfoundry.org/credhub-cli/credhub/auth"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers/certs"
+	"github.com/google/uuid"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	uuid "github.com/satori/go.uuid"
 )
 
 var (
@@ -53,7 +53,7 @@ var _ = Describe("mutual TLS authentication", func() {
 
 	BeforeEach(func() {
 		credentialName = fmt.Sprintf("api-integration-test-%d", time.Now().UnixNano())
-		appGuid = uuid.NewV4().String()
+		appGuid = uuid.NewString()
 	})
 
 	Describe("with a certificate signed by a trusted CA", func() {
