@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20231009130502-3a143b873abb
+# code.cloudfoundry.org/credhub-cli v0.0.0-20231016130351-b222b8e0beb7
 ## explicit; go 1.21
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -62,7 +62,7 @@ github.com/onsi/ginkgo/v2/internal/parallel_support
 github.com/onsi/ginkgo/v2/internal/testingtproxy
 github.com/onsi/ginkgo/v2/reporters
 github.com/onsi/ginkgo/v2/types
-# github.com/onsi/gomega v1.28.0
+# github.com/onsi/gomega v1.28.1
 ## explicit; go 1.18
 github.com/onsi/gomega
 github.com/onsi/gomega/format

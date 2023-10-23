@@ -5,11 +5,11 @@ go 1.21
 toolchain go1.21.0
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20231009130502-3a143b873abb
+	code.cloudfoundry.org/credhub-cli v0.0.0-20231016130351-b222b8e0beb7
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/go-version v1.6.0
 	github.com/onsi/ginkgo/v2 v2.13.0
-	github.com/onsi/gomega v1.28.0
+	github.com/onsi/gomega v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
 )
 
