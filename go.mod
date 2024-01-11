@@ -1,6 +1,6 @@
 module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 
-go 1.21.5
+go 1.21.6
 
 require (
 	code.cloudfoundry.org/credhub-cli v0.0.0-20240102230713-fa64581dbbe1
