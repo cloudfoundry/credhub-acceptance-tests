@@ -4,6 +4,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20240111014531-6181ecde5039 h1:dPzHdHYX
 code.cloudfoundry.org/credhub-cli v0.0.0-20240111014531-6181ecde5039/go.mod h1:zqPgon0HFYyU/mdEUPs87pQ9njYxHDDsUdLJ9hgP12g=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240115140241-36c6332535b4 h1:0gkTNJ04VlJ7enYnE6PlR+eL4i6MOZFhDOIobGVGJ9I=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240115140241-36c6332535b4/go.mod h1:U9Fk5Z9+RlKZihdqEW09EiQz8IRMuAB5OBxAKz1Vh5Y=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240122140356-433e4b9fc358 h1:ANUEWegYF/rgVrShxQTFlKXhRYNw8N+DZrY417kl//8=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240122140356-433e4b9fc358/go.mod h1:uRL0cKLtPITGpXTp+Vw86JGTRUR+SuGovcmEydLGQGw=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.107 h1:uminKnlYtXkCBdzXh75ViyZxBuVJ3aCLMCj0ncBHe24=
@@ -28,8 +30,12 @@ github.com/google/pprof v0.0.0-20231229205709-960ae82b1e42 h1:dHLYa5D8/Ta0aLR2Xc
 github.com/google/pprof v0.0.0-20231229205709-960ae82b1e42/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
 github.com/google/pprof v0.0.0-20240117000934-35fc243c5815 h1:WzfWbQz/Ze8v6l++GGbGNFZnUShVpP/0xffCPLL+ax8=
 github.com/google/pprof v0.0.0-20240117000934-35fc243c5815/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
+github.com/google/pprof v0.0.0-20240125082051-42cd04596328 h1:oI+lCI2DY1BsRrdzMJBhIMxBBdlZJl31YNQC11EiyvA=
+github.com/google/pprof v0.0.0-20240125082051-42cd04596328/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
 github.com/google/uuid v1.5.0 h1:1p67kYwdtXjb0gL0BPiP1Av9wiZPo5A8z2cWkTZ+eyU=
 github.com/google/uuid v1.5.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/go-version v1.6.0 h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mOkIeek=
 github.com/hashicorp/go-version v1.6.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
