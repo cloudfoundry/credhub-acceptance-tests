@@ -6,6 +6,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20240115140241-36c6332535b4 h1:0gkTNJ04
 code.cloudfoundry.org/credhub-cli v0.0.0-20240115140241-36c6332535b4/go.mod h1:U9Fk5Z9+RlKZihdqEW09EiQz8IRMuAB5OBxAKz1Vh5Y=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240122140356-433e4b9fc358 h1:ANUEWegYF/rgVrShxQTFlKXhRYNw8N+DZrY417kl//8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240122140356-433e4b9fc358/go.mod h1:uRL0cKLtPITGpXTp+Vw86JGTRUR+SuGovcmEydLGQGw=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240129140404-5d5c1a8dbf29 h1:gLCd2gvBW4PYVVkwtyMCd2vRhC9obLW75Cx5VKGE+BQ=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240129140404-5d5c1a8dbf29/go.mod h1:0RuwiDxouCU+zPfDLLQj0gaNKaWnPDB0UUlYg0xTIhU=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.107 h1:uminKnlYtXkCBdzXh75ViyZxBuVJ3aCLMCj0ncBHe24=
@@ -32,6 +34,8 @@ github.com/google/pprof v0.0.0-20240117000934-35fc243c5815 h1:WzfWbQz/Ze8v6l++GG
 github.com/google/pprof v0.0.0-20240117000934-35fc243c5815/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
 github.com/google/pprof v0.0.0-20240125082051-42cd04596328 h1:oI+lCI2DY1BsRrdzMJBhIMxBBdlZJl31YNQC11EiyvA=
 github.com/google/pprof v0.0.0-20240125082051-42cd04596328/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
+github.com/google/pprof v0.0.0-20240130152714-0ed6a68c8d9e h1:E+3PBMCXn0ma79O7iCrne0iUpKtZ7rIcZvoz+jNtNtw=
+github.com/google/pprof v0.0.0-20240130152714-0ed6a68c8d9e/go.mod h1:czg5+yv1E0ZGTi6S6vVK1mke0fV+FaUhNGcd6VRS9Ik=
 github.com/google/uuid v1.5.0 h1:1p67kYwdtXjb0gL0BPiP1Av9wiZPo5A8z2cWkTZ+eyU=
 github.com/google/uuid v1.5.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
