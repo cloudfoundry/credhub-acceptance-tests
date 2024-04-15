@@ -10,6 +10,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20240325130311-cdbb1ac98b29 h1:IYppmm4i
 code.cloudfoundry.org/credhub-cli v0.0.0-20240325130311-cdbb1ac98b29/go.mod h1:WyUvL4Of1z2gBlVmFSc35OyB2eNZZ8N0XwS40M55IjI=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240401130341-7d037f0ebac5 h1:OMSv8juzH9yzkkiFSOuQgdQh5hRx32lxgbO8SNaAZmI=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240401130341-7d037f0ebac5/go.mod h1:KaBIkikGMXx/sclWAUfVTCPK2J0tGByGiK5FcXTgK8E=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240408130546-41a93a2e6319 h1:br9t/arpyiuy+45CEoeQXDCtvYYteuzUiNiHvp6jZTU=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240408130546-41a93a2e6319/go.mod h1:YR9+RYOIkumBDCDCDZzwnjQvPgtcAU8vfVrWvewByG4=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e h1:FQdRViaoDphGRfgrotl2QGsX1gbloe57dbGBS5CG6KY=
 github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e/go.mod h1:PXmcacyJB/pJjSxEl15IU6rEIKXrhZQRzsr0UTkgNNs=
 github.com/cloudfoundry/socks5-proxy v0.2.114 h1:ewCoN/Syuzm7EI/iDbbumoWABmdCt0Plrb44OpbEfZk=
@@ -41,6 +43,8 @@ github.com/google/pprof v0.0.0-20240327155427-868f304927ed h1:n8QtJTrwsv3P7dNxPa
 github.com/google/pprof v0.0.0-20240327155427-868f304927ed/go.mod h1:kf6iHlnVGwgKolg33glAes7Yg/8iWP8ukqeldJSO7jw=
 github.com/google/pprof v0.0.0-20240402174815-29b9bb013b0f h1:f00RU+zOX+B3rLAmMMkzHUF2h1z4DeYR9tTCvEq2REY=
 github.com/google/pprof v0.0.0-20240402174815-29b9bb013b0f/go.mod h1:kf6iHlnVGwgKolg33glAes7Yg/8iWP8ukqeldJSO7jw=
+github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd h1:gbpYu9NMq8jhDVbvlGkMFWCjLFlqqEZjEmObmhUy6Vo=
+github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd/go.mod h1:kf6iHlnVGwgKolg33glAes7Yg/8iWP8ukqeldJSO7jw=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/go-version v1.6.0 h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mOkIeek=
@@ -67,6 +71,7 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
+github.com/rogpeppe/go-internal v1.12.0 h1:exVL4IDcn6na9z1rAb56Vxr+CgyK3nn3O+epU5NdKM8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.6.1 h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
