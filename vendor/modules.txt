@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20240408130546-41a93a2e6319
+# code.cloudfoundry.org/credhub-cli v0.0.0-20240415130328-ccf34f5b6270
 ## explicit; go 1.21.6
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -28,7 +28,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd
+# github.com/google/pprof v0.0.0-20240416155748-26353dc0451f
 ## explicit; go 1.19
 github.com/google/pprof/profile
 # github.com/google/uuid v1.6.0
@@ -61,7 +61,7 @@ github.com/onsi/ginkgo/v2/internal/parallel_support
 github.com/onsi/ginkgo/v2/internal/testingtproxy
 github.com/onsi/ginkgo/v2/reporters
 github.com/onsi/ginkgo/v2/types
-# github.com/onsi/gomega v1.32.0
+# github.com/onsi/gomega v1.33.0
 ## explicit; go 1.20
 github.com/onsi/gomega
 github.com/onsi/gomega/format
