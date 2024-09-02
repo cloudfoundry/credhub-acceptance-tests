@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20240819130425-9b9cc2447389
+# code.cloudfoundry.org/credhub-cli v0.0.0-20240826130714-db1bf1b6b6ac
 ## explicit; go 1.21.6
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -8,10 +8,10 @@ code.cloudfoundry.org/credhub-cli/credhub/credentials/generate
 code.cloudfoundry.org/credhub-cli/credhub/credentials/values
 code.cloudfoundry.org/credhub-cli/credhub/permissions
 code.cloudfoundry.org/credhub-cli/credhub/server
-# github.com/cloudfoundry/go-socks5 v0.0.0-20180221174514-54f73bdb8a8e
-## explicit
+# github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee
+## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.121
+# github.com/cloudfoundry/socks5-proxy v0.2.122
 ## explicit; go 1.21.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/go-logr/logr v1.4.2
@@ -30,8 +30,8 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8
-## explicit; go 1.19
+# github.com/google/pprof v0.0.0-20240829160300-da1f7e9f2b25
+## explicit; go 1.22
 github.com/google/pprof/profile
 # github.com/google/uuid v1.6.0
 ## explicit
@@ -41,8 +41,8 @@ github.com/google/uuid
 github.com/hashicorp/go-version
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/onsi/ginkgo/v2 v2.20.1
-## explicit; go 1.20
+# github.com/onsi/ginkgo/v2 v2.20.2
+## explicit; go 1.22
 github.com/onsi/ginkgo/v2
 github.com/onsi/ginkgo/v2/config
 github.com/onsi/ginkgo/v2/formatter
@@ -63,8 +63,8 @@ github.com/onsi/ginkgo/v2/internal/parallel_support
 github.com/onsi/ginkgo/v2/internal/testingtproxy
 github.com/onsi/ginkgo/v2/reporters
 github.com/onsi/ginkgo/v2/types
-# github.com/onsi/gomega v1.34.1
-## explicit; go 1.20
+# github.com/onsi/gomega v1.34.2
+## explicit; go 1.22
 github.com/onsi/gomega
 github.com/onsi/gomega/format
 github.com/onsi/gomega/gbytes
@@ -88,8 +88,6 @@ golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/exp v0.0.0-20240823005443-9b4947da3948
 ## explicit; go 1.20
-golang.org/x/exp/constraints
-golang.org/x/exp/slices
 # golang.org/x/net v0.28.0
 ## explicit; go 1.18
 golang.org/x/net/context
