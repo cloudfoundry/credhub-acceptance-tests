@@ -1,9 +1,13 @@
 code.cloudfoundry.org/credhub-cli v0.0.0-20240902130721-726266af5f6a h1:JhPRP9WMq2aaSD573uPpgWTERoPVHwIDUE3/tCJDsIY=
 code.cloudfoundry.org/credhub-cli v0.0.0-20240902130721-726266af5f6a/go.mod h1:zFetpGhBJoTRcHXrTxUCp7IKHKWXLZ2+YG43RYkyyXA=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240906130858-907ed5401334 h1:9MApTv2lrO8y1j/0oRNFqxTTONJIa745apbZyApYJas=
+code.cloudfoundry.org/credhub-cli v0.0.0-20240906130858-907ed5401334/go.mod h1:rx2L3EjkNNKb5H1BBcq7t+779LYAD929mzvcIfTya1A=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/socks5-proxy v0.2.122 h1:Gh6rP/P2gcx6lZZ2dNVComumven0RbST3NRTC8PNd9M=
 github.com/cloudfoundry/socks5-proxy v0.2.122/go.mod h1:HU6mWPd37l6Yw+H98Kffb+5KP6o2l749kw054psBsUM=
+github.com/cloudfoundry/socks5-proxy v0.2.123 h1:8+4eWzz6Z+Ao1M1cOxeGBjPFqgzCr2MKyNV8SBEkTuU=
+github.com/cloudfoundry/socks5-proxy v0.2.123/go.mod h1:Wu7EyUFshLHy8e0bI/1HLIKAGt9LxWoqLcK3Dd+w7EQ=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -11,6 +15,7 @@ github.com/fsnotify/fsnotify v1.7.0 h1:8JEhPFa5W2WU7YfeZzPNqzMP6Lwt7L2715Ggo0nos
 github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyTJwOpGvigM=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
+github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 h1:tfuBGBXKqDEevZMzYi5KSi8KkcZtzBcTgAUUtapy0OI=
 github.com/go-task/slim-sprig/v3 v3.0.0 h1:sUs3vkvUymDpBKi3qH1YSqBQk9+9D/8M2mN1vB6EwHI=
 github.com/go-task/slim-sprig/v3 v3.0.0/go.mod h1:W848ghGpv3Qj3dhTPRyJypKRiqCdHZiAzKg9hl15HA8=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
