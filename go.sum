@@ -18,6 +18,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20241111140541-fdb2c1524e73 h1:/y2Jw7CI
 code.cloudfoundry.org/credhub-cli v0.0.0-20241111140541-fdb2c1524e73/go.mod h1:MciAoCMNWj05jcKK9eHeoPtB26i2S0MLd5rjIas4aqA=
 code.cloudfoundry.org/credhub-cli v0.0.0-20241118140725-15c52bcdbd91 h1:JVFA77oz7fQjCCE+BXoJWSkpts5EZmOazejM0NdWBVs=
 code.cloudfoundry.org/credhub-cli v0.0.0-20241118140725-15c52bcdbd91/go.mod h1:EM1uPBcxI5LvfC94dISljecu+XgZ0guwoK9bQ5CPkOU=
+code.cloudfoundry.org/credhub-cli v0.0.0-20241125140822-88bb7623a21d h1:9Nb5PuNb8UZAGP+Ewu+otYPqtVJkiQ+yiOfvKKJjceg=
+code.cloudfoundry.org/credhub-cli v0.0.0-20241125140822-88bb7623a21d/go.mod h1:Ac5WjlTgwP4REsj4M5CJ4NiODgxmMfqaYAVCItQ5OP0=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/socks5-proxy v0.2.122 h1:Gh6rP/P2gcx6lZZ2dNVComumven0RbST3NRTC8PNd9M=
@@ -40,6 +42,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.131 h1:487I7xX9PKDhobm4spBTCIZHbLCKVyF
 github.com/cloudfoundry/socks5-proxy v0.2.131/go.mod h1:GtZrczZKzFyoWVUtoCsMeGa8FD3Uo2LNJTcF8WgP+Fk=
 github.com/cloudfoundry/socks5-proxy v0.2.132 h1:oMo45RC7fVQl1FxzIU50BFSkAQtnrUTIr/QYtKfuSN0=
 github.com/cloudfoundry/socks5-proxy v0.2.132/go.mod h1:KjBjhhLktUTZaZDM5+e2zPDflgktar4+MaBgjtkWVJ4=
+github.com/cloudfoundry/socks5-proxy v0.2.133 h1:+vZ2Geqe8JaUrRWadE++rfqw06IE7jSsDwJhYLQ1pMM=
+github.com/cloudfoundry/socks5-proxy v0.2.133/go.mod h1:oF7WYWuSmLJ980vPVwM0oAuXuMmVNaERa2Vsg1T9QCo=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -68,6 +72,8 @@ github.com/google/pprof v0.0.0-20241101162523-b92577c0c142 h1:sAGdeJj0bnMgUNVeUp
 github.com/google/pprof v0.0.0-20241101162523-b92577c0c142/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
 github.com/google/pprof v0.0.0-20241122213907-cbe949e5a41b h1:SXO0REt4iu865upYCk8aKBBJQ4BqoE0ReP23ClMu60s=
 github.com/google/pprof v0.0.0-20241122213907-cbe949e5a41b/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
+github.com/google/pprof v0.0.0-20241128161848-dc51965c6481 h1:yudKIrXagAOl99WQzrP1gbz5HLB9UjhcOFnPzdd6Qec=
+github.com/google/pprof v0.0.0-20241128161848-dc51965c6481/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/go-version v1.7.0 h1:5tqGy27NaOTB8yJKUZELlFAS/LTKJkrmONwQKeRZfjY=
