@@ -40,6 +40,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20250203140928-329c0d63b022 h1:RIwPWi5J
 code.cloudfoundry.org/credhub-cli v0.0.0-20250203140928-329c0d63b022/go.mod h1:1XWqBvBHdh9f+c/9PJWVPbWLHMpDRmA7XNbqvmUmR/8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250210140307-5af5e1820968 h1:TA4GieJt5Ib5Lej0yOHLZWKjpid5Y9CLI/+3qli7fFo=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250210140307-5af5e1820968/go.mod h1:YnPMv3A5DaEUrJd8yV9cn4TKhqm9NIRMuh3FhWRYX0M=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250219235359-bc9098574636 h1:3S43ESyAfuVZpBLsvpkXMeVdCVL0/j2MT3NI4dlJzQE=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250219235359-bc9098574636/go.mod h1:+qHMffpY2jTffhha12QSzVxz+LHfaxRPJKD0OKOM9L0=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/socks5-proxy v0.2.122 h1:Gh6rP/P2gcx6lZZ2dNVComumven0RbST3NRTC8PNd9M=
@@ -80,6 +82,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.141 h1:fGbqjRjd08Be0/J6b7SVbTriF0bgmzS
 github.com/cloudfoundry/socks5-proxy v0.2.141/go.mod h1:al9eHJNg79E5cAMzZOxto0nm4QY1qJI0SPgRdDk7V7E=
 github.com/cloudfoundry/socks5-proxy v0.2.142 h1:lwrV6k8sKLTJO5//ndez9Io7M5vnApzcxhW9+V0gXTU=
 github.com/cloudfoundry/socks5-proxy v0.2.142/go.mod h1:FSr8WtsHdtUb0raH313Yoxc1ypqyS8xRxNVUDIHqDcs=
+github.com/cloudfoundry/socks5-proxy v0.2.143 h1:ufHGQv5W+Ne9QY17jEGIxbGPHgBaUrTumMim3Gmawzo=
+github.com/cloudfoundry/socks5-proxy v0.2.143/go.mod h1:uBUyMLx8TXuj87nLYvfA6P4zpUKLQweH4zHsKjnA7kc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -92,6 +96,8 @@ github.com/go-task/slim-sprig/v3 v3.0.0 h1:sUs3vkvUymDpBKi3qH1YSqBQk9+9D/8M2mN1v
 github.com/go-task/slim-sprig/v3 v3.0.0/go.mod h1:W848ghGpv3Qj3dhTPRyJypKRiqCdHZiAzKg9hl15HA8=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
+github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
 github.com/google/pprof v0.0.0-20240903155634-a8630aee4ab9 h1:q5g0N9eal4bmJwXHC5z0QCKs8qhS35hFfq0BAYsIwZI=
 github.com/google/pprof v0.0.0-20240903155634-a8630aee4ab9/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
 github.com/google/pprof v0.0.0-20240910150728-a0b0bb1d4134 h1:c5FlPPgxOn7kJz3VoPLkQYQXGBS3EklQ4Zfi57uOuqQ=
@@ -168,6 +174,8 @@ golang.org/x/crypto v0.32.0 h1:euUpcYgM8WcP71gNpTqQCn6rC2t6ULUPiOzfWaXVVfc=
 golang.org/x/crypto v0.32.0/go.mod h1:ZnnJkOaASj8g0AjIduWNlq2NRxL0PlBrbKVyZ6V/Ugc=
 golang.org/x/crypto v0.33.0 h1:IOBPskki6Lysi0lo9qQvbxiQ+FvsCC/YWOecCHAixus=
 golang.org/x/crypto v0.33.0/go.mod h1:bVdXmD7IV/4GdElGPozy6U7lWdRXA4qyRVGJV57uQ5M=
+golang.org/x/crypto v0.34.0 h1:+/C6tk6rf/+t5DhUketUbD1aNGqiSX3j15Z6xuIDlBA=
+golang.org/x/crypto v0.34.0/go.mod h1:dy7dXNW32cAb/6/PRuTNsix8T+vJAqvuIy5Bli/x0YQ=
 golang.org/x/net v0.29.0 h1:5ORfpBpCs4HzDYoodCDBbwHzdR5UrLBZ3sOnUJmFoHo=
 golang.org/x/net v0.29.0/go.mod h1:gLkgy8jTGERgjzMic6DS9+SP0ajcu6Xu3Orq/SpETg0=
 golang.org/x/net v0.30.0 h1:AcW1SDZMkb8IpzCdQUaIq2sP4sZ4zw+55h6ynffypl4=
