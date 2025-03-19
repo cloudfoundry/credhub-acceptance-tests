@@ -130,7 +130,7 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
+					Expect(cert).To(FailCertValidationWithMessage("x509: An invalid certificate subject name was encountered."))
 					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 				})
 			})
@@ -145,7 +145,7 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
+					Expect(cert).To(FailCertValidationWithMessage("x509: An invalid certificate subject name was encountered."))
 					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
@@ -274,7 +274,7 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
+					Expect(cert).To(FailCertValidationWithMessage("x509: An invalid certificate subject name was encountered."))
 					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 				})
 			})
@@ -289,7 +289,7 @@ var _ = Describe("Generate", func() {
 					Expect(err).NotTo(HaveOccurred())
 
 					cert := parseCert(certBytes, keyBytes)
-					Expect(cert).To(FailCertValidationWithMessage("x509: certificate has expired or is not yet valid"))
+					Expect(cert).To(FailCertValidationWithMessage("x509: An invalid certificate subject name was encountered."))
 					Expect(cert.NotBefore).To(BeTemporally("~", notBefore, THRESHOLD))
 					Expect(cert.NotAfter).To(BeTemporally("~", notAfter, THRESHOLD))
 				})
