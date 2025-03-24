@@ -48,6 +48,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20250303140637-bae947e8c288 h1:4WkrjPFm
 code.cloudfoundry.org/credhub-cli v0.0.0-20250303140637-bae947e8c288/go.mod h1:UrHMUIojrfRSNPEMaB2UTNfsqwzPxUagYPZhSgxCZrE=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250310131029-ea50fd1cfd0a h1:zJFoPFYsMRzkKouoUfT3ELuztIvvd3rBcE8dlsZKfG8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250310131029-ea50fd1cfd0a/go.mod h1:vhljZP8up+8iGKrUMEuOixnT6+0zNQas5YkXhUlhXJQ=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250317130919-6d4d60c755af h1:OEPxLqPfXzfabBAN41spitZChMcHwaCpK6HvP72EGp8=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250317130919-6d4d60c755af/go.mod h1:RBTfaM7O2QucgQ54GdopWf2B7BHswvPQWhXZGbWyLco=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/socks5-proxy v0.2.122 h1:Gh6rP/P2gcx6lZZ2dNVComumven0RbST3NRTC8PNd9M=
@@ -94,6 +96,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.144 h1:URs7jUatRFFGdHktWPiUFwtCQWrGfQO
 github.com/cloudfoundry/socks5-proxy v0.2.144/go.mod h1:7B8CZY+9yy1HHm+0GVuoFts/hWeaqJQTygN8wm335d4=
 github.com/cloudfoundry/socks5-proxy v0.2.145 h1:cnGyzkQq1xShLAtviPPWkn7E73F3R+76spKY6ENXlos=
 github.com/cloudfoundry/socks5-proxy v0.2.145/go.mod h1:+O1GDwzIaN0ceAtkFymiZUfXmPsUJNuAMhMA2Hvw3HQ=
+github.com/cloudfoundry/socks5-proxy v0.2.146 h1:nAnORtNrcQ0SEAJSpI9N6MI/qaQO6hrWqp7qPV1yG24=
+github.com/cloudfoundry/socks5-proxy v0.2.146/go.mod h1:1SjHm0TU1kf5+3cgeBvp343Z9YM1UJfD9lLa9k29sdU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -138,6 +142,8 @@ github.com/google/pprof v0.0.0-20250302191652-9094ed2288e7 h1:+J3r2e8+RsmN3vKfo7
 github.com/google/pprof v0.0.0-20250302191652-9094ed2288e7/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
 github.com/google/pprof v0.0.0-20250315033105-103756e64e1d h1:tx51Lf+wdE+aavqH8TcPJoCjTf4cE8hrMzROghCely0=
 github.com/google/pprof v0.0.0-20250315033105-103756e64e1d/go.mod h1:vavhavw2zAxS5dIdcRluK6cSGGPlZynqzFM8NdvU144=
+github.com/google/pprof v0.0.0-20250317173921-a4b03ec1a45e h1:ijClszYn+mADRFY17kjQEVQ1XRhq2/JR1M3sGqeJoxs=
+github.com/google/pprof v0.0.0-20250317173921-a4b03ec1a45e/go.mod h1:boTsfXsheKC2y+lKOCMpSfarhxDeIzfZG1jqGcPl3cA=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/go-version v1.7.0 h1:5tqGy27NaOTB8yJKUZELlFAS/LTKJkrmONwQKeRZfjY=
@@ -162,6 +168,8 @@ github.com/onsi/ginkgo/v2 v2.22.2 h1:/3X8Panh8/WwhU/3Ssa6rCKqPLuAkVY2I0RoyDLySlU
 github.com/onsi/ginkgo/v2 v2.22.2/go.mod h1:oeMosUL+8LtarXBHu/c0bx2D/K9zyQ6uX3cTyztHwsk=
 github.com/onsi/ginkgo/v2 v2.23.0 h1:FA1xjp8ieYDzlgS5ABTpdUDB7wtngggONc8a7ku2NqQ=
 github.com/onsi/ginkgo/v2 v2.23.0/go.mod h1:zXTP6xIp3U8aVuXN8ENK9IXRaTjFnpVB9mGmaSRvxnM=
+github.com/onsi/ginkgo/v2 v2.23.3 h1:edHxnszytJ4lD9D5Jjc4tiDkPBZ3siDeJJkUZJJVkp0=
+github.com/onsi/ginkgo/v2 v2.23.3/go.mod h1:zXTP6xIp3U8aVuXN8ENK9IXRaTjFnpVB9mGmaSRvxnM=
 github.com/onsi/gomega v1.34.2 h1:pNCwDkzrsv7MS9kpaQvVb1aVLahQXyJ/Tv5oAZMI3i8=
 github.com/onsi/gomega v1.34.2/go.mod h1:v1xfxRgk0KIsG+QOdm7p8UosrOzPYRo60fd3B/1Dukc=
 github.com/onsi/gomega v1.35.1 h1:Cwbd75ZBPxFSuZ6T+rN/WCb/gOc6YgFBXLlZLhC7Ds4=
@@ -172,6 +180,8 @@ github.com/onsi/gomega v1.36.1 h1:bJDPBO7ibjxcbHMgSCoo4Yj18UWbKDlLwX1x9sybDcw=
 github.com/onsi/gomega v1.36.1/go.mod h1:PvZbdDc8J6XJEpDK4HCuRBm8a6Fzp9/DmhC9C7yFlog=
 github.com/onsi/gomega v1.36.2 h1:koNYke6TVk6ZmnyHrCXba/T/MoLBXFjeC1PtvYgw0A8=
 github.com/onsi/gomega v1.36.2/go.mod h1:DdwyADRjrc825LhMEkD76cHR5+pUnjhUN8GlHlRPHzY=
+github.com/onsi/gomega v1.36.3 h1:hID7cr8t3Wp26+cYnfcjR6HpJ00fdogN6dqZ1t6IylU=
+github.com/onsi/gomega v1.36.3/go.mod h1:8D9+Txp43QWKhM24yyOBEdpkzN8FvJyAwecBgsU4KU0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.12.0 h1:exVL4IDcn6na9z1rAb56Vxr+CgyK3nn3O+epU5NdKM8=
