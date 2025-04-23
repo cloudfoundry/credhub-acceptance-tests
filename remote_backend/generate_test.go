@@ -5,12 +5,13 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"strings"
+
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"gopkg.in/yaml.v2"
-	"strings"
+	"gopkg.in/yaml.v3"
 )
 
 var _ = Describe("Generate", func() {
