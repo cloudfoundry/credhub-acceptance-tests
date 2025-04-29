@@ -27,7 +27,7 @@ var _ = It("should generate a new secret with and without metadata", func() {
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: metadata
+    some: metadata
 `))
 	})
 
@@ -121,7 +121,7 @@ var _ = It("should regenerate a secret with and without metadata", func() {
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: regenerated-metadata
+    some: regenerated-metadata
 `))
 	})
 
@@ -215,7 +215,7 @@ var _ = It("should set a new secret with and without metadata", func() {
 		Expect(stdOut).To(ContainSubstring(`type: value`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: metadata
+    some: metadata
 `))
 	})
 

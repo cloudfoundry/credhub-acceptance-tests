@@ -164,7 +164,7 @@ var _ = Describe("Import test", func() {
 			Expect(stdOut).To(ContainSubstring(`value: gx4ll8193j5rw0wljgqo`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: metadata`))
+    some: metadata`))
 
 			session = RunCommand("get", "-n", "/director/deployment/blobstore-director1-with-metadata")
 			Eventually(session).Should(Exit(0))
