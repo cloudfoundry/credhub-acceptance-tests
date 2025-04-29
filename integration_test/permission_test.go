@@ -56,8 +56,8 @@ var _ = Describe("Permission Test", func() {
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
-- read
-- write`))
+    - read
+    - write`))
 			})
 		})
 		Context("Set Permission is called on permission that exists", func() {
@@ -90,8 +90,8 @@ var _ = Describe("Permission Test", func() {
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
-- read
-- write`))
+    - read
+    - write`))
 			})
 		})
 	})
@@ -134,8 +134,8 @@ var _ = Describe("Permission Test", func() {
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
-- read
-- write`))
+    - read
+    - write`))
 			})
 		})
 	})
@@ -159,8 +159,8 @@ var _ = Describe("Permission Test", func() {
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("actor: " + actor))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring("path: " + path))
 				Eventually(string(session.Out.Contents())).Should(ContainSubstring(`operations:
-- read
-- write`))
+    - read
+    - write`))
 			})
 		})
 	})
