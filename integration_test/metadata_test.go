@@ -159,7 +159,7 @@ metadata:
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: other-metadata
+    some: other-metadata
 `))
 	})
 
@@ -171,7 +171,7 @@ metadata:
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: other-metadata
+    some: other-metadata
 `))
 	})
 

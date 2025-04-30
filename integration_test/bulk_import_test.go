@@ -188,9 +188,9 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some:
-    object:
-      with: data`))
+    some:
+        object:
+            with: data`))
 
 			session = RunCommand("get", "-n", "/director/deployment/bosh-cert1-with-metadata")
 			Eventually(session).Should(Exit(0))
