@@ -48,7 +48,7 @@ metadata:
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: metadata
+    some: metadata
 `))
 	})
 
@@ -133,7 +133,7 @@ metadata:
 		Expect(stdOut).To(ContainSubstring(`type: password`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: regenerated-metadata
+    some: regenerated-metadata
 `))
 	})
 
@@ -237,7 +237,7 @@ metadata:
 		Expect(stdOut).To(ContainSubstring(`value: FAKE-CREDENTIAL-VALUE`))
 		Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: metadata
+    some: metadata
 `))
 	})
 

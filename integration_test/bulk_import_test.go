@@ -174,9 +174,9 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`value: y14ck84ef51dnchgk4kp`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some:
-  - different
-  - metadata`))
+    some:
+        - different
+        - metadata`))
 
 			session = RunCommand("get", "-n", "/director/deployment/bosh-ca1-with-metadata")
 			Eventually(session).Should(Exit(0))
