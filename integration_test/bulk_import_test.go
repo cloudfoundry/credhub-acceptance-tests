@@ -202,11 +202,11 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some:
-    object:
-    - with
-    - an
-    - array`))
+    some:
+        object:
+            - with
+            - an
+            - array`))
 
 			session = RunCommand("get", "-n", "/director/deployment/ssh-cred1-with-metadata")
 			Eventually(session).Should(Exit(0))
@@ -218,9 +218,9 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  top:
-    one: foo
-    two: bar`))
+    top:
+        one: foo
+        two: bar`))
 
 			session = RunCommand("get", "-n", "/director/deployment/rsa-cred1-with-metadata")
 			Eventually(session).Should(Exit(0))
@@ -232,7 +232,7 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`-----BEGIN RSA PRIVATE KEY-----`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: thing`))
+    some: thing`))
 
 			session = RunCommand("get", "-n", "/director/deployment/user1-with-metadata")
 			Eventually(session).Should(Exit(0))
@@ -245,7 +245,7 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`password_hash:`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: thing`))
+    some: thing`))
 
 			session = RunCommand("get", "-n", "/director/deployment/json1-with-metadata")
 			Eventually(session).Should(Exit(0))
@@ -259,7 +259,7 @@ metadata:
 			Expect(stdOut).To(ContainSubstring(`- covfefe`))
 			Expect(stdOut).To(ContainSubstring(`
 metadata:
-  some: thing`))
+    some: thing`))
 
 			credentialNamesSet = []string{
 				"/director/deployment/blobstore-agent1-with-metadata",
