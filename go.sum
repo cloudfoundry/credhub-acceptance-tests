@@ -2,6 +2,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20250414180459-eaea4c141b26 h1:w3kqw3ho
 code.cloudfoundry.org/credhub-cli v0.0.0-20250414180459-eaea4c141b26/go.mod h1:I68lJFs9HLQ9QOtvnDH9RyYX0LM+Ogim6vGIb/HGWD8=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250422214913-c4e5375deae6 h1:nNTgUyOJqkGT32nOh5LtK9d6rVK/ScttdSavlgUTVEA=
 code.cloudfoundry.org/credhub-cli v0.0.0-20250422214913-c4e5375deae6/go.mod h1:cZ2LzVkl9v4tQOAELa2gCJksiQyoGarC057ghAf1hys=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250429210922-e7482003b9e8 h1:qtyc68dD8NW4ehEt6ZwZfZ04NvXTDSLRjTHrgHRbXsQ=
+code.cloudfoundry.org/credhub-cli v0.0.0-20250429210922-e7482003b9e8/go.mod h1:z02K56l75WlYG1RgYWuCCJVs9FtRTQZ8PJ9tFGCZnmE=
 github.com/bmatcuk/doublestar v1.3.4 h1:gPypJ5xD31uhX6Tf54sDPUOBXTqKH4c9aPY66CyQrS0=
 github.com/bmatcuk/doublestar v1.3.4/go.mod h1:wiQtGV+rzVYxB7WIlirSN++5HPtPlXEo9MEoZQC/PmE=
 github.com/charlievieth/fs v0.0.3 h1:3lZQXTj4PbE81CVPwALSn+JoyCNXkZgORHN6h2XHGlg=
