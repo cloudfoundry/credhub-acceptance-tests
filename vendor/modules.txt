@@ -11,7 +11,7 @@ code.cloudfoundry.org/credhub-cli/credhub/server
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.153
+# github.com/cloudfoundry/socks5-proxy v0.2.154
 ## explicit; go 1.23.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/go-logr/logr v1.4.3
