@@ -57,18 +57,16 @@ func writeFiles(command CliCommand) error {
 	}
 
 	return nil
-
 }
 
 func generateInputFile(input SessionInput, path string) error {
-	formattedInput := fmt.Sprintf("```\n" + input.fullCommand + "\n" + "```")
+	formattedInput := fmt.Sprintf("```\n%s\n```", input.fullCommand)
 	err := ioutil.WriteFile(path, []byte(formattedInput), os.ModePerm)
 	return err
-
 }
 
 func generateOutputFile(output string, path string) error {
-	formattedOutput := fmt.Sprintf("```\n" + output + "\n" + "```")
+	formattedOutput := fmt.Sprintf("```\n%s\n```", output)
 	err := ioutil.WriteFile(path, []byte(formattedOutput), os.ModePerm)
 	return err
 }
