@@ -3,7 +3,7 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.24.0
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20250818133441-006e3fb362ab
+	code.cloudfoundry.org/credhub-cli v0.0.0-20250909190601-52dc427c98d2
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/onsi/ginkgo/v2 v2.25.3
@@ -21,8 +21,8 @@ require (
 	github.com/google/pprof v0.0.0-20250903194437-c28834ac2320 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/crypto v0.42.0 // indirect
+	golang.org/x/net v0.44.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
 	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/tools v0.36.0 // indirect
