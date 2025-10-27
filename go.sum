@@ -34,6 +34,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20251006131851-da8a271bccef h1:RqYLXsLU
 code.cloudfoundry.org/credhub-cli v0.0.0-20251006131851-da8a271bccef/go.mod h1:8lIVIyQvwiHjxUDzHclgpiBVJsJaFmEcWqu9SMGXKe0=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251014195659-0e45fa40da27 h1:IBIsfNjDTIGF2qm96c3qikni9Wuc//qQTyKobSQqOeE=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251014195659-0e45fa40da27/go.mod h1:IrVzsWYqVqFEv7/PfyLEAdX6E5fDnof/YWvnri+9ebI=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251020132013-870a4dda3a37 h1:iyVRSLTHRi8jqYZ9JA7mDYpXMqqzE7lP/HmcJq5bViw=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251020132013-870a4dda3a37/go.mod h1:8ydmDnVA8v+ZCZyb466qMP6g9YQ7ZjP4PGGv2gORaf4=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
 github.com/Masterminds/semver/v3 v3.4.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/bmatcuk/doublestar v1.3.4 h1:gPypJ5xD31uhX6Tf54sDPUOBXTqKH4c9aPY66CyQrS0=
@@ -48,6 +50,7 @@ github.com/cloudfoundry/bosh-cli/v7 v7.9.7 h1:Vb+KNHfP/C13g3oE8f4oqI8m1Np0VDQmI3
 github.com/cloudfoundry/bosh-cli/v7 v7.9.9 h1:Yl+R5n8D50aReYPI6OrwNjF+qPMasn1MRBKKPYdwP8c=
 github.com/cloudfoundry/bosh-cli/v7 v7.9.11 h1:H4olQfH7JVdo8xh+H8iCMcXdl6CjMufDPKFCzc0r7GI=
 github.com/cloudfoundry/bosh-cli/v7 v7.9.12 h1:Tg9WE/LlJqdwbrv/Ad2Y9UgflSVPHGLzekLvxHQiUF8=
+github.com/cloudfoundry/bosh-cli/v7 v7.9.13 h1:8NiiRBqL0tVnXstoaAmaUOHn0pjAO6zjXukG+oeNc2g=
 github.com/cloudfoundry/bosh-utils v0.0.538 h1:5J99nCN0NynRK9lUcIAXeswW4pv2bkhyLLevajjHb/s=
 github.com/cloudfoundry/bosh-utils v0.0.538/go.mod h1:ohCt2Llxkj8/sgG3zipUhpHdB2bYgwCcFTzkkRNDpo8=
 github.com/cloudfoundry/bosh-utils v0.0.543 h1:VWPGTIfONQPSiXVOlCNSnFk0aUAChFhsiY4kAWfgdqQ=
@@ -58,6 +61,7 @@ github.com/cloudfoundry/bosh-utils v0.0.548 h1:dcmz0UCLn8boRLe/fZ7qN7h+/plESuni9
 github.com/cloudfoundry/bosh-utils v0.0.552 h1:BebrjrBVWUa07A2F3ahvs5P8G5NncmJJquLU9tg/kog=
 github.com/cloudfoundry/bosh-utils v0.0.554 h1:xdq5Qtsu0+dxNNre4W9H/LwBIxib3XoX9MP8Jbv7WV0=
 github.com/cloudfoundry/bosh-utils v0.0.555 h1:tISTfz5Yb3El48lCtj/C663vyAlqVOdn1ByFdPfMIbM=
+github.com/cloudfoundry/bosh-utils v0.0.556 h1:L7MG/HYVLpyH4Pwo+BbOAGEhl7m+RhobbTG6E4X6H+g=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
@@ -80,6 +84,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.156 h1:O0sqgbNlNzhUDU6B+Q1vAA0KdsHGViG
 github.com/cloudfoundry/socks5-proxy v0.2.156/go.mod h1:Blyn3pFyflE46w7mETBKe9CEkNvrTiNH8VItD8bRevU=
 github.com/cloudfoundry/socks5-proxy v0.2.157 h1:/6zGdttVfA1uKhR31APYha6FatINeDj2oRkf2XSBSX4=
 github.com/cloudfoundry/socks5-proxy v0.2.157/go.mod h1:owsGELXjFmfqFNYTFPnxloIM1Wqg7Uma2h0vpKtci0Q=
+github.com/cloudfoundry/socks5-proxy v0.2.158 h1:R+7NlxmzCiTMAyZqNt77G/DgdEINcEjz+cnMAu+UHm8=
+github.com/cloudfoundry/socks5-proxy v0.2.158/go.mod h1:RFuO7DkORi74ijYHjGNWiW2OSNxmklFWcxp22KdbO7Y=
 github.com/cppforlife/go-patch v0.2.0 h1:Y14MnCQjDlbw7WXT4k+u6DPAA9XnygN4BfrSpI/19RU=
 github.com/cppforlife/go-patch v0.2.0/go.mod h1:67a7aIi94FHDZdoeGSJRRFDp66l9MhaAG1yGxpUoFD8=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
@@ -148,6 +154,8 @@ github.com/onsi/ginkgo/v2 v2.25.3 h1:Ty8+Yi/ayDAGtk4XxmmfUy4GabvM+MegeB4cDLRi6nw
 github.com/onsi/ginkgo/v2 v2.25.3/go.mod h1:43uiyQC4Ed2tkOzLsEYm7hnrb7UJTWHYNsuy3bG/snE=
 github.com/onsi/ginkgo/v2 v2.26.0 h1:1J4Wut1IlYZNEAWIV3ALrT9NfiaGW2cDCJQSFQMs/gE=
 github.com/onsi/ginkgo/v2 v2.26.0/go.mod h1:qhEywmzWTBUY88kfO0BRvX4py7scov9yR+Az2oavUzw=
+github.com/onsi/ginkgo/v2 v2.27.1 h1:0LJC8MpUSQnfnp4n/3W3GdlmJP3ENGF0ZPzjQGLPP7s=
+github.com/onsi/ginkgo/v2 v2.27.1/go.mod h1:wmy3vCqiBjirARfVhAqFpYt8uvX0yaFe+GudAqqcCqA=
 github.com/onsi/gomega v1.37.0 h1:CdEG8g0S133B4OswTDC/5XPSzE1OeP29QOioj2PID2Y=
 github.com/onsi/gomega v1.37.0/go.mod h1:8D9+Txp43QWKhM24yyOBEdpkzN8FvJyAwecBgsU4KU0=
 github.com/onsi/gomega v1.38.0 h1:c/WX+w8SLAinvuKKQFh77WEucCnPk4j2OTUr7lt7BeY=
