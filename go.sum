@@ -38,6 +38,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20251020132013-870a4dda3a37 h1:iyVRSLTH
 code.cloudfoundry.org/credhub-cli v0.0.0-20251020132013-870a4dda3a37/go.mod h1:8ydmDnVA8v+ZCZyb466qMP6g9YQ7ZjP4PGGv2gORaf4=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251027231142-f720bbd35b00 h1:cbENYGQ/W7ZbkVH1WWahgcusWw83iYk7qMGq/UC+5Hs=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251027231142-f720bbd35b00/go.mod h1:f9RpRyU7J2jOlazjpMCz8myAQ8H0ohacM+pl5BBpZB0=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251104211411-cc4d0d0b0cb5 h1:NowGVgNIQPyIEpAcjEODXOte9VrFatvIqqTmVht8y1A=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251104211411-cc4d0d0b0cb5/go.mod h1:9PLTnwy+cUUfSaPh6lXv8DY5mZlmZK8NCLpgZpxxbrY=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
 github.com/Masterminds/semver/v3 v3.4.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/bmatcuk/doublestar v1.3.4 h1:gPypJ5xD31uhX6Tf54sDPUOBXTqKH4c9aPY66CyQrS0=
@@ -65,6 +67,7 @@ github.com/cloudfoundry/bosh-utils v0.0.554 h1:xdq5Qtsu0+dxNNre4W9H/LwBIxib3XoX9
 github.com/cloudfoundry/bosh-utils v0.0.555 h1:tISTfz5Yb3El48lCtj/C663vyAlqVOdn1ByFdPfMIbM=
 github.com/cloudfoundry/bosh-utils v0.0.556 h1:L7MG/HYVLpyH4Pwo+BbOAGEhl7m+RhobbTG6E4X6H+g=
 github.com/cloudfoundry/bosh-utils v0.0.558 h1:L9ozC4ZWQcR0Yr9YAPl6dMrXyhFvg8tTkF7t/M5kDmk=
+github.com/cloudfoundry/bosh-utils v0.0.560 h1:4vsa4dbw0gDe0/5AnFSYPrt2L+lrCxKwbJDs3hhdw6M=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee h1:88ruSYvCUKX2YcF2CMYVTmPGITvNdRbzaBRk2c/iMds=
 github.com/cloudfoundry/go-socks5 v0.0.0-20240831012420-2590b55236ee/go.mod h1:72EEm1oq5oXqGfu9XGtaRPWEcAFYd/P10cMNln0QhA8=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
