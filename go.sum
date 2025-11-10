@@ -42,6 +42,8 @@ code.cloudfoundry.org/credhub-cli v0.0.0-20251104211411-cc4d0d0b0cb5 h1:NowGVgNI
 code.cloudfoundry.org/credhub-cli v0.0.0-20251104211411-cc4d0d0b0cb5/go.mod h1:9PLTnwy+cUUfSaPh6lXv8DY5mZlmZK8NCLpgZpxxbrY=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251107200559-e43c817e01a3 h1:9A3itD6WcqYCuOGIaarPD9f28EBmHtGoJpfDOYualrw=
 code.cloudfoundry.org/credhub-cli v0.0.0-20251107200559-e43c817e01a3/go.mod h1:KUHlxvs4GZIyrSXZ2isQAnHdrSBmtRKfmJxP4jccHKY=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251110140857-09635fb46e8e h1:JTGRi6OyMwc2pWxL2BGdF8gJoxGvUH1qJAPrSEmrA3Y=
+code.cloudfoundry.org/credhub-cli v0.0.0-20251110140857-09635fb46e8e/go.mod h1:Ho49WWmcR5S6VNVQErzgBNENdL/FQTf5EK/QYGtxtOI=
 github.com/Masterminds/semver/v3 v3.4.0 h1:Zog+i5UMtVoCU8oKka5P7i9q9HgrJeGzI9SA1Xbatp0=
 github.com/Masterminds/semver/v3 v3.4.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/bmatcuk/doublestar v1.3.4 h1:gPypJ5xD31uhX6Tf54sDPUOBXTqKH4c9aPY66CyQrS0=
