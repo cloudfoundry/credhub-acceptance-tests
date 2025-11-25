@@ -109,6 +109,8 @@ github.com/cloudfoundry/socks5-proxy v0.2.160 h1:Ty+zUlVrLS5+Mig1zj6fmJdWGa/pdsQ
 github.com/cloudfoundry/socks5-proxy v0.2.160/go.mod h1:qfiPkwyKr+WdFI2FBr3rqtYg2ak+O0oDFlxlIHynamo=
 github.com/cloudfoundry/socks5-proxy v0.2.161 h1:YtcldtQk9b/RZTutiOx2VVX29NbI3iXq8d0EW2ZhvDg=
 github.com/cloudfoundry/socks5-proxy v0.2.161/go.mod h1:N/U9BOgG5UAdhlRX1gCVRFvGVC5fFmINwmFWvBxBlEI=
+github.com/cloudfoundry/socks5-proxy v0.2.162 h1:kjgrHmdTT/DdWiHskTczv11d1p8e36yHMMiS+gVRDak=
+github.com/cloudfoundry/socks5-proxy v0.2.162/go.mod h1:N/U9BOgG5UAdhlRX1gCVRFvGVC5fFmINwmFWvBxBlEI=
 github.com/cppforlife/go-patch v0.2.0 h1:Y14MnCQjDlbw7WXT4k+u6DPAA9XnygN4BfrSpI/19RU=
 github.com/cppforlife/go-patch v0.2.0/go.mod h1:67a7aIi94FHDZdoeGSJRRFDp66l9MhaAG1yGxpUoFD8=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
