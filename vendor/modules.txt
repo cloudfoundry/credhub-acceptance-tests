@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20260511130211-a3ce9828f30e
+# code.cloudfoundry.org/credhub-cli v0.0.0-20260518130143-ff3c0bccfc2a
 ## explicit; go 1.25.7
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
@@ -14,7 +14,7 @@ github.com/Masterminds/semver/v3
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.175
+# github.com/cloudfoundry/socks5-proxy v0.2.176
 ## explicit; go 1.25.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/go-logr/logr v1.4.3
@@ -82,7 +82,7 @@ github.com/onsi/gomega/types
 # go.yaml.in/yaml/v3 v3.0.4
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
-# golang.org/x/crypto v0.51.0
+# golang.org/x/crypto v0.52.0
 ## explicit; go 1.25.0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
@@ -94,7 +94,7 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/mod v0.36.0
 ## explicit; go 1.25.0
 golang.org/x/mod/semver
-# golang.org/x/net v0.54.0
+# golang.org/x/net v0.55.0
 ## explicit; go 1.25.0
 golang.org/x/net/context
 golang.org/x/net/html
@@ -105,7 +105,7 @@ golang.org/x/net/proxy
 # golang.org/x/sync v0.20.0
 ## explicit; go 1.25.0
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.44.0
+# golang.org/x/sys v0.45.0
 ## explicit; go 1.25.0
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
