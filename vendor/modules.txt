@@ -1,4 +1,4 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20260622130231-57c8cb0f1d6e
+# code.cloudfoundry.org/credhub-cli v0.0.0-20260629130111-5ee9a1ab59ab
 ## explicit; go 1.25.7
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
