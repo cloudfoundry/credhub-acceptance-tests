@@ -1,5 +1,5 @@
-# code.cloudfoundry.org/credhub-cli v0.0.0-20260901223900-3db4ee360330
-## explicit; go 1.26
+# code.cloudfoundry.org/credhub-cli v0.0.0-20260904212625-86e168992675
+## explicit; go 1.26.0
 code.cloudfoundry.org/credhub-cli/credhub
 code.cloudfoundry.org/credhub-cli/credhub/auth
 code.cloudfoundry.org/credhub-cli/credhub/auth/uaa
@@ -14,7 +14,7 @@ github.com/Masterminds/semver/v3
 # github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851
 ## explicit; go 1.21.0
 github.com/cloudfoundry/go-socks5
-# github.com/cloudfoundry/socks5-proxy v0.2.186
+# github.com/cloudfoundry/socks5-proxy v0.2.187
 ## explicit; go 1.25.0
 github.com/cloudfoundry/socks5-proxy
 # github.com/go-logr/logr v1.4.4
@@ -31,7 +31,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/pprof v0.0.0-20260903180319-d6c3cb2f37ec
+# github.com/google/pprof v0.0.0-20260906184651-6331bc6350fe
 ## explicit; go 1.25.0
 github.com/google/pprof/profile
 # github.com/google/uuid v1.6.0

@@ -3,7 +3,7 @@ module github.com/cloudfoundry-incubator/credhub-acceptance-tests
 go 1.26.0
 
 require (
-	code.cloudfoundry.org/credhub-cli v0.0.0-20260901223900-3db4ee360330
+	code.cloudfoundry.org/credhub-cli v0.0.0-20260904212625-86e168992675
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-version v1.9.0
 	github.com/onsi/ginkgo/v2 v2.32.1
@@ -14,11 +14,11 @@ require (
 require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 // indirect
-	github.com/cloudfoundry/socks5-proxy v0.2.186 // indirect
+	github.com/cloudfoundry/socks5-proxy v0.2.187 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20260903180319-d6c3cb2f37ec // indirect
+	github.com/google/pprof v0.0.0-20260906184651-6331bc6350fe // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.56.0 // indirect
 	golang.org/x/mod v0.40.0 // indirect
