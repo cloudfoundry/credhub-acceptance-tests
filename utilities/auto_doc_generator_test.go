@@ -6,7 +6,6 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -66,14 +65,14 @@ var _ = Describe("Auto Doc Generator Test", func() {
 
 				inputFilePath := filepath.Join(path, "input.adoc")
 				Expect(inputFilePath).To(BeAnExistingFile())
-				actualInputFileData, err := ioutil.ReadFile(inputFilePath)
+				actualInputFileData, err := os.ReadFile(inputFilePath)
 				expectedInputFileData := []byte(fmt.Sprintf("```\n%s\n```", sessionInput.fullCommand))
 				Expect(actualInputFileData).To(Equal(expectedInputFileData))
 				Expect(err).NotTo(HaveOccurred())
 
 				outputFilePath := filepath.Join(path, "output.adoc")
 				Expect(outputFilePath).To(BeAnExistingFile())
-				actualOutputFileData, err := ioutil.ReadFile(outputFilePath)
+				actualOutputFileData, err := os.ReadFile(outputFilePath)
 				expectedOutputFileData := []byte(fmt.Sprintf("```\n%s\n```", string(session.Out.Contents())))
 				Expect(actualOutputFileData).To(Equal(expectedOutputFileData))
 				Expect(err).NotTo(HaveOccurred())

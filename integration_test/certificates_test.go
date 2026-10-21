@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -423,13 +423,13 @@ var _ = Describe("Certificates Test", func() {
 				session = RunCommand("get", "-n", leafCertificateName)
 				leafCert := CertFromPem(string(session.Out.Contents()), false)
 
-				caCerts, err := ioutil.TempFile("", "credhubTestCerts")
+				caCerts, err := os.CreateTemp("", "credhubTestCerts")
 				Expect(err).ToNot(HaveOccurred())
 				pem.Encode(caCerts, &pem.Block{Type: "CERTIFICATE", Bytes: rootCert.Raw})
 				pem.Encode(caCerts, &pem.Block{Type: "CERTIFICATE", Bytes: intermediateCert.Raw})
 				caCerts.Close()
 
-				leafFile, err := ioutil.TempFile("", "leafCert")
+				leafFile, err := os.CreateTemp("", "leafCert")
 				Expect(err).ToNot(HaveOccurred())
 				pem.Encode(leafFile, &pem.Block{Type: "CERTIFICATE", Bytes: leafCert.Raw})
 				leafFile.Close()

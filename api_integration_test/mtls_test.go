@@ -7,8 +7,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -36,15 +37,15 @@ var _ = BeforeSuite(func() {
 	config, err = LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 
-	credhubCA, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
+	credhubCA, err = os.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
 	Expect(err).NotTo(HaveOccurred())
 
-	uaaCA, err = ioutil.ReadFile(filepath.Join(config.UAACa))
+	uaaCA, err = os.ReadFile(filepath.Join(config.UAACa))
 	Expect(err).NotTo(HaveOccurred())
 
-	clientCACert, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
+	clientCACert, err = os.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
 	Expect(err).NotTo(HaveOccurred())
-	clientCAKey, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
+	clientCAKey, err = os.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
 	Expect(err).NotTo(HaveOccurred())
 })
 
@@ -82,7 +83,7 @@ var _ = Describe("mutual TLS authentication", func() {
 			defer resp.Body.Close()
 
 			var resBody []byte
-			resBody, err = ioutil.ReadAll(resp.Body)
+			resBody, err = io.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 
 			type body struct {
@@ -204,7 +205,7 @@ func mtlsPost(url string, postData map[string]string, serverCA, clientCert, clie
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}

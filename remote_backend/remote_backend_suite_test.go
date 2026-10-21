@@ -4,7 +4,6 @@ import (
 	"math/rand"
 	"testing"
 
-	"io/ioutil"
 	"os"
 	"runtime"
 
@@ -21,7 +20,7 @@ var (
 
 var _ = BeforeEach(func() {
 	var err error
-	homeDir, err = ioutil.TempDir("", "cm-test")
+	homeDir, err = os.MkdirTemp("", "cm-test")
 	Expect(err).NotTo(HaveOccurred())
 
 	if runtime.GOOS == "windows" {

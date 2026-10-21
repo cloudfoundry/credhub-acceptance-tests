@@ -3,7 +3,7 @@ package api_integration_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
@@ -34,15 +34,15 @@ var _ = BeforeSuite(func() {
 	config, err = LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 
-	credhubCA, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
+	credhubCA, err = os.ReadFile(filepath.Join(config.CredentialRoot, "server_ca_cert.pem"))
 	Expect(err).NotTo(HaveOccurred())
 
-	uaaCA, err = ioutil.ReadFile(filepath.Join(config.UAACa))
+	uaaCA, err = os.ReadFile(filepath.Join(config.UAACa))
 	Expect(err).NotTo(HaveOccurred())
 
-	clientCACert, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
+	clientCACert, err = os.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_cert.pem"))
 	Expect(err).NotTo(HaveOccurred())
-	clientCAKey, err = ioutil.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
+	clientCAKey, err = os.ReadFile(filepath.Join(config.CredentialRoot, "client_ca_private.pem"))
 	Expect(err).NotTo(HaveOccurred())
 
 	os.Unsetenv("CREDHUB_DEBUG")
@@ -55,7 +55,7 @@ var _ = Describe("library with mtls authentication", func() {
 		appGuid = uuid.NewString()
 
 		var err error
-		certsDir, err = ioutil.TempDir("", "credhub-acceptance-mtls")
+		certsDir, err = os.MkdirTemp("", "credhub-acceptance-mtls")
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -87,7 +87,7 @@ var _ = Describe("library with mtls authentication", func() {
 			defer resp.Body.Close()
 
 			var resBody []byte
-			resBody, err = ioutil.ReadAll(resp.Body)
+			resBody, err = io.ReadAll(resp.Body)
 			Expect(err).ToNot(HaveOccurred())
 
 			type body struct {
@@ -115,9 +115,9 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			certPath := filepath.Join(certsDir, "cert.pem")
-			Expect(ioutil.WriteFile(certPath, cert, 0644)).To(Succeed())
+			Expect(os.WriteFile(certPath, cert, 0644)).To(Succeed())
 			keyPath := filepath.Join(certsDir, "key.pem")
-			Expect(ioutil.WriteFile(keyPath, key, 0600)).To(Succeed())
+			Expect(os.WriteFile(keyPath, key, 0600)).To(Succeed())
 
 			credhubClient, err := credhub.New(
 				config.ApiUrl,
@@ -142,9 +142,9 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			certPath := filepath.Join(certsDir, "cert.pem")
-			Expect(ioutil.WriteFile(certPath, cert, 0644)).To(Succeed())
+			Expect(os.WriteFile(certPath, cert, 0644)).To(Succeed())
 			keyPath := filepath.Join(certsDir, "key.pem")
-			Expect(ioutil.WriteFile(keyPath, key, 0600)).To(Succeed())
+			Expect(os.WriteFile(keyPath, key, 0600)).To(Succeed())
 
 			credhubClient, err := credhub.New(
 				config.ApiUrl,
@@ -166,9 +166,9 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			certPath := filepath.Join(certsDir, "cert.pem")
-			Expect(ioutil.WriteFile(certPath, cert, 0644)).To(Succeed())
+			Expect(os.WriteFile(certPath, cert, 0644)).To(Succeed())
 			keyPath := filepath.Join(certsDir, "key.pem")
-			Expect(ioutil.WriteFile(keyPath, key, 0600)).To(Succeed())
+			Expect(os.WriteFile(keyPath, key, 0600)).To(Succeed())
 
 			credhubClient, err := credhub.New(
 				config.ApiUrl,
@@ -192,9 +192,9 @@ var _ = Describe("library with mtls authentication", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			certPath := filepath.Join(certsDir, "cert.pem")
-			Expect(ioutil.WriteFile(certPath, cert, 0644)).To(Succeed())
+			Expect(os.WriteFile(certPath, cert, 0644)).To(Succeed())
 			keyPath := filepath.Join(certsDir, "key.pem")
-			Expect(ioutil.WriteFile(keyPath, key, 0600)).To(Succeed())
+			Expect(os.WriteFile(keyPath, key, 0600)).To(Succeed())
 
 			credhubClient, err := credhub.New(
 				config.ApiUrl,

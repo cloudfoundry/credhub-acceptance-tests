@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"io/ioutil"
 	"os"
 
 	. "github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
@@ -29,7 +28,7 @@ var _ = Describe("Import/Export test", func() {
 
 		BeforeEach(func() {
 			var err error
-			exportFile, err = ioutil.TempFile("", "export-data")
+			exportFile, err = os.CreateTemp("", "export-data")
 			Expect(err).NotTo(HaveOccurred())
 
 			session = RunCommand("generate",
@@ -116,7 +115,7 @@ var _ = Describe("Import/Export test", func() {
 
 		BeforeEach(func() {
 			var err error
-			exportFile, err = ioutil.TempFile("", "export-data")
+			exportFile, err = os.CreateTemp("", "export-data")
 			Expect(err).NotTo(HaveOccurred())
 
 			session = RunCommand("generate",
