@@ -27,5 +27,5 @@ cat <<EOF > test_config.json
 EOF
 
 pushd "$BASEDIR" >/dev/null
-  ginkgo -v -r -p remote_backend -randomizeAllSpecs -randomizeSuites
+  ginkgo -v -r -p remote_backend --randomize-all --randomize-suites
 popd >/dev/null
