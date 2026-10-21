@@ -3,7 +3,6 @@ package bbr_integration
 import (
 	"fmt"
 
-	"io/ioutil"
 	"os"
 
 	"github.com/cloudfoundry-incubator/credhub-acceptance-tests/test_helpers"
@@ -28,7 +27,7 @@ var _ = Describe("Backup and Restore", func() {
 		CleanupCredhub(bbrTestPath)
 
 		var err error
-		bbrDirectory, err = ioutil.TempDir("", "bbr")
+		bbrDirectory, err = os.MkdirTemp("", "bbr")
 		Expect(err).NotTo(HaveOccurred())
 	})
 

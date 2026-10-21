@@ -8,7 +8,6 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 
-	"io/ioutil"
 	"testing"
 	"time"
 
@@ -32,7 +31,7 @@ var _ = BeforeSuite(func() {
 	config, err = test_helpers.LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 
-	tmpDir, err = ioutil.TempDir("", "BBR_CREDHUB_TEST")
+	tmpDir, err = os.MkdirTemp("", "BBR_CREDHUB_TEST")
 	Expect(err).NotTo(HaveOccurred())
 
 })

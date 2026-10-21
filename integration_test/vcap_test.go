@@ -2,7 +2,7 @@ package integration
 
 import (
 	"crypto/tls"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -72,7 +72,7 @@ func postJSON(url string, postData string, token string) (string, int, error) {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", 0, err
 	}

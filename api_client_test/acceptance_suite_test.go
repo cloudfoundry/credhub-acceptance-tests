@@ -2,7 +2,7 @@ package acceptance_test
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path"
 	"testing"
 
@@ -26,10 +26,10 @@ var _ = BeforeEach(func() {
 	config, err := LoadConfig()
 	Expect(err).NotTo(HaveOccurred())
 
-	credhub_ca, err := ioutil.ReadFile(path.Join(config.CredentialRoot, "server_ca_cert.pem"))
+	credhub_ca, err := os.ReadFile(path.Join(config.CredentialRoot, "server_ca_cert.pem"))
 	Expect(err).NotTo(HaveOccurred())
 
-	uaa_ca, err := ioutil.ReadFile(path.Join(config.UAACa))
+	uaa_ca, err := os.ReadFile(path.Join(config.UAACa))
 	Expect(err).NotTo(HaveOccurred())
 
 	credhubClient, err = credhub.New(config.ApiUrl,

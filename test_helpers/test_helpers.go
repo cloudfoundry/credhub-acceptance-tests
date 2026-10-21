@@ -5,7 +5,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -62,7 +61,7 @@ func LoadConfig() (Config, error) {
 
 	configuration := Config{}
 
-	configurationJson, err := ioutil.ReadFile(path.Join(os.Getenv("PWD"), "..", "test_config.json"))
+	configurationJson, err := os.ReadFile(path.Join(os.Getenv("PWD"), "..", "test_config.json"))
 	if err != nil {
 		return configuration, err
 	}
@@ -79,8 +78,8 @@ func TargetAndLoginWithClientCredentials(cfg Config) {
 	CleanEnv()
 	credhub_ca := path.Join(cfg.CredentialRoot, "server_ca_cert.pem")
 	uaa_ca := cfg.UAACa
-	credhub_ca_contents, _ := ioutil.ReadFile(credhub_ca)
-	uaa_ca_contents, _ := ioutil.ReadFile(uaa_ca)
+	credhub_ca_contents, _ := os.ReadFile(credhub_ca)
+	uaa_ca_contents, _ := os.ReadFile(uaa_ca)
 
 	os.Setenv("CREDHUB_SECRET", cfg.ClientSecret)
 	os.Setenv("CREDHUB_CLIENT", cfg.ClientName)
