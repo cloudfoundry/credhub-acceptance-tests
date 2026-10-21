@@ -65,7 +65,7 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 }, func(data []byte) {
 	CommandPath = string(data)
 
-	rand.Seed(GinkgoRandomSeed() + int64(GinkgoParallelNode()))
+	rand.Seed(GinkgoRandomSeed() + int64(GinkgoParallelProcess()))
 })
 
 var _ = SynchronizedAfterSuite(func() {}, func() {
