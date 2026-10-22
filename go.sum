@@ -1,5 +1,5 @@
-code.cloudfoundry.org/credhub-cli v0.0.0-20261012130316-50bbb19ba9c5 h1:YtXz7ufr9wQ0jja47nm8MZhwO13EW2D2QIOSarXRyBc=
-code.cloudfoundry.org/credhub-cli v0.0.0-20261012130316-50bbb19ba9c5/go.mod h1:PKh1doBWs+udFu4aZrrS2dcdwHtvz4U3t2sGVStyU+M=
+code.cloudfoundry.org/credhub-cli v0.0.0-20261021073153-496131241ced h1:0WXV0rVLy2It1kSpvkruOaO2g3Ti6dZHNyFGofzqUac=
+code.cloudfoundry.org/credhub-cli v0.0.0-20261021073153-496131241ced/go.mod h1:F8Ycli/3sHjlrpJ3NdU2Umfr62lJCzBZkv1E5PnRKVc=
 github.com/Masterminds/semver/v3 v3.5.0 h1:kQceYJfbupGfZOKZQg0kou0DgAKhzDg2NZPAwZ/2OOE=
 github.com/Masterminds/semver/v3 v3.5.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/cloudfoundry/go-socks5 v0.0.0-20250423223041-4ad5fea42851 h1:oy59UYcspoP44ggE8DM3kjxl1+sTFd802bbZlBBhBMk=
