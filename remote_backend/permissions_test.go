@@ -10,10 +10,10 @@ import (
 )
 
 type Permission struct {
-	Uuid       string   `json: uuid`
-	Actor      string   `json: actor`
-	Path       string   `json: path`
-	Operations []string `json: operations`
+	Uuid       string   `json:"uuid"`
+	Actor      string   `json:"actor"`
+	Path       string   `json:"path"`
+	Operations []string `json:"operations"`
 }
 
 var _ = Describe("Permissions", func() {

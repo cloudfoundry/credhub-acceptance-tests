@@ -13,9 +13,9 @@ import (
 )
 
 type Permission struct {
-	Actor      string   `json: actor`
-	Path       string   `json: path`
-	Operations []string `json: operations`
+	Actor      string   `json:"actor"`
+	Path       string   `json:"path"`
+	Operations []string `json:"operations"`
 }
 
 var _ = Describe("Permission Test", func() {
